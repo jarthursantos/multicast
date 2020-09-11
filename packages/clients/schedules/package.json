@@ -1,0 +1,68 @@
+{
+  "name": "@clients/schedules",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/main.js",
+  "author": "Dantas Distribuidora <ti@dantasdistribuidora.com.br>",
+  "description": "Sistema de gerenciamento do recebimento de cargas",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm-run-all -p dev:react electron:serve",
+    "dev:electron": "cross-env NODE_ENV=development webpack --config webpack/electron.webpack.js --mode development && npm run start:electron",
+    "dev:react": "cross-env NODE_ENV=development webpack-dev-server --config webpack/react.webpack.js --mode development",
+    "electron:serve": "wait-on http-get://localhost:4000/ && npm run dev:electron",
+    "start:electron": "electron .",
+    "build": "npm-run-all build:electron build:react",
+    "build:run": "npm-run-all build start:electron",
+    "build:electron": "webpack --config webpack/electron.webpack.js --mode production",
+    "build:react": "webpack --config webpack/react.webpack.js --mode production",
+    "package:x64": "npm-run-all build package:dist:x64",
+    "package:x32": "npm-run-all build package:dist:x32",
+    "package:dist:x64": "electron-builder --x64 -c.electronVersion=10.1.1",
+    "package:dist:x32": "electron-builder --ia32 -c.electronVersion=10.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.2",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/styled-components": "^5.1.3",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.3.0",
+    "electron": "^10.1.1",
+    "electron-builder": "^22.8.0",
+    "file-loader": "^6.1.0",
+    "html-webpack-plugin": "^4.4.1",
+    "npm-run-all": "^4.1.5",
+    "style-loader": "^1.2.1",
+    "typescript": "^4.0.2",
+    "wait-on": "^5.2.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "styled-components": "^5.2.0"
+  },
+  "build": {
+    "appId": "br.com.dantasdistribuidora.schedules",
+    "productName": "Agendamentos",
+    "directories": {
+      "buildResources": "build",
+      "output": "packages"
+    },
+    "files": [
+      "package.json",
+      "dist/**"
+    ]
+  }
+}
