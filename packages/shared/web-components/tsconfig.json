@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "module": "commonjs",
+    "allowJs": false,
+    "checkJs": false,
+    "jsx": "react"
+  }
+}
