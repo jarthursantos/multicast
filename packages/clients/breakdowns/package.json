@@ -1,5 +1,5 @@
 {
-  "name": "@clients/breakdown",
+  "name": "@clients/breakdowns",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/main.js",
@@ -54,7 +54,7 @@
     "styled-components": "^5.2.0"
   },
   "build": {
-    "appId": "br.com.dantasdistribuidora.breakdown",
+    "appId": "br.com.dantasdistribuidora.breakdowns",
     "productName": "Avarias",
     "directories": {
       "buildResources": "build",
