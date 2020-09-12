@@ -4,3 +4,4 @@ release
 yarn-error.log
 coverage
 .vscode
+.env
