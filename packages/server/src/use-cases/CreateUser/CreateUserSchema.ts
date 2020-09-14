@@ -8,8 +8,6 @@ export const createUserSchema = Yup.object().shape({
 
   email: Yup.string().email('Email inválido').required('Email é obrigatório'),
 
-  password: Yup.string().required('Senha é obrigatória'),
-
   permissions_id: Yup.number().integer('permissions_id should be a integer'),
 
   role: Yup.string().oneOf(Roles)
