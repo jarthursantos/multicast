@@ -10,7 +10,7 @@ export class UpdateUserController {
     const { id } = params
 
     try {
-      if (auth.user.role === "ADMIN") {
+      if (auth.user.role !== 'ADMIN') {
         throw new Error('Usuário sem acesso')
       }
 
