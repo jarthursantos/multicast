@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client'
 import { Request, Response } from 'express'
 
 import { CreateUserUseCase } from './CreateUserUseCase'
@@ -10,7 +9,7 @@ export class CreateUserController {
     const { body, auth } = req
 
     try {
-      if (auth.user.role !== "ADMIN") {
+      if (auth.user.role !== 'ADMIN') {
         throw new Error('Usuário sem acesso')
       }
 
