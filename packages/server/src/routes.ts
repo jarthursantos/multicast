@@ -48,6 +48,7 @@ import { findSchedulesController } from 'use-cases/FindSchedules'
 import { findUserByIdController } from 'use-cases/FindUserById'
 import { findUserChangesController } from 'use-cases/FindUserChanges'
 import { findUsersController } from 'use-cases/FindUsers'
+import { generateInvoiceReceiptsController } from 'use-cases/GenerateInvoiceReceipts'
 import { nonReceiveConflictedInvoicesController } from 'use-cases/NonReceiveConflictedInvoices'
 import { receiveConflictedInvoicesController } from 'use-cases/ReceiveConflictedInvoices'
 import {
@@ -265,6 +266,13 @@ router.put(
   validateBody(updateInvoicesSchema),
   (req: Request, res: Response) => {
     updateScheduleInvoicesController.handle(req, res)
+  }
+)
+
+router.get(
+  '/schedules/:id/invoices/:invoiceId/receipt',
+  (req: Request, res: Response) => {
+    generateInvoiceReceiptsController.handle(req, res)
   }
 )
 
