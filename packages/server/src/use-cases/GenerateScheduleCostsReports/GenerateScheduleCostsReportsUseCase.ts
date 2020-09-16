@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns'
+import { parse } from 'date-fns'
 import { ICostPerPeriodProvider } from 'providers/ICostPerPeriodProvider'
 import { ISchedulesRepository } from 'repositories/ISchedulesRepository'
 
@@ -11,14 +11,8 @@ export class GenerateScheduleCostsReportsUseCase {
   ) {}
 
   async execute(data: IGenerateScheduleCostsReportsRequestDTO) {
-    const periodStart =
-      typeof data.periodStart === 'string'
-        ? parseISO(data.periodStart)
-        : data.periodStart
-    const periodEnd =
-      typeof data.periodEnd === 'string'
-        ? parseISO(data.periodEnd)
-        : data.periodEnd
+    const periodStart = parse(data.periodStart, 'yyyy-MM-dd', new Date())
+    const periodEnd = parse(data.periodEnd, 'yyyy-MM-dd', new Date())
 
     const schedules = await this.schedulesRepository.findReceivedsFromPeriod(
       periodStart,

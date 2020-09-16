@@ -1,4 +1,4 @@
 export interface IGenerateScheduleCostsReportsRequestDTO {
-  periodStart: string | Date
-  periodEnd: string | Date
+  periodStart: string
+  periodEnd: string
 }

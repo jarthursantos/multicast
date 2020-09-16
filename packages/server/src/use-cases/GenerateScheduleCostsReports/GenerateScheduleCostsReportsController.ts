@@ -9,8 +9,11 @@ export class GenerateScheduleCostsReportsController {
     private generateScheduleCostsReportsCase: GenerateScheduleCostsReportsUseCase
   ) {}
 
-  async handle(req: Request, res: Response) {
-    const { periodStart, periodEnd } = req.params
+  async handle(
+    req: Request<{}, {}, {}, { periodStart: string; periodEnd: string }>,
+    res: Response
+  ) {
+    const { periodStart, periodEnd } = req.query
 
     try {
       await generateScheduleCostsReportsSchema.validate(
