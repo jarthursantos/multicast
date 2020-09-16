@@ -35,6 +35,8 @@ export class GenerateScheduleCostsReportsUseCase {
       0
     )
 
+    console.log({ schedules })
+
     const report = await this.costPerPeriodProvider.generate({
       periodStart,
       periodEnd,

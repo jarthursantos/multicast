@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { endOfDay, startOfDay } from 'date-fns'
 import { DischargeTable } from 'entities/DischargeTable'
 import { Invoice } from 'entities/Invoice'
 import { Schedule } from 'entities/Schedule'
@@ -80,10 +81,15 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
     periodStart: Date,
     periodEnd: Date
   ): Promise<Schedule[]> {
+    console.log({
+      startOfDay: startOfDay(periodStart),
+      endOfDay: endOfDay(periodEnd)
+    })
+
     const schedules = await this.prisma.schedules.findMany({
       where: {
         NOT: { receivedAt: null },
-        scheduledAt: { gt: periodStart, lt: periodEnd },
+        scheduledAt: { gte: startOfDay(periodStart), lte: endOfDay(periodEnd) },
         rescheduledAt: null,
         canceledAt: null
       },
