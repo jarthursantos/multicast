@@ -8,10 +8,13 @@ export class GenerateScheduleCostsReportsController {
   ) {}
 
   async handle(req: Request, res: Response) {
+    const { periodStart, periodEnd } = req.params
+
     try {
-      const report = await this.generateScheduleCostsReportsCase.execute(
-        req.body
-      )
+      const report = await this.generateScheduleCostsReportsCase.execute({
+        periodStart,
+        periodEnd
+      })
 
       return res.json(report)
     } catch (error) {
