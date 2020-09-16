@@ -7,6 +7,7 @@ import { WinThorInvoiceSituationsRepository } from 'repositories/implementations
 import { WinThorProviderRepository } from 'repositories/implementations/WinThorProviderRepository'
 
 import { GenerateScheduleCostsReportsController } from './GenerateScheduleCostsReportsController'
+import { generateScheduleCostsReportsSchema } from './GenerateScheduleCostsReportsSchema'
 import { GenerateScheduleCostsReportsUseCase } from './GenerateScheduleCostsReportsUseCase'
 
 const winthorProviderRepository = new WinThorProviderRepository()
@@ -40,4 +41,8 @@ const generateScheduleCostsReportsController = new GenerateScheduleCostsReportsC
   generateScheduleCostsReportsUseCase
 )
 
-export { generateScheduleCostsReportsController }
+export {
+  generateScheduleCostsReportsController,
+  generateScheduleCostsReportsUseCase,
+  generateScheduleCostsReportsSchema
+}
