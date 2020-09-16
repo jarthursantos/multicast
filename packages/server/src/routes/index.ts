@@ -36,7 +36,10 @@ router.post(
   }
 )
 
-router.use('/files', express.static(resolve(__dirname, '..', 'tmp', 'uploads')))
+router.use(
+  '/files',
+  express.static(resolve(__dirname, '..', '..', 'tmp', 'uploads'))
+)
 
 router.use(auth)
 
