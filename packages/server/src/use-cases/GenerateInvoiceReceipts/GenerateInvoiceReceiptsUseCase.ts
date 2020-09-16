@@ -1,4 +1,4 @@
-import { IRepceiptPerInvoiceProvider } from 'providers/IReceiptPerInvoiceProvider'
+import { IReceiptPerInvoiceProvider } from 'providers/IReceiptPerInvoiceProvider'
 import { IInvoicesRepository } from 'repositories/IInvoicesRepository'
 import { ISchedulesRepository } from 'repositories/ISchedulesRepository'
 
@@ -6,7 +6,7 @@ export class GenerateInvoiceReceiptsUseCase {
   constructor(
     private scheduleRepository: ISchedulesRepository,
     private invoiceRepository: IInvoicesRepository,
-    private receiptPerInvoiceProvider: IRepceiptPerInvoiceProvider
+    private receiptPerInvoiceProvider: IReceiptPerInvoiceProvider
   ) {}
 
   async execute(scheduleId: string, invoiceId: string) {

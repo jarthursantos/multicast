@@ -4055,6 +4055,11 @@ extend@^3.0.0:
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
 
+extenso@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/extenso/-/extenso-2.0.1.tgz#85411f40d7b8758279a18f84fadf5b0e4042717c"
+  integrity sha512-EXaNgWmE9UHqXCa65Fgj4bNArSxBsJh80QWJPscViClk3ch/WlNfB3otKwIid2gfXdEqJ1Hfyl5/+aKSH/Y1Pw==
+
 extglob@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/extglob/-/extglob-2.0.4.tgz#ad00fe4dc612a9232e8718711dc5cb5ab0285543"

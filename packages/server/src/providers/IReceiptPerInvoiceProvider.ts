@@ -7,6 +7,6 @@ export type IReceiptPerInvoiceData = Pick<Invoice, 'number' | 'receiptValue'> &
   Pick<Schedule, 'shippingName'> &
   Pick<Provider, 'name'>
 
-export interface IRepceiptPerInvoiceProvider {
+export interface IReceiptPerInvoiceProvider {
   generate(data: IReceiptPerInvoiceData): Promise<File>
 }

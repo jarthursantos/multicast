@@ -49,6 +49,7 @@ import { findUserByIdController } from 'use-cases/FindUserById'
 import { findUserChangesController } from 'use-cases/FindUserChanges'
 import { findUsersController } from 'use-cases/FindUsers'
 import { generateInvoiceReceiptsController } from 'use-cases/GenerateInvoiceReceipts'
+import { generateScheduleReceiptsController } from 'use-cases/GenerateScheduleReceipts'
 import { nonReceiveConflictedInvoicesController } from 'use-cases/NonReceiveConflictedInvoices'
 import { receiveConflictedInvoicesController } from 'use-cases/ReceiveConflictedInvoices'
 import {
@@ -251,6 +252,10 @@ router.put(
 
 router.put('/schedules/:id/reschedule', (req: Request, res: Response) => {
   rescheduleSchedulesController.handle(req, res)
+})
+
+router.get('/schedules/:id/receipt', (req: Request, res: Response) => {
+  generateScheduleReceiptsController.handle(req, res)
 })
 
 router.post(

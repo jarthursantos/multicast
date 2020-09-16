@@ -5,20 +5,19 @@ import exphbs from 'express-handlebars'
 import extense from 'extenso'
 import { resolve, join } from 'path'
 import {
-  IReceiptPerInvoiceData,
-  IReceiptPerInvoiceProvider
-} from 'providers/IReceiptPerInvoiceProvider'
+  IReceiptScheduleData,
+  IReceiptScheduleProvider
+} from 'providers/IReceiptScheduleProvider'
 import puppeteer from 'puppeteer'
 import { IFilesRepository } from 'repositories/IFilesRepository'
 import { v4 as uuid } from 'uuid'
 
-export class HBSRepeiptPerInvoiceProvider
-  implements IReceiptPerInvoiceProvider {
+export class HBSReceiptScheduleProvider implements IReceiptScheduleProvider {
   constructor(private fileRepository: IFilesRepository) {}
 
-  async generate(data: IReceiptPerInvoiceData): Promise<File> {
+  async generate(data: IReceiptScheduleData): Promise<File> {
     const viewsPath = resolve(__dirname, '..', '..', 'views', 'reports')
-    const templatePath = join(viewsPath, 'receipt-per-invoice.hbs')
+    const templatePath = join(viewsPath, 'receipt.hbs')
     const outputDit = resolve(__dirname, '..', '..', '..', 'tmp', 'uploads')
 
     const engine = exphbs.create({
@@ -30,19 +29,35 @@ export class HBSRepeiptPerInvoiceProvider
 
     const generate = () => {
       return new Promise<string>((resolve, reject) => {
-        const receiptValue = data.receiptValue.toFixed(2).replace('.', ',')
-        const receiptValueExtense = extense(receiptValue, {
-          mode: 'currency'
-        })
-
         engine.renderView(
           templatePath,
           {
             ...data,
-            receiptValue,
-            receiptValueExtense,
-            providerName: data.name,
-            emittedAt: format(new Date(), 'dd/MM/yyyy')
+            receiptValue: data.receiptValue.toFixed(2).replace('.', ','),
+            receiptValueExtense: extense(
+              data.receiptValue.toFixed(2).replace('.', ','),
+              {
+                mode: 'currency'
+              }
+            ),
+            emittedAt: format(new Date(), 'dd/MM/yyyy'),
+            invoices: data.invoices.map(invoice => {
+              console.log({ invoice })
+
+              return {
+                ...invoice,
+                receiptValue: invoice.receiptValue.toFixed(2).replace('.', ','),
+                receiptValueExtense: extense(
+                  invoice.receiptValue.toFixed(2).replace('.', ','),
+                  {
+                    mode: 'currency',
+                    number: {
+                      decimal: 'formal'
+                    }
+                  }
+                )
+              }
+            })
           },
           (err, body) => {
             if (err) {
