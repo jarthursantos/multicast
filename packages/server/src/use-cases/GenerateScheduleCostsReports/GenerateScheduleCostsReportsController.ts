@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
+import { ValidationError } from 'yup'
 
+import { generateScheduleCostsReportsSchema } from './GenerateScheduleCostsReportsSchema'
 import { GenerateScheduleCostsReportsUseCase } from './GenerateScheduleCostsReportsUseCase'
 
 export class GenerateScheduleCostsReportsController {
@@ -11,6 +13,13 @@ export class GenerateScheduleCostsReportsController {
     const { periodStart, periodEnd } = req.params
 
     try {
+      await generateScheduleCostsReportsSchema.validate(
+        { periodStart, periodEnd },
+        {
+          abortEarly: false
+        }
+      )
+
       const report = await this.generateScheduleCostsReportsCase.execute({
         periodStart,
         periodEnd
@@ -18,6 +27,10 @@ export class GenerateScheduleCostsReportsController {
 
       return res.json(report)
     } catch (error) {
+      if (error instanceof ValidationError) {
+        return res.status(400).json({ message: error.errors.join(', ') })
+      }
+
       return res.status(400).json({
         message: error.message || 'Unexpected error'
       })
