@@ -76,6 +76,56 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
     return result
   }
 
+  async findReceivedsFromPeriod(
+    periodStart: Date,
+    periodEnd: Date
+  ): Promise<Schedule[]> {
+    const schedules = await this.prisma.schedules.findMany({
+      where: {
+        NOT: { receivedAt: null },
+        scheduledAt: { gt: periodStart, lt: periodEnd },
+        rescheduledAt: null,
+        canceledAt: null
+      },
+      include: { dischargeTable: true }
+    })
+
+    const result: Schedule[] = []
+
+    for (let i = 0; i < schedules.length; i++) {
+      const schedule = schedules[i]
+
+      const invoices = await this.scheduleInvoicesRepository.findInvoicesOfSchedule(
+        schedule.id
+      )
+
+      const situation = this.scheduleSituationsProvider.find(schedule, invoices)
+
+      const { totalVolume, totalWeight } = this.extractTotals(invoices)
+
+      const dischargeTable = new DischargeTable(
+        schedule.dischargeTable,
+        schedule.dischargeTable.id
+      )
+
+      result.push(
+        new Schedule(
+          {
+            ...schedule,
+            dischargeTable,
+            invoices,
+            situation,
+            totalWeight,
+            totalVolume
+          },
+          schedule.id
+        )
+      )
+    }
+
+    return result
+  }
+
   async findById(id: string): Promise<Schedule> {
     const schedule = await this.prisma.schedules.findOne({
       where: { id },

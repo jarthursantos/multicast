@@ -4,10 +4,10 @@ const options: PDFOptions = {
   format: 'A4',
   displayHeaderFooter: false,
   margin: {
-    top: '40px',
-    right: '50px',
-    left: '50px',
-    bottom: '100px'
+    top: '30px',
+    right: '30px',
+    left: '30px',
+    bottom: '30px'
   },
   printBackground: true
 }
