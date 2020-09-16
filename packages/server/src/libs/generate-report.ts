@@ -9,7 +9,7 @@ async function generateHTML(template: string, layout: string, data: any) {
     ? template
     : `${template}.hbs`
 
-  const viewsPath = resolve(__dirname, '..', '..', 'views', 'reports')
+  const viewsPath = resolve(__dirname, '..', 'views', 'reports')
   const templatePath = join(viewsPath, normalizedTemplate)
 
   const engine = exphbs.create({
@@ -43,7 +43,7 @@ export async function generateReport(
   })
 
   const filename = `${uuid()}.pdf`
-  const outputDit = resolve(__dirname, '..', '..', '..', 'tmp', 'uploads')
+  const outputDit = resolve(__dirname, '..', '..', 'tmp', 'uploads')
 
   const page = await browser.newPage()
 
