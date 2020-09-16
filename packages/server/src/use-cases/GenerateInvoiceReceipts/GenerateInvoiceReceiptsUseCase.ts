@@ -27,7 +27,7 @@ export class GenerateInvoiceReceiptsUseCase {
     }
 
     const reportFile = await this.receiptPerInvoiceProvider.generate({
-      ...schedule,
+      shippingName: schedule.shippingName,
       ...invoice,
       name: invoice.provider.name
     })
