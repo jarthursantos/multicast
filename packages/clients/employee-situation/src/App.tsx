@@ -1,23 +1,14 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter, Switch, Route } from 'react-router-dom'
 
-import { ipcRenderer } from 'electron'
+import Home from './pages/Home'
 
 const App = () => {
-  const handleOpenAbout = useCallback(() => {
-    ipcRenderer.send('openAbout')
-  }, [])
-
   return (
     <HashRouter>
       <Switch>
-        <Route
-          path="/"
-          exact
-          component={() => <h2 onClick={handleOpenAbout}>Home</h2>}
-        />
-        <Route path="/about" exact component={() => <h2>About</h2>} />
+        <Route path="/" exact component={Home} />
       </Switch>
     </HashRouter>
   )
