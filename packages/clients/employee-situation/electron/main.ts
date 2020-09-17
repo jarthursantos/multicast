@@ -10,8 +10,10 @@ const windowManager = new WindowManager({
 
 app.on('ready', () =>
   windowManager.createMainWindow({
-    width: 900,
-    height: 600
+    width: 500,
+    height: 300,
+    resizable: false,
+    maximizable: false
   })
 )
 
