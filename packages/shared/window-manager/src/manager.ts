@@ -1,4 +1,5 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
+import isDev from 'electron-is-dev'
 
 import { WindowSaver } from './types'
 import { resolveURL } from './utils'
@@ -17,6 +18,8 @@ export class WindowManager {
 
     mainWindow.loadURL(resolveURL())
 
+    isDev && mainWindow.removeMenu()
+
     this.registerWindow(mainWindow, 'mainWindow')
   }
 
@@ -32,6 +35,8 @@ export class WindowManager {
     const window = new BrowserWindow(this.generateOptions(options))
 
     window.loadURL(resolveURL(url))
+
+    isDev && window.removeMenu()
 
     this.registerWindow(window, windowName)
   }
