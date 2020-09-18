@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@types/oracledb": "^5.0.0",
+    "dotenv": "^8.2.0",
     "oracledb": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -64,7 +65,7 @@
     "productName": "Situação do Funcionário",
     "directories": {
       "buildResources": "build",
-      "output": "packages"
+      "output": "releases"
     },
     "files": [
       "package.json",
