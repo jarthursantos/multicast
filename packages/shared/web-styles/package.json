@@ -1,0 +1,13 @@
+{
+  "name": "@shared/web-styles",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "styled-components": "^5.2.0"
+  }
+}
