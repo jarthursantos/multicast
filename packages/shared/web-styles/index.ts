@@ -1,16 +1,3 @@
-import { createGlobalStyle } from 'styled-components'
-
-export const GlobalStyles = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: 0;
-  }
-
-  html,
-  body,
-  #root {
-    height: 100%
-  }
-`
+export { GlobalStyle } from './src/GlobalStyle'
+export { ThemeSelect, select as selectTheme, Themes } from './src/themes'
+export { Colors } from './src/themes/colors'

@@ -1,11 +1,9 @@
 import React from 'react'
 
-import { Container } from './styles'
+import { Button, ButtonProps } from '@shared/web-components/Button'
 
-const SubmitButton: React.FC<React.ButtonHTMLAttributes<
-  HTMLButtonElement
->> = props => {
-  return <Container {...props} type="submit"></Container>
+const SubmitButton: React.FC<ButtonProps> = props => {
+  return <Button {...props} type="submit"></Button>
 }
 
 export { SubmitButton }
