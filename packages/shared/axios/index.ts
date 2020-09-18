@@ -6,7 +6,7 @@ config()
 let authToken: string
 
 const api = axios.create({
-  baseURL: process.env.SERVER_URL
+  baseURL: process.env.SERVER_URL || 'http://192.168.1.2:3340'
 })
 
 api.interceptors.request.use(config => {
