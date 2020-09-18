@@ -5,21 +5,25 @@ import {
   FormHandles,
   SubmitButton,
   TextInput,
-  NumberInput,
   useFieldWatch
 } from '@shared/web-components/Form'
 
 import { Container } from './styles'
 import { SearchData } from './types'
 
-const Search: React.FC = () => {
+export interface SearchProps {
+  onSearchResult(search: SearchData): void
+}
+
+const Search: React.FC<SearchProps> = ({ onSearchResult }) => {
   const formRef = useRef<FormHandles>(null)
 
   useFieldWatch(formRef, 'code')
 
-  const handleSubmit = useCallback((data: SearchData) => {
-    console.log(data)
-  }, [])
+  const handleSubmit = useCallback(
+    (data: SearchData) => onSearchResult && onSearchResult(data),
+    [onSearchResult]
+  )
 
   return (
     <Form
@@ -28,9 +32,12 @@ const Search: React.FC = () => {
       initialData={{ code: 100, name: 'Arthur' }}
     >
       <Container>
-        <NumberInput name="code" label="Matrícula" />
-
-        <TextInput name="name" label="Nome do Funcionário" className="name" />
+        <TextInput
+          name="name"
+          className="name"
+          label="Nome do Funcionário"
+          inputProps={{ autoFocus: true }}
+        />
 
         <SubmitButton label="Pesquisar" />
       </Container>
@@ -38,4 +45,5 @@ const Search: React.FC = () => {
   )
 }
 
+export * from './types'
 export default Search

@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter, Switch, Route } from 'react-router-dom'
+import { ToastContainer, Slide } from 'react-toastify'
 
 import { ThemeProvider } from 'styled-components'
 
@@ -17,6 +18,15 @@ const App = () => {
         </Switch>
 
         <GlobalStyle />
+
+        <ToastContainer
+          position="bottom-center"
+          closeButton={false}
+          autoClose={3000}
+          transition={Slide}
+          style={{ marginBottom: -24 }}
+          newestOnTop
+        />
       </HashRouter>
     </ThemeProvider>
   )

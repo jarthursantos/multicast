@@ -5,6 +5,8 @@ export const Container = styled.div`
   flex-direction: row;
   align-items: flex-end;
 
+  padding: 16px;
+
   & > * + * {
     margin-left: 8px;
   }
