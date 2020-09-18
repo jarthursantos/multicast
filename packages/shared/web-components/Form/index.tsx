@@ -1,0 +1,5 @@
+export * from './Inputs'
+export * from './SubmitButton'
+export * from './styles'
+export * from './watch'
+export { FormHandles } from '@unform/core'
