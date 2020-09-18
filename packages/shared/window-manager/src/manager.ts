@@ -18,7 +18,7 @@ export class WindowManager {
 
     mainWindow.loadURL(resolveURL())
 
-    isDev && mainWindow.removeMenu()
+    !isDev && mainWindow.removeMenu()
 
     this.registerWindow(mainWindow, 'mainWindow')
   }
@@ -36,7 +36,7 @@ export class WindowManager {
 
     window.loadURL(resolveURL(url))
 
-    isDev && window.removeMenu()
+    !isDev && window.removeMenu()
 
     this.registerWindow(window, windowName)
   }
