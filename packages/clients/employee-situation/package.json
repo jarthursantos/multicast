@@ -65,7 +65,7 @@
     "productName": "Situação do Funcionário",
     "directories": {
       "buildResources": "build",
-      "output": "releases"
+      "output": "release"
     },
     "files": [
       "package.json",
