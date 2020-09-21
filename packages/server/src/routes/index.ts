@@ -14,6 +14,7 @@ import {
 } from 'use-cases/CreateSession'
 
 import { dischargeTablesRouter } from './discharge-tables'
+import { employeesRouter } from './employees'
 import { invoicesRouter } from './invoices'
 import { permissionsRouter } from './permissions'
 import { providersRouter } from './providers'
@@ -40,6 +41,8 @@ router.use(
   '/files',
   express.static(resolve(__dirname, '..', '..', 'tmp', 'uploads'))
 )
+
+router.use(employeesRouter)
 
 router.use(auth)
 
