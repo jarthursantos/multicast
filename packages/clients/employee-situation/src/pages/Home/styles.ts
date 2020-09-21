@@ -24,3 +24,13 @@ export const Container = styled.div`
 export const ScrollBar = styled(ScrollBarBase)`
   max-height: calc(100vh - 89px);
 `
+
+export const MessageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: ${({ theme }) => theme.colors.text.secondary.dark};
+  font-size: 13px;
+  height: calc(100vh - 89px);
+`

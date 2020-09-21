@@ -1,6 +1,6 @@
 {
   "name": "@clients/employee-situation",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "main": "./dist/main.js",
   "author": "Dantas Distribuidora <ti@dantasdistribuidora.com.br>",

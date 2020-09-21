@@ -6,7 +6,13 @@ import { Page } from '@shared/web-components'
 
 import Search, { SearchData } from '../../components/Search'
 import Employee, { EmployeeData } from './Employee'
-import { Wrapper, ScrollBar, Container, Separator } from './styles'
+import {
+  Wrapper,
+  ScrollBar,
+  Container,
+  Separator,
+  MessageContainer
+} from './styles'
 
 const Home: React.FC = () => {
   const [employees, setEmployees] = useState<EmployeeData[]>()
@@ -31,6 +37,16 @@ const Home: React.FC = () => {
         <Search onSearchResult={handleSearch} />
 
         <Separator />
+
+        {!employees && (
+          <MessageContainer>
+            Pesquise por algum nome para começar
+          </MessageContainer>
+        )}
+
+        {(employees?.length || 0) === 0 && (
+          <MessageContainer>Nenhum funcionário encontrado</MessageContainer>
+        )}
 
         {employees && (
           <ScrollBar>
