@@ -1,5 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 
+import { useFormValidator } from 'hookable-unform'
+
 import {
   Form,
   FormHandles,
@@ -8,6 +10,7 @@ import {
   useFieldWatch
 } from '@shared/web-components/Form'
 
+import { schema } from './schema'
 import { Container } from './styles'
 import { SearchData } from './types'
 
@@ -17,12 +20,21 @@ export interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearchResult }) => {
   const formRef = useRef<FormHandles>(null)
+  const validateForm = useFormValidator(formRef, schema)
 
   useFieldWatch(formRef, 'code')
 
   const handleSubmit = useCallback(
-    (data: SearchData) => onSearchResult && onSearchResult(data),
-    [onSearchResult]
+    async (data: SearchData) => {
+      const { success } = await validateForm()
+
+      if (success && onSearchResult) {
+        formRef.current?.setErrors({})
+
+        onSearchResult(data)
+      }
+    },
+    [onSearchResult, validateForm, formRef]
   )
 
   return (

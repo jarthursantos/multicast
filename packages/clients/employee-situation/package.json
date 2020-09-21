@@ -1,6 +1,6 @@
 {
   "name": "@clients/employee-situation",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "main": "./dist/main.js",
   "author": "Dantas Distribuidora <ti@dantasdistribuidora.com.br>",
@@ -51,6 +51,7 @@
   "dependencies": {
     "@types/oracledb": "^5.0.0",
     "dotenv": "^8.2.0",
+    "hookable-unform": "^1.0.19",
     "oracledb": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -58,7 +59,8 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^6.0.8",
     "remove": "^0.1.5",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "yup": "^0.29.3"
   },
   "build": {
     "appId": "br.com.dantasdistribuidora.employee-situation",
