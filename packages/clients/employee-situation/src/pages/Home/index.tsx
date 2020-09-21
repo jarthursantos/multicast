@@ -13,7 +13,7 @@ const Home: React.FC = () => {
 
   const handleSearch = useCallback(async (search: SearchData) => {
     try {
-      const response = await api.get<EmployeeData[]>('searchEmployees', {
+      const response = await api.get<EmployeeData[]>('employees', {
         params: search
       })
 
