@@ -26,11 +26,7 @@ const Search: React.FC<SearchProps> = ({ onSearchResult }) => {
   )
 
   return (
-    <Form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      initialData={{ code: 100, name: 'Arthur' }}
-    >
+    <Form ref={formRef} onSubmit={handleSubmit}>
       <Container>
         <TextInput
           name="name"
