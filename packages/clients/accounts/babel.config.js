@@ -6,10 +6,17 @@ module.exports = {
   ],
   plugins: [
     [
-      "@babel/plugin-transform-runtime",
+      'babel-plugin-root-import',
+      {
+        rootPathSuffix: 'src',
+        rootPathPrefix: '~/'
+      }
+    ],
+    [
+      '@babel/plugin-transform-runtime',
       {
         regenerator: true
       }
     ]
-  ],
+  ]
 }

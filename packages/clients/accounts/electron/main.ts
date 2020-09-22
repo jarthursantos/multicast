@@ -8,18 +8,29 @@ const windowManager = new WindowManager({
   }
 })
 
-app.on('ready', () =>
-  windowManager.createMainWindow({
+let mainWindowID: string
+let settingsWindowID: string
+
+app.on('ready', () => {
+  mainWindowID = windowManager.createMainWindow({
     width: 900,
     height: 600
   })
-)
+})
 
 app.allowRendererProcessReuse = true
 
-ipcMain.on('openAbout', () => {
-  windowManager.createWindow('about', {
-    width: 500,
-    height: 500
+ipcMain.on('openSettings', () => {
+  settingsWindowID = windowManager.createWindow('settings', {
+    width: 350,
+    height: 165,
+    minimizable: false,
+    resizable: false,
+    maximizable: false,
+    parent: windowManager.getWindow(mainWindowID)
   })
+})
+
+ipcMain.on('closeSettings', () => {
+  windowManager.getWindow(settingsWindowID)?.close()
 })

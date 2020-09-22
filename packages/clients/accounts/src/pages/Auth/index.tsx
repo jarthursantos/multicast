@@ -1,15 +1,18 @@
 import React from 'react'
 
-import { Page } from '@shared/web-components'
 import { AuthPage } from '@shared/web-pages'
 
-import { version } from '../../../package.json'
+import { version } from '~/../package.json'
+import icon from '~/assets/icon.ico'
 
 const Auth: React.FC = () => {
   return (
-    <Page title="Entrar">
-      <AuthPage version={version} />
-    </Page>
+    <AuthPage
+      icon={icon}
+      title="Usuários & Permissões"
+      version={version}
+      onLogInSuccess={console.log}
+    />
   )
 }
 
