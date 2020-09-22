@@ -64,6 +64,7 @@ const NumberInput: React.FC<Props> = ({
         ref={inputRef}
         id={fieldName}
         style={{ width }}
+        hasError={!!error}
         onFocus={clearError}
         step={double ? 0.1 : 1}
         defaultValue={defaultValue}

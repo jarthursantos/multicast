@@ -1,36 +1,4 @@
-import axios, { AxiosError } from 'axios'
-import { config } from 'dotenv'
-
-config()
-
-let authToken: string
-
-const api = axios.create({
-  baseURL: process.env.SERVER_URL || 'http://192.168.1.2:3340'
-})
-
-api.interceptors.request.use(config => {
-  config.params = config.params || {}
-
-  config.headers.Authorization = `Bearer ${authToken}`
-
-  return config
-})
-
-export const setAuthToken = (token: string) => {
-  authToken = token
-}
-
-export function extractErrorMessage(error: AxiosError) {
-  if (error.isAxiosError) {
-    if (error.response) {
-      return error.response.data.message
-    } else {
-      return 'Não foi possível se conectar ao servidor'
-    }
-  } else {
-    return 'Houve um erro no login, verifique seus dados!'
-  }
-}
-
-export { api }
+export * from './src/context'
+export * from './src/hooks'
+export * from './src/types'
+export * from './src/utils'

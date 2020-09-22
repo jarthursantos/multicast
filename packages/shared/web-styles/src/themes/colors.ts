@@ -1,5 +1,8 @@
 export interface Colors {
-  background: string
+  background: {
+    light: string
+    dark: string
+  }
 
   primary: {
     light: string

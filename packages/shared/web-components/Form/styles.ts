@@ -2,6 +2,10 @@ import { Form as Unform } from '@unform/web'
 import styled, { css } from 'styled-components'
 
 export const Form = styled(Unform)`
+  & > * + * {
+    margin-top: 16px;
+  }
+
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -54,7 +58,14 @@ export const Input = styled.input<InputStyleProps>`
   border-width: 2px;
   border-style: solid;
   min-width: 10px;
-  text-transform: uppercase;
+
+  &[type='text'] {
+    text-transform: uppercase;
+  }
+
+  &[type='email'] {
+    text-transform: lowercase;
+  }
 
   border-radius: 4px;
   color: #666;

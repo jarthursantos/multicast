@@ -13,17 +13,17 @@ export class WindowManager {
     this.defaultOptions = defaultOptions || {}
   }
 
-  createMainWindow(options: BrowserWindowConstructorOptions) {
+  createMainWindow(options: BrowserWindowConstructorOptions): string {
     const mainWindow = new BrowserWindow(this.generateOptions(options))
 
     mainWindow.loadURL(resolveURL())
 
     !isDev && mainWindow.removeMenu()
 
-    this.registerWindow(mainWindow, 'mainWindow')
+    return this.registerWindow(mainWindow, 'mainWindow')
   }
 
-  createWindow(url: string, options: BrowserWindowConstructorOptions) {
+  createWindow(url: string, options: BrowserWindowConstructorOptions): string {
     const windowName = this.generateWindowName(url)
 
     if (this.windowExists(windowName)) {
@@ -38,7 +38,15 @@ export class WindowManager {
 
     !isDev && window.removeMenu()
 
-    this.registerWindow(window, windowName)
+    return this.registerWindow(window, windowName)
+  }
+
+  getWindow(windowName: string): BrowserWindow | undefined {
+    if (this.windowExists(windowName)) {
+      return this.windows[windowName]
+    }
+
+    return undefined
   }
 
   private generateOptions(options: BrowserWindowConstructorOptions) {
@@ -59,5 +67,7 @@ export class WindowManager {
     })
 
     this.windows[name] = window
+
+    return name
   }
 }

@@ -32,9 +32,11 @@ const TextInput: React.FC<Props> = ({ name, label, inputProps, ...rest }) => {
 
       <Input
         size={1}
+        type="text"
         {...inputProps}
         ref={inputRef}
         id={fieldName}
+        hasError={!!error}
         onFocus={clearError}
         defaultValue={defaultValue}
       />

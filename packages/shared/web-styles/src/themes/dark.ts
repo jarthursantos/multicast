@@ -4,7 +4,10 @@ const Dark: DefaultTheme = {
   title: 'dark',
 
   colors: {
-    background: '#fff',
+    background: {
+      light: '#fff',
+      dark: '#f0f0f0'
+    },
 
     primary: {
       light: '#db4437',
