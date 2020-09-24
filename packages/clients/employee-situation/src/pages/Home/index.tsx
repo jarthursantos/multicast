@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { api, extractErrorMessage } from '@shared/axios'
+import { extractErrorMessage, useAxios } from '@shared/axios'
 import { Page } from '@shared/web-components'
 
 import Search, { SearchData } from '../../components/Search'
@@ -15,21 +15,25 @@ import {
 } from './styles'
 
 const Home: React.FC = () => {
+  const api = useAxios()
   const [employees, setEmployees] = useState<EmployeeData[]>()
 
-  const handleSearch = useCallback(async (search: SearchData) => {
-    try {
-      const response = await api.get<EmployeeData[]>('employees', {
-        params: search
-      })
+  const handleSearch = useCallback(
+    async (search: SearchData) => {
+      try {
+        const response = await api.get<EmployeeData[]>('employees', {
+          params: search
+        })
 
-      setEmployees(response.data)
-    } catch (error) {
-      const message = extractErrorMessage(error)
+        setEmployees(response.data)
+      } catch (error) {
+        const message = extractErrorMessage(error)
 
-      toast.error(message)
-    }
-  }, [])
+        toast.error(message)
+      }
+    },
+    [api]
+  )
 
   return (
     <Page title="Situação dos funcionários">
