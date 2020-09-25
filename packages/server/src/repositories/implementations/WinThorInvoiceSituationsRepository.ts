@@ -16,7 +16,7 @@ export class WinThorInvoiceSituationsRepository
     let situation = InvoiceSituations.INVOICE_NON_LAUNCHED
 
     const launchedResult = await winthor.raw(
-      `SELECT DTEMISSAO, CHAVENFE, CHAVECTE, NUMBONUS, DTFECHAMENTO, DTFECHAMENTOTOTAL FROM PCNFENT LEFT JOIN PCBONUSC USING (NUMBONUS) WHERE NUMNOTA = ${invoiceNumber} AND CODFORNEC = ${providerCode}`
+      `SELECT DTEMISSAO, CHAVENFE, CHAVECTE, NUMBONUS, DTFECHAMENTO, DTFECHAMENTOTOTAL FROM PCNFENT LEFT JOIN PCBONUSC USING (NUMBONUS) WHERE NUMNOTA = ${invoiceNumber} AND CODFORNEC = ${providerCode} AND PCNFENT.DTCANCEL IS NULL`
     )
 
     if (launchedResult.length === 0) {
