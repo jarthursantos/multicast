@@ -15,7 +15,8 @@ const NumberInput: React.FC<Props> = ({
   name,
   label,
   double,
-  width = 60,
+  inputProps,
+  width,
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -54,12 +55,12 @@ const NumberInput: React.FC<Props> = ({
   }, [fieldName, inputRef, registerField])
 
   return (
-    <InputContainer>
+    <InputContainer {...rest}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
       <Input
         size={1}
-        {...rest}
+        {...inputProps}
         type="number"
         ref={inputRef}
         id={fieldName}

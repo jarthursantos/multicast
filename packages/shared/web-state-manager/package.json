@@ -1,0 +1,19 @@
+{
+  "name": "@shared/web-state-manager",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/lodash": "^4.14.161",
+    "@types/react": "^16.9.49",
+    "electron": "^10.1.1",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "electron-is-dev": "^1.2.0",
+    "lodash": "^4.17.20",
+    "react": "^16.13.1"
+  }
+}

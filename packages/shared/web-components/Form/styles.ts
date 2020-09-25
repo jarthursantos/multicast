@@ -48,6 +48,9 @@ export const InputLabel = styled.label`
   color: #666;
   font-size: 13px;
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export interface InputStyleProps {
@@ -71,6 +74,7 @@ export const Input = styled.input<InputStyleProps>`
   color: #666;
   font-size: 14px;
   padding: 6px 8px;
+  min-height: 40px;
   transition: border 0.2s;
 
   ::placeholder {
