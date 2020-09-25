@@ -13,7 +13,7 @@ export class WinThorInvoiceProductsRepository
   ): Promise<InvoiceProduct[]> {
     const provider = await this.providerRepository.findById(providerCode)
 
-    const transaction = await winthor.raw(`
+    const transaction = await winthor.raw<any[]>(`
       SELECT PCNFENT.NUMTRANSENT
       FROM PCNFENT
       WHERE PCNFENT.NUMTRANSENT = (CASE WHEN PCNFENT.TIPODESCARGA IN ('6', '7', '8', 'T', 'C') THEN (SELECT PCMOV.NUMTRANSENT FROM PCMOV WHERE PCMOV.NUMTRANSENT = PCNFENT.NUMTRANSENT AND PCMOV.DTCANCEL IS NULL AND ROWNUM = 1 AND PCMOV.CODOPER = 'ED') ELSE PCNFENT.NUMTRANSENT END)
@@ -25,11 +25,11 @@ export class WinThorInvoiceProductsRepository
         AND PCNFENT.CODFILIAL <> '99'
     `)
 
-    if (!transaction) {
+    if (transaction.length === 0) {
       return []
     }
 
-    const { NUMTRANSENT } = transaction
+    const { NUMTRANSENT } = transaction[0]
 
     const result: InvoiceProduct[] = []
 
