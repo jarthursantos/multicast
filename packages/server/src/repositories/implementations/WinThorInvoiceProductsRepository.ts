@@ -13,6 +13,24 @@ export class WinThorInvoiceProductsRepository
   ): Promise<InvoiceProduct[]> {
     const provider = await this.providerRepository.findById(providerCode)
 
+    const transaction = await winthor.raw(`
+      SELECT PCNFENT.NUMTRANSENT
+      FROM PCNFENT
+      WHERE PCNFENT.NUMTRANSENT = (CASE WHEN PCNFENT.TIPODESCARGA IN ('6', '7', '8', 'T', 'C') THEN (SELECT PCMOV.NUMTRANSENT FROM PCMOV WHERE PCMOV.NUMTRANSENT = PCNFENT.NUMTRANSENT AND PCMOV.DTCANCEL IS NULL AND ROWNUM = 1 AND PCMOV.CODOPER = 'ED') ELSE PCNFENT.NUMTRANSENT END)
+        AND EXISTS(SELECT 1 FROM PCMOV WHERE PCMOV.NUMTRANSENT = PCNFENT.NUMTRANSENT)
+        AND NVL(PCNFENT.VLTOTAL, 0) > 0
+        AND PCNFENT.TIPODESCARGA IN ('1', '2', '3', '4', 'R', 'S', '5', '9', '6', '7', '8', 'A', 'E', 'B', 'C', 'D', 'F', 'I', 'N', 'T', 'M', 'J', 'H')
+        AND PCNFENT.NUMNOTA = ${invoiceNumber}
+        AND PCNFENT.CODFORNEC = ${providerCode}
+        AND PCNFENT.CODFILIAL <> '99'
+    `)
+
+    if (!transaction) {
+      return []
+    }
+
+    const { NUMTRANSENT } = transaction
+
     const result: InvoiceProduct[] = []
 
     const products = await winthor
@@ -33,8 +51,7 @@ export class WinThorInvoiceProductsRepository
       .leftJoin('PCPRODUT', 'PCMOV.CODPROD', 'PCPRODUT.CODPROD')
       .leftJoin('PCPEDIDO', 'PCMOV.NUMPED', 'PCPEDIDO.NUMPED')
       .where({
-        'PCMOV.NUMNOTA': invoiceNumber,
-        'PCMOV.CODFORNEC': providerCode
+        'PCMOV.NUMTRANSENT': NUMTRANSENT
       })
 
     products.forEach(product =>
