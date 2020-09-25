@@ -10,8 +10,9 @@ const windowManager = new WindowManager({
 
 app.on('ready', () =>
   windowManager.createMainWindow({
-    width: 900,
-    height: 600
+    width: 800,
+    minWidth: 750,
+    minHeight: 400
   })
 )
 
