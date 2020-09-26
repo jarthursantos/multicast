@@ -41,7 +41,7 @@ export interface Credentials {
 }
 
 export interface User {
-  id: number
+  id: string
   name: string
   email: string
   role: 'ADMIN' | 'USER'

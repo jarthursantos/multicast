@@ -5,7 +5,7 @@ import { all, takeLatest, put } from 'redux-saga/effects' // call
 
 // import { Types as PersistTypes, ReHydrateSuccessAction } from '../persist/types'
 // import { keepConnectedRequest } from '../preferences/actions'
-import { logInFailure } from './actions' // logInSuccess
+import { logInFailure, logInSuccess } from './actions' // logInSuccess
 import { LogInRequestAction, Types } from './types' // User
 
 export function* logIn({ payload }: LogInRequestAction) {
@@ -15,7 +15,12 @@ export function* logIn({ payload }: LogInRequestAction) {
     // const { email, password, keepConnected } = payload.credentials
     // const response = yield call(api.post, 'sessions', { email, password })
     // const { user, token }: { user: User; token: string } = response.data
-    // yield put(logInSuccess(user, token))
+    yield put(
+      logInSuccess(
+        { email: '', id: '', name: 'Arthur', role: 'ADMIN' },
+        'token'
+      )
+    )
     // yield put(keepConnectedRequest(keepConnected))
     // history.push('/home/users')
   } catch (err) {

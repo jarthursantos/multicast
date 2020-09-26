@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, webContents, ipcMain } from 'electron'
 import serve from 'electron-serve'
 
 import { createWindow } from './helpers'
@@ -14,7 +14,7 @@ if (isProd) {
 ;(async () => {
   await app.whenReady()
 
-  const mainWindow = createWindow('main', {
+  const mainWindow = createWindow('auth', {
     width: 1000,
     height: 600
   })
@@ -27,6 +27,27 @@ if (isProd) {
     mainWindow.webContents.openDevTools()
   }
 })()
+
+ipcMain.on('openHome', async () => {
+  const homeWindow = createWindow('home', {
+    width: 1000,
+    height: 600
+  })
+
+  if (isProd) {
+    await homeWindow.loadURL('app://./home.html')
+  } else {
+    const port = process.argv[2]
+    await homeWindow.loadURL(`http://localhost:${port}/home`)
+    homeWindow.webContents.openDevTools()
+  }
+})
+
+ipcMain.on('redux-action', (_, action) => {
+  webContents
+    .getAllWebContents()
+    .forEach(content => content.send('redux-action', action))
+})
 
 app.on('window-all-closed', () => {
   app.quit()

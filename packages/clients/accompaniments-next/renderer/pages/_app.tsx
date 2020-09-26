@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { AxiosContext } from '@shared/axios'
 
 import { store, persistor } from '../../store'
+import { ReduxActionFromMain } from '../providers/ReduxActionFromMain'
 
 export default function (props: AppProps) {
   const { Component, pageProps } = props
@@ -35,6 +36,8 @@ export default function (props: AppProps) {
           <AxiosContext.Provider value={{ baseURL: 'http://192.168.1.2:3340' }}>
             <Component {...pageProps} />
           </AxiosContext.Provider>
+
+          <ReduxActionFromMain />
         </PersistGate>
       </Provider>
     </React.Fragment>
