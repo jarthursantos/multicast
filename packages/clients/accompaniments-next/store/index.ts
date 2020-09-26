@@ -7,11 +7,12 @@ import createStore from './createStore'
 import rootReducer from './modules/rootReducer'
 import rootSaga from './modules/rootSaga'
 import persistReducers from './persistReducers'
+import { replyActions } from './replyActions'
 import { RootState } from './state'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const middlewares = [sagaMiddleware]
+const middlewares = [replyActions, sagaMiddleware]
 
 const store = createStore(persistReducers(rootReducer), middlewares)
 const persistor = persistStore(store)
