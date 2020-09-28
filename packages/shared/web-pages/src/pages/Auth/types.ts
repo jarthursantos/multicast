@@ -1,9 +1,14 @@
-export interface Props {
+export interface AuthProps {
   title: string
   version: string
   icon: string
   credentials?: PartialCredentials
-  onLogInSuccess(credentials: Credentials, user: User): void
+  onLogInSuccess(credentials: Credentials, data: LoginSuccessData): void
+}
+
+export interface LoginSuccessData {
+  user: User
+  token: string
 }
 
 export interface Credentials {

@@ -24,9 +24,9 @@ import {
   Separator,
   ProgramDataContainer
 } from './styles'
-import { Props, Credentials, User } from './types'
+import { AuthProps, Credentials, LoginSuccessData } from './types'
 
-const Auth: React.FC<Props> = props => {
+const AuthPage: React.FC<AuthProps> = props => {
   const { icon, title, version, credentials, onLogInSuccess } = props
 
   const api = useAxios()
@@ -44,7 +44,7 @@ const Auth: React.FC<Props> = props => {
           formRef.current?.setErrors({})
           setLoading(true)
 
-          const { data } = await api.post<User>('/sessions', {
+          const { data } = await api.post<LoginSuccessData>('/sessions', {
             ...authCredentials,
             title,
             version
@@ -137,7 +137,5 @@ const Auth: React.FC<Props> = props => {
   )
 }
 
-export type AuthProps = Props
-
-export { Auth as AuthPage }
-export { Credentials, Roles, User } from './types'
+export * from './types'
+export { AuthPage }
