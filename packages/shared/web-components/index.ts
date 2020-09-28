@@ -1,4 +1,5 @@
 export * from './Button'
 export * from './Checkbox'
 export * from './Form'
-export * from './Page'
+export * from './Pager'
+export * from './Ribbon'

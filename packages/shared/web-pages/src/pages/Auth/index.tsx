@@ -5,7 +5,6 @@ import { ipcRenderer } from 'electron'
 import { useFormValidator } from 'hookable-unform'
 
 import { useAxios, extractErrorMessage } from '@shared/axios'
-import { Page } from '@shared/web-components'
 import {
   Form,
   MailInput,
@@ -79,61 +78,55 @@ const AuthPage: React.FC<AuthProps> = props => {
   }, [credentials, formRef])
 
   return (
-    <Page title={`${title} - Entrar`}>
-      <Wrapper>
-        <Background />
+    <Wrapper>
+      <Background />
 
-        <Container>
-          <ProgramDataContainer onClick={handleOpenSettings}>
-            <div className="icon">
-              <img src={icon} alt="icon" draggable={false} />
-            </div>
+      <Container>
+        <ProgramDataContainer onClick={handleOpenSettings}>
+          <div className="icon">
+            <img src={icon} alt="icon" draggable={false} />
+          </div>
 
-            <div className="data">
-              <h1>{title}</h1>
+          <div className="data">
+            <h1>{title}</h1>
 
-              <small>v{version}</small>
-            </div>
-          </ProgramDataContainer>
+            <small>v{version}</small>
+          </div>
+        </ProgramDataContainer>
 
-          <Separator />
+        <Separator />
 
-          <FormContainer>
-            <h1>Bem-vindo de volta</h1>
+        <FormContainer>
+          <h1>Bem-vindo de volta</h1>
 
-            <h2>Entrar</h2>
+          <h2>Entrar</h2>
 
-            <Form
-              ref={formRef}
-              onSubmit={handleSubmit}
-              initialData={credentials}
-            >
-              <MailInput
-                name="email"
-                label="Seu E-Mail"
-                inputProps={{
-                  type: 'email',
-                  autoFocus: !credentials?.email
-                }}
-              />
+          <Form ref={formRef} onSubmit={handleSubmit} initialData={credentials}>
+            <MailInput
+              name="email"
+              label="Seu E-Mail"
+              inputProps={{
+                type: 'email',
+                autoFocus: !credentials?.email
+              }}
+            />
 
-              <TextInput
-                name="password"
-                label="Sua Senha"
-                inputProps={{
-                  type: 'password',
-                  autoFocus: !!credentials?.email
-                }}
-              />
+            <TextInput
+              name="password"
+              label="Sua Senha"
+              inputProps={{
+                type: 'password',
+                autoFocus: !!credentials?.email
+              }}
+            />
 
-              <CheckboxInput name="keepConnected" label="Manter conectado" />
+            <CheckboxInput name="keepConnected" label="Manter conectado" />
 
-              <SubmitButton label="Entrar" loading={loading} flex />
-            </Form>
-          </FormContainer>
-        </Container>
-      </Wrapper>
-    </Page>
+            <SubmitButton label="Entrar" loading={loading} flex />
+          </Form>
+        </FormContainer>
+      </Container>
+    </Wrapper>
   )
 }
 
