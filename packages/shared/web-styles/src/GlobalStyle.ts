@@ -1,9 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
-import 'react-toastify/dist/ReactToastify.css'
-import 'react-perfect-scrollbar/dist/css/styles.css'
-
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
@@ -24,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
     outline: 0;
   }
 
-  html, body, #root {
+  html, body, #root, #__next {
     height: 100%;
     overflow: hidden;
   }
@@ -281,5 +278,3 @@ const GlobalStyle = createGlobalStyle`
     src: local('Roboto Bold'), local('Roboto-Bold'), url('./assets/Roboto-Bold.ttf') format('ttf');
   }
 `
-
-export { GlobalStyle }

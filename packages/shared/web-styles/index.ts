@@ -1,3 +1,3 @@
-export { GlobalStyle } from './src/GlobalStyle'
-// export { ThemeSelect, select as selectTheme, Themes } from './src/themes'
-// export { Colors } from './src/themes/colors'
+export * from './src/GlobalStyle'
+export * from './src/themes'
+export * from './src/themes/colors'

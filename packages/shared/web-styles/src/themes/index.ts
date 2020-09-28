@@ -13,14 +13,10 @@ export interface ThemeSelect {
   light: DefaultTheme
 }
 
-export function select(theme: Themes): DefaultTheme {
+export function selectTheme(theme: Themes): DefaultTheme {
   if (theme === Themes.DARK) {
     return dark
   }
 
   return light
-}
-
-export default {
-  select
 }
