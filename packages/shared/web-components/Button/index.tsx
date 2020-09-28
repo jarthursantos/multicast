@@ -34,5 +34,6 @@ const Button: React.FC<ButtonProps> = ({
   )
 }
 
+export * from './Group'
 export * from './types'
 export { Button }
