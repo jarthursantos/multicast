@@ -1,5 +1,6 @@
 export * from './Button'
 export * from './Checkbox'
+export * from './DataGrid'
 export * from './Form'
 export * from './Pager'
 export * from './Ribbon'
