@@ -11,15 +11,6 @@ export default function auth(state = INITIAL_STATE, action: AuthActionTypes) {
         draft.user = action.payload.user
         draft.token = action.payload.token
         draft.signed = true
-        draft.loading = false
-        break
-      }
-      case Types.LOG_IN_REQUEST: {
-        draft.loading = true
-        break
-      }
-      case Types.LOG_IN_FAILURE: {
-        draft.loading = false
         break
       }
       case Types.LOG_OUT: {

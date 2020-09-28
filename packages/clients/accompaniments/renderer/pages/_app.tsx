@@ -4,17 +4,23 @@ import { Provider } from 'react-redux'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { PersistGate } from 'redux-persist/integration/react'
+import { ThemeProvider } from 'styled-components'
 
 import { AxiosContext } from '@shared/axios'
+import { GlobalStyle, selectTheme, Themes } from '@shared/web-styles'
 
 import { store, persistor } from '../../store'
 import { ReduxActionFromMain } from '../providers/ReduxActionFromMain'
+
+import '../public/styles/scrollbar.css'
+import '../public/styles/toastify.css'
 
 export default function (props: AppProps) {
   const { Component, pageProps } = props
 
   React.useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side')
+
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles)
     }
@@ -28,14 +34,21 @@ export default function (props: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <title>FollowUP</title>
+
+        <title>FollowUP Compras</title>
       </Head>
 
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <AxiosContext.Provider value={{ baseURL: 'http://192.168.1.2:3340' }}>
-            <Component {...pageProps} />
-          </AxiosContext.Provider>
+          <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
+            <AxiosContext.Provider
+              value={{ baseURL: 'http://192.168.1.2:3340' }}
+            >
+              <Component {...pageProps} />
+
+              <GlobalStyle />
+            </AxiosContext.Provider>
+          </ThemeProvider>
 
           <ReduxActionFromMain />
         </PersistGate>

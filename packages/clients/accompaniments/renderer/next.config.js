@@ -1,6 +1,11 @@
 const withPlugins = require('next-compose-plugins');
 const withTM = require('next-transpile-modules')(
-  ['@shared/axios']
+  [
+    '@shared/axios',
+    '@shared/web-components',
+    '@shared/web-pages',
+    '@shared/web-styles'
+  ]
 );
 
 module.exports = withPlugins([withTM], {
@@ -19,5 +24,5 @@ module.exports = withPlugins([withTM], {
         }
       ]
     }
-  }),
+  })
 })
