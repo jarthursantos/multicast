@@ -1,6 +1,7 @@
 appId: com.example.nextron
 productName: My Nextron App
 copyright: Copyright © 2018 Yoshihide Shiono
+electronVersion: 10.1.1
 directories:
   output: dist
   buildResources: resources
