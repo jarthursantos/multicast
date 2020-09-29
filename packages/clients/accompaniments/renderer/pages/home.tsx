@@ -7,12 +7,12 @@ import { ButtonGroup } from '@shared/web-components/Button'
 import { Pager } from '@shared/web-components/Pager'
 import { Ribbon, TabBar, TabOptions } from '@shared/web-components/Ribbon'
 
-import { MdPendingAction } from '../components/Icons/PendingAction'
-import { MdReceiptLong } from '../components/Icons/ReceiptLong'
-import Dashboard from './subpages/Dashboard'
-import InProgress from './subpages/InProgress'
-import News from './subpages/News'
-import Receiving from './subpages/Receiving'
+import { MdPendingAction } from '~/components/Icons/PendingAction'
+import { MdReceiptLong } from '~/components/Icons/ReceiptLong'
+import Dashboard from '~/pages/Dashboard'
+import InProgress from '~/pages/InProgress'
+import News from '~/pages/News'
+import Receiving from '~/pages/Receiving'
 
 const Home = () => {
   const [currentPage, setPage] = useState<string>()

@@ -6,9 +6,10 @@ import Head from 'next/head'
 
 import { AuthPage, Credentials, LoginSuccessData } from '@shared/web-pages'
 
+import { logInSuccess } from '~/store/modules/auth/actions'
+import { keepConnectedRequest } from '~/store/modules/preferences/actions'
+
 import { version } from '../../package.json'
-import { logInSuccess } from '../../store/modules/auth/actions'
-import { keepConnectedRequest } from '../../store/modules/preferences/actions'
 
 const Next = () => {
   const dispatch = useDispatch()

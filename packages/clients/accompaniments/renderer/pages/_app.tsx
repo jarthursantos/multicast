@@ -9,8 +9,8 @@ import { ThemeProvider } from 'styled-components'
 import { AxiosContext } from '@shared/axios'
 import { GlobalStyle, selectTheme, Themes } from '@shared/web-styles'
 
-import { store, persistor } from '../../store'
-import { ReduxActionFromMain } from '../providers/ReduxActionFromMain'
+import { ReduxActionFromMain } from '~/providers/ReduxActionFromMain'
+import { store, persistor } from '~/store'
 
 import '../public/styles/resizable.css'
 import '../public/styles/scrollbar.css'

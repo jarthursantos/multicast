@@ -11,6 +11,7 @@ export const Wrapper = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: transparent;
+  /* border-color: ${({ theme }) => theme.colors.border.secondary}; */
   color: ${({ theme }) => theme.colors.text.secondary.dark};
   fill: ${({ theme }) => theme.colors.text.secondary.dark};
   padding: 8px 12px 8px 8px;

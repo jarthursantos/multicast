@@ -8,8 +8,9 @@ import {
 
 import { DataGrid, Pager } from '@shared/web-components'
 
-import ProductsContainer from '../../../components/ProductsContainer'
-import SituationGroup from '../../../components/SituationGroup'
+import ProductsContainer from '~/components/ProductsContainer'
+import SituationGroup from '~/components/SituationGroup'
+
 import {
   allAccompanimentsColumns,
   nonRevisedColumns,
