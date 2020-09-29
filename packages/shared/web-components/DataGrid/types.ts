@@ -1,5 +1,7 @@
-import { ColumnProps } from './Body/Column/types'
+import { CellProps } from './Body/Row/Cell/types'
 import { RowStyle } from './Body/Row/types'
+import { FooterCellProps } from './Footer/Cell/types'
+import { HeaderCellProps } from './Header/Cell/types'
 
 export interface ContextHandles {
   resolveRowStyle(item: any): React.CSSProperties | undefined
@@ -8,16 +10,25 @@ export interface ContextHandles {
   keyBinding: string | number | symbol
 }
 
-export interface DataGridProps<Data> {
+export interface GridProps {
+  style?: React.HTMLAttributes<HTMLDivElement>
+}
+
+export interface DataGridProps<Data> extends GridProps {
   data: Data[]
   columns: ColumnProps[]
   keyBinding: keyof Data
   rowStyles?: RowStyle<Data>[]
-  style?: React.HTMLAttributes<HTMLDivElement>
 
   onRowClick?(item: Data): void
   onRowDoubleClick?(item: Data): void
   onSelectionChange?(item: Data): void
+}
+
+export interface ColumnProps {
+  header: HeaderCellProps
+  cell: CellProps
+  footer?: FooterCellProps
 }
 
 export interface SortOrder {

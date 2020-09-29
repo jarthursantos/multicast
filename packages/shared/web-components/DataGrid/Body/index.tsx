@@ -12,6 +12,7 @@ const Body: React.FC = () => {
     <Container>
       {data.map(item => {
         const id = `${item[keyBinding]}`
+
         return <Row key={id} id={id} data={item} />
       })}
     </Container>

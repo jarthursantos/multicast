@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 import dot from 'dot-object'
 
@@ -26,4 +26,4 @@ const Row: React.FC<RowProps> = ({ id, data }) => {
   )
 }
 
-export default Row
+export default memo(Row)
