@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 
 export interface GroupButtonProps {
   name: string
-  icon: string | ReactElement
+  icon: ReactElement
   label: string
   width?: number
 }
