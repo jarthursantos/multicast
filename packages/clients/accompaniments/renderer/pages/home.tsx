@@ -7,8 +7,8 @@ import { ButtonGroup } from '@shared/web-components/Button'
 import { Pager } from '@shared/web-components/Pager'
 import { Ribbon, TabBar, TabOptions } from '@shared/web-components/Ribbon'
 
-import { MdPendingAction } from '../components/icons/PendingAction'
-import { MdReceiptLong } from '../components/icons/ReceiptLong'
+import { MdPendingAction } from '../components/Icons/PendingAction'
+import { MdReceiptLong } from '../components/Icons/ReceiptLong'
 import Dashboard from './subpages/Dashboard'
 import InProgress from './subpages/InProgress'
 import News from './subpages/News'
@@ -30,7 +30,7 @@ const Home = () => {
 
         <Ribbon.Options>
           <TabOptions.Content name="accompaniments">
-            <ButtonGroup initialButton="resume" onSelectionChange={setPage}>
+            <ButtonGroup initialButton="inProgress" onSelectionChange={setPage}>
               <ButtonGroup.Button
                 name="resume"
                 label="Resumo Geral"

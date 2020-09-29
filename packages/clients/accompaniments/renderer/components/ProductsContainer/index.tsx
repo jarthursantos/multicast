@@ -1,6 +1,14 @@
 import React from 'react'
 
+import { DataGrid } from '@shared/web-components'
+
+import { columns } from './columns'
 import { Container } from './styles'
+
+interface Product {
+  code: string
+  provider: string
+}
 
 const ProductsContainer: React.FC = () => {
   return (
@@ -10,7 +18,13 @@ const ProductsContainer: React.FC = () => {
       minConstraints={[250, Infinity]}
       maxConstraints={[500, Infinity]}
       handleSize={[10, 100]}
-    />
+    >
+      <DataGrid<Product>
+        data={[{ code: '1', provider: 'Teste' }]}
+        keyBinding="code"
+        columns={columns}
+      />
+    </Container>
   )
 }
 
