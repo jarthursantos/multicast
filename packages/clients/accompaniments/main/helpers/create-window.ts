@@ -72,7 +72,7 @@ export default (
 
   const browserOptions: BrowserWindowConstructorOptions = {
     ...options,
-    ...state,
+    // ...state,
     webPreferences: {
       nodeIntegration: true,
       ...options.webPreferences

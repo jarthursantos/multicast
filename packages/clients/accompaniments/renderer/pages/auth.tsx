@@ -36,6 +36,11 @@ const Next = () => {
         title="FollowUP Compras"
         version={version}
         onLogInSuccess={handleLoginSuccess}
+        credentials={{
+          email: 'admin@dantasdistribuidora.com.br',
+          password: '571043',
+          keepConnected: true
+        }}
       />
     </React.Fragment>
   )

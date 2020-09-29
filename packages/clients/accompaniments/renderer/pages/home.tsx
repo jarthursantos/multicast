@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { MdNewReleases, MdDashboard } from 'react-icons/md'
 
+import { ipcRenderer } from 'electron'
 import Head from 'next/head'
 
 import { ButtonGroup } from '@shared/web-components/Button'
@@ -17,6 +18,10 @@ import Receiving from '~/pages/Receiving'
 const Home = () => {
   const [currentPage, setPage] = useState<string>()
 
+  const handle = useCallback(() => {
+    ipcRenderer.send('openAccompaniment', 'test')
+  }, [])
+
   return (
     <React.Fragment>
       <Head>
@@ -30,7 +35,7 @@ const Home = () => {
 
         <Ribbon.Options>
           <TabOptions.Content name="accompaniments">
-            <ButtonGroup initialButton="inProgress" onSelectionChange={setPage}>
+            <ButtonGroup initialButton="resume" onSelectionChange={setPage}>
               <ButtonGroup.Button
                 name="resume"
                 label="Resumo Geral"
@@ -56,6 +61,8 @@ const Home = () => {
                 width={105}
               />
             </ButtonGroup>
+
+            <button onClick={handle}>Teste</button>
           </TabOptions.Content>
         </Ribbon.Options>
 

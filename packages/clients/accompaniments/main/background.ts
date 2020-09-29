@@ -24,22 +24,24 @@ if (isProd) {
   } else {
     const port = process.argv[2]
     await mainWindow.loadURL(`http://localhost:${port}/auth`)
-    mainWindow.webContents.openDevTools()
   }
 })()
 
-ipcMain.on('openHome', async () => {
-  const homeWindow = createWindow('home', {
-    width: 1000,
-    height: 600
+ipcMain.on('openAccompaniment', async (_, id: string) => {
+  const accompanimentWindow = createWindow('accompaniments', {
+    width: 1050,
+    height: 575,
+    resizable: false
   })
 
+  accompanimentWindow.removeMenu()
+  accompanimentWindow.webContents.send('accompanimentId', id)
+
   if (isProd) {
-    await homeWindow.loadURL('app://./home.html')
+    await accompanimentWindow.loadURL('app://./accompaniments.html')
   } else {
     const port = process.argv[2]
-    await homeWindow.loadURL(`http://localhost:${port}/home`)
-    homeWindow.webContents.openDevTools()
+    await accompanimentWindow.loadURL(`http://localhost:${port}/accompaniments`)
   }
 })
 
