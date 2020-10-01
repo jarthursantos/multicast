@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { ActionIconButton } from '../../ActionIconButton'
 import { useActiveButton } from '../context'
-import { Container, IconWrapper, Label } from './styles'
 import { GroupButtonProps } from './types'
 
 const GroupButton: React.FC<GroupButtonProps> = ({
@@ -13,14 +13,11 @@ const GroupButton: React.FC<GroupButtonProps> = ({
   const [isActive, selectButton] = useActiveButton(name)
 
   return (
-    <Container
-      width={width}
-      onClick={selectButton}
+    <ActionIconButton
       className={isActive && 'active'}
-    >
-      <IconWrapper>{icon}</IconWrapper>
-      <Label>{label}</Label>
-    </Container>
+      onClick={selectButton}
+      {...{ icon, label, width }}
+    />
   )
 }
 

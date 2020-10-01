@@ -1,13 +1,14 @@
 import { darken } from 'polished'
 import styled from 'styled-components'
 
-export const Container = styled.div<{ width: number }>`
+export const Container = styled.button<{ width: number }>`
   cursor: pointer;
 
   display: flex;
   align-items: center;
   flex-direction: column;
 
+  background: none;
   border-radius: 4px;
   border-width: 2px;
   border-style: solid;
@@ -16,7 +17,7 @@ export const Container = styled.div<{ width: number }>`
   fill: ${({ theme }) => theme.colors.text.secondary.dark};
   width: ${({ width }) => width}px;
   padding: 8px 16px;
-  height: 100%;
+  height: 96px;
 
   transition: all 0.2s ease-in-out;
 

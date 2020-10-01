@@ -27,7 +27,11 @@ export class UpdateInvoicesUseCase {
     )
 
     invoicesWithSameData.forEach(invoiceWithSameData => {
-      if (!invoiceWithSameData.canceledAt && id !== invoiceWithSameData.id) {
+      if (
+        !invoiceWithSameData.canceledAt &&
+        invoiceWithSameData.divergence !== 'RESCHEDULED' &&
+        id !== invoiceWithSameData.id
+      ) {
         throw Error('Nota Fiscal já existe')
       }
     })

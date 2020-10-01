@@ -1,8 +1,5 @@
-import { ReactElement } from 'react'
+import { ActionIconButtonProps } from '../../ActionIconButton/types'
 
-export interface GroupButtonProps {
+export interface GroupButtonProps extends ActionIconButtonProps {
   name: string
-  icon: ReactElement
-  label: string
-  width?: number
 }

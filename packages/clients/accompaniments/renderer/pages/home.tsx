@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react'
-import { MdNewReleases, MdDashboard } from 'react-icons/md'
+import { MdNewReleases, MdDashboard, MdRefresh } from 'react-icons/md'
 
 import { ipcRenderer } from 'electron'
 import Head from 'next/head'
 
-import { ButtonGroup } from '@shared/web-components/Button'
+import { ActionIconButton, ButtonGroup } from '@shared/web-components/Button'
 import { Pager } from '@shared/web-components/Pager'
 import { Ribbon, TabBar, TabOptions } from '@shared/web-components/Ribbon'
 
+import { MdFilter } from '~/components/Icons/Filter'
 import { MdPendingAction } from '~/components/Icons/PendingAction'
 import { MdReceiptLong } from '~/components/Icons/ReceiptLong'
 import Dashboard from '~/pages/Dashboard'
@@ -42,18 +43,21 @@ const Home = () => {
                 icon={<MdDashboard />}
                 width={85}
               />
+
               <ButtonGroup.Button
                 name="new"
                 label="Novos Pedidos"
                 icon={<MdNewReleases />}
                 width={85}
               />
+
               <ButtonGroup.Button
                 name="inProgress"
                 label="Em Andamento"
                 icon={<MdPendingAction />}
                 width={95}
               />
+
               <ButtonGroup.Button
                 name="inReceivement"
                 label="Em Recebimento"
@@ -62,7 +66,21 @@ const Home = () => {
               />
             </ButtonGroup>
 
-            <button onClick={handle}>Teste</button>
+            <TabOptions.Content.Separator />
+
+            <ActionIconButton
+              icon={<MdFilter />}
+              onClick={handle}
+              width={80}
+              label="Filtrar Pedidos"
+            />
+
+            <ActionIconButton
+              icon={<MdRefresh />}
+              onClick={handle}
+              width={80}
+              label="Atualizar Pedidos"
+            />
           </TabOptions.Content>
         </Ribbon.Options>
 
