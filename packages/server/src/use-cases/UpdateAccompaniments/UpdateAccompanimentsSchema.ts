@@ -3,14 +3,17 @@ import * as Yup from 'yup'
 
 // TODO
 export const updateAccompanimentsSchema = Yup.object().shape({
-  releasedAt: Yup.date().when(
-    'expectedBillingAt',
-    (expectedBillingAt: Date, releasedAt: Yup.DateSchema<Date>) => {
-      return expectedBillingAt ? releasedAt.required() : releasedAt
-    }
-  ),
+  releasedAt: Yup.date()
+    .nullable()
+    .when(
+      'expectedBillingAt',
+      (expectedBillingAt: Date, releasedAt: Yup.DateSchema<Date>) => {
+        return expectedBillingAt ? releasedAt.required() : releasedAt
+      }
+    ),
 
   expectedBillingAt: Yup.date()
+    .nullable()
     .min(Yup.ref('releasedAt'), buildMinMessage)
     .when(
       'billingAt',
@@ -20,6 +23,7 @@ export const updateAccompanimentsSchema = Yup.object().shape({
     ),
 
   billingAt: Yup.date()
+    .nullable()
     .min(Yup.ref('expectedBillingAt'), buildMinMessage)
     .when(
       'schedulingAt',
@@ -28,9 +32,11 @@ export const updateAccompanimentsSchema = Yup.object().shape({
       }
     ),
 
-  freeOnBoardAt: Yup.date().min(Yup.ref('billingAt'), buildMinMessage),
+  freeOnBoardAt: Yup.date()
+    .nullable()
+    .min(Yup.ref('billingAt'), buildMinMessage),
 
-  schedulingAt: Yup.date().min(Yup.ref('billingAt'), buildMinMessage)
+  schedulingAt: Yup.date().nullable().min(Yup.ref('billingAt'), buildMinMessage)
 
   // valueDelivered: Yup.number().when(
   //   'schedulingAt',
