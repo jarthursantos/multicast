@@ -1,19 +1,19 @@
 import { useEffect } from 'react'
 
-import { remote } from 'electron'
+import { closeWindow } from '~/util/close-window'
 
 export function useCloseWindow() {
   useEffect(() => {
-    function closeWindow(event: KeyboardEvent) {
+    function handleCloseWindow(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        remote.getCurrentWindow().close()
+        closeWindow()
       }
     }
 
-    window.addEventListener('keyup', closeWindow)
+    window.addEventListener('keyup', handleCloseWindow)
 
     return () => {
-      window.removeEventListener('keyup', closeWindow)
+      window.removeEventListener('keyup', handleCloseWindow)
     }
   })
 }

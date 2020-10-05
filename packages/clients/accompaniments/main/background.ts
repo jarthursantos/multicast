@@ -35,8 +35,8 @@ if (isProd) {
 
 ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
   const accompanimentWindow = createWindow('accompaniments', {
-    width: 1055,
-    height: 565,
+    width: 1160,
+    height: 620,
     resizable: false,
     webPreferences: {
       enableRemoteModule: true

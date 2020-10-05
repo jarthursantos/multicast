@@ -46,11 +46,11 @@ export function loadAccompanimentsSuccessAction(
 
 export function updateAccompanimentRequestAction(
   id: string,
-  accompaniment: Accompaniment
+  data: Accompaniment
 ): UpdateAccompanimentRequestAction {
   return {
     type: Types.UPDATE_ACCOMPANIMENT_REQUEST,
-    payload: { id, accompaniment }
+    payload: { id, data }
   }
 }
 

@@ -340,7 +340,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'expectedBilling'
+      path: 'expectedBillingAt'
     }
   },
   {

@@ -86,13 +86,6 @@ export const ChartLegend = styled.div`
   }
 `
 
-export const ColorIndicator = styled.div<{ color: string }>`
-  background: ${({ color }) => color};
-  border-radius: 8px;
-  height: 16px;
-  width: 16px;
-`
-
 export const TimelineLegendContainer = styled.div`
   display: flex;
   flex-direction: column;

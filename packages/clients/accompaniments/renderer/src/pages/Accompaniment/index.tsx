@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useWatchAction } from '@shared/action-watcher'
-import { useAxios, useSetToken } from '@shared/axios'
 import { Button } from '@shared/web-components'
 import {
   Form,
@@ -13,6 +12,7 @@ import {
 import AccompanimentData from '~/components/Forms/AccompanimentData'
 import Observations from '~/components/Forms/Observations'
 import RequestData from '~/components/Forms/RequestData'
+import { useAccompaniment } from '~/hooks/use-accompaniments'
 import { useWindowParams } from '~/hooks/use-window-params'
 import { useTypedSelector } from '~/store'
 import {
@@ -21,21 +21,18 @@ import {
   markAccompanimentAsSendRequestAction,
   updateAccompanimentRequestAction
 } from '~/store/modules/accompaniments/actions'
-import {
-  Accompaniment as AccompanimentObject,
-  Types
-} from '~/store/modules/accompaniments/types'
+import { Types, Accompaniment } from '~/store/modules/accompaniments/types'
+import { closeWindow } from '~/util/close-window'
 
 import { Container } from './styles'
 import { SuccessActionResult } from './types'
 
-const Accompaniment: React.FC = () => {
+const AccompanimentPage: React.FC = () => {
   const dispatch = useDispatch()
-  const setToken = useSetToken()
   const params = useWindowParams<{ id: string; token: string }>()
 
-  const [api, haveToken] = useAxios()
-  const [accompaniment, setAccompaniment] = useState<AccompanimentObject>()
+  const [accompaniment, setAccompaniment] = useState<Accompaniment>()
+  const remoteAccompaniment = useAccompaniment(params?.id, params?.token)
 
   const { updatingAccompaniment } = useTypedSelector(
     state => state.accompaniments
@@ -62,41 +59,32 @@ const Accompaniment: React.FC = () => {
   const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
 
   const handleSubmit = useCallback(
-    (data: any) =>
-      dispatch(updateAccompanimentRequestAction(accompaniment.id, data)),
+    (data: any) => {
+      console.log({ data })
+
+      dispatch(updateAccompanimentRequestAction(accompaniment.id, data))
+    },
     [dispatch, accompaniment]
   )
 
   useEffect(() => {
-    async function findAccompaniment() {
-      try {
-        const { data } = await api.get<AccompanimentObject>(
-          `accompaniments/${params.id}`
-        )
-
-        setAccompaniment(data)
-      } catch (error) {
-        console.log(error)
-      }
+    if (remoteAccompaniment) {
+      setAccompaniment(remoteAccompaniment)
     }
-
-    if (haveToken) {
-      findAccompaniment()
-    } else if (params) {
-      setToken(params.token)
-    }
-  }, [setToken, params, api, haveToken])
+  }, [remoteAccompaniment])
 
   useWatchAction<SuccessActionResult>(
+    ({ payload }) => {
+      setAccompaniment(payload.accompaniment)
+    },
     [
       Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS,
       Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS,
       Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
-    ],
-    ({ payload }) => {
-      setAccompaniment(payload.accompaniment)
-    }
+    ]
   )
+
+  useWatchAction(closeWindow, Types.UPDATE_ACCOMPANIMENT_SUCCESS)
 
   return (
     <Form onSubmit={handleSubmit} initialData={accompaniment}>
@@ -139,4 +127,4 @@ const Accompaniment: React.FC = () => {
   )
 }
 
-export default Accompaniment
+export default AccompanimentPage

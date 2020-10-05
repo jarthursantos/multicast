@@ -44,7 +44,7 @@ export interface UpdateAccompanimentRequestAction extends BaseAction {
   type: typeof Types.UPDATE_ACCOMPANIMENT_REQUEST
   payload: {
     id: string
-    accompaniment: Accompaniment
+    data: Accompaniment
   }
 }
 

@@ -12,14 +12,17 @@ import {
   markAccompanimentAsReviewedFailureAction,
   markAccompanimentAsReviewedSuccessAction,
   markAccompanimentAsSendFailureAction,
-  markAccompanimentAsSendSuccessAction
+  markAccompanimentAsSendSuccessAction,
+  updateAccompanimentFailureAction,
+  updateAccompanimentSuccessAction
 } from './actions'
 import {
   Accompaniment,
   MarkAccompanimentAsReleadedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendRequestAction,
-  Types
+  Types,
+  UpdateAccompanimentRequestAction
 } from './types'
 
 export function* loadAccompaniments() {
@@ -28,11 +31,37 @@ export function* loadAccompaniments() {
 
     const accompaniments: Accompaniment[] = response.data
 
+    toast.success('Acompanhamentos atualizados')
+
     yield put(loadAccompanimentsSuccessAction(accompaniments))
   } catch (err) {
     const message = extractErrorMessage(err)
 
+    toast.error(message)
+
     yield put(loadAccompanimentsFailureAction(message))
+  }
+}
+
+export function* updateAccompaniment({
+  payload
+}: UpdateAccompanimentRequestAction) {
+  try {
+    const { id, data } = payload
+
+    const response = yield call(api.put, `/accompaniments/${id}`, data)
+
+    const accompaniment: Accompaniment = response.data
+
+    toast.success('Acompanhamento atualizado')
+
+    yield put(updateAccompanimentSuccessAction(accompaniment))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    toast.error(message)
+
+    yield put(updateAccompanimentFailureAction(message))
   }
 }
 
@@ -110,6 +139,8 @@ export function* markAccompanimentAsReleased({
 
 export default all([
   takeLatest(Types.LOAD_ACCOMPANIMENTS_REQUEST, loadAccompaniments),
+
+  takeLatest(Types.UPDATE_ACCOMPANIMENT_REQUEST, updateAccompaniment),
 
   takeLatest(
     Types.MARK_ACCOMPANIMENT_SENDED_REQUEST,

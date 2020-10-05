@@ -4,6 +4,8 @@ import 'chartjs-plugin-labels'
 import React from 'react'
 import { Pie } from 'react-chartjs-2'
 
+import ColorIndicator from '~/components/ColorIndicator'
+
 import FilterSituations from './FilterSituations'
 import {
   Wrapper,
@@ -14,7 +16,6 @@ import {
   ChartWrapper,
   ChartsLegendContainer,
   ChartLegend,
-  ColorIndicator,
   TimelineLegendContainer,
   TimelineLabelContainer,
   TimelineLabel,
@@ -58,11 +59,11 @@ const data = {
   ]
 }
 
-function buildOptions(title: string) {
+function buildOptions(title?: string) {
   return {
     title: {
-      display: true,
-      text: title,
+      display: !!title,
+      text: title || '',
       fontFamily: 'Roboto',
       fontSize: 14,
       padding: 16,

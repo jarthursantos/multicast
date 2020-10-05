@@ -3,6 +3,7 @@ import React from 'react'
 import { NumberInput, DateInput } from '@shared/web-components/Form'
 
 import { Container, Inline } from '../styles'
+import { InvoiceContainer } from './styles'
 import { AccompanimentDataProps } from './types'
 
 const AccompanimentData: React.VFC<AccompanimentDataProps> = ({ disabled }) => {
@@ -13,7 +14,7 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({ disabled }) => {
       <DateInput
         name="releasedAt"
         label="Liberação para Faturamento"
-        inputProps={{ disabled }}
+        inputProps={{ disabled, readOnly: true }}
       />
 
       <DateInput
@@ -22,24 +23,28 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({ disabled }) => {
         inputProps={{ disabled }}
       />
 
-      <DateInput
-        name="billedAt"
-        label="Arquivo XML / Faturamento"
-        inputProps={{ disabled }}
-      />
+      <InvoiceContainer disabled={disabled}>
+        <h3>Nota Fiscal</h3>
 
-      <Inline>
-        <NumberInput
-          name="invoice.number"
-          label="Nº Nota Fiscal"
-          inputProps={{ disabled }}
-        />
         <DateInput
-          name="invoice.value"
-          label="Valor Nota Fiscal"
+          name="invoice.emittedAt"
+          label="Emissão"
           inputProps={{ disabled }}
         />
-      </Inline>
+
+        <Inline>
+          <NumberInput
+            name="invoice.number"
+            label="Número"
+            inputProps={{ disabled }}
+          />
+          <NumberInput
+            name="invoice.value"
+            label="Valor"
+            inputProps={{ disabled }}
+          />
+        </Inline>
+      </InvoiceContainer>
 
       <DateInput
         name="freeOnBoardAt"
