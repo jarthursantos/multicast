@@ -3,13 +3,17 @@ import { Accompaniment } from 'entities/Accompaniment'
 import { PurchaseOrder } from 'entities/PurchaseOrder'
 import { omit } from 'lodash'
 import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
+import { IAnnotationsRepository } from 'repositories/IAnnotationsRepository'
 import { IPurchaseOrderRepository } from 'repositories/IPurchaseOrderRepository'
 
-export class PrimsaAccompanimentsRepository
+export class PrismaAccompanimentsRepository
   implements IAccompanimentsRepository {
   private prisma = new PrismaClient()
 
-  constructor(private purchaseOrderRepository: IPurchaseOrderRepository) {}
+  constructor(
+    private purchaseOrderRepository: IPurchaseOrderRepository,
+    private annotationsRepository: IAnnotationsRepository
+  ) {}
 
   async registerPurchaseOrders(purchases: PurchaseOrder[]): Promise<void> {
     for (let i = 0; i < purchases.length; i++) {
@@ -17,12 +21,19 @@ export class PrimsaAccompanimentsRepository
 
       const accompaniment = new Accompaniment({
         ...purchaseOrder,
-        purchaseOrder
+        purchaseOrder,
+        annotations: []
       })
 
       await this.prisma.accompaniments.create({
         data: {
-          ...omit(accompaniment, 'invoiceId', 'invoice', 'purchaseOrder'),
+          ...omit(
+            accompaniment,
+            'invoiceId',
+            'invoice',
+            'purchaseOrder',
+            'annotations'
+          ),
           number: purchaseOrder.number
         }
       })
@@ -39,8 +50,12 @@ export class PrimsaAccompanimentsRepository
         accompaniment.number
       )
 
+      const annotations = await this.annotationsRepository.findFromAccompaniment(
+        id
+      )
+
       return new Accompaniment(
-        { ...accompaniment, purchaseOrder },
+        { ...accompaniment, purchaseOrder, annotations },
         accompaniment.id
       )
     }
@@ -65,8 +80,15 @@ export class PrimsaAccompanimentsRepository
 
       // TODO: populate with invoice
 
+      const annotations = await this.annotationsRepository.findFromAccompaniment(
+        accompaniment.id
+      )
+
       result.push(
-        new Accompaniment({ ...accompaniment, purchaseOrder }, accompaniment.id)
+        new Accompaniment(
+          { ...accompaniment, purchaseOrder, annotations },
+          accompaniment.id
+        )
       )
     }
 
@@ -77,7 +99,13 @@ export class PrimsaAccompanimentsRepository
     const updatedData = await this.prisma.accompaniments.update({
       where: { id: accompaniment.id },
       data: {
-        ...omit(accompaniment, 'invoiceId', 'invoice', 'purchaseOrder')
+        ...omit(
+          accompaniment,
+          'invoiceId',
+          'invoice',
+          'purchaseOrder',
+          'annotations'
+        )
       }
     })
 
@@ -85,8 +113,12 @@ export class PrimsaAccompanimentsRepository
       updatedData.number
     )
 
+    const annotations = await this.annotationsRepository.findFromAccompaniment(
+      accompaniment.id
+    )
+
     return new Accompaniment(
-      { ...updatedData, purchaseOrder },
+      { ...updatedData, purchaseOrder, annotations },
       accompaniment.id
     )
   }

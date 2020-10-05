@@ -1,6 +1,7 @@
 import { pick } from 'lodash'
 import { v4 as uuid } from 'uuid'
 
+import { Annotation } from './Annotation'
 import { Invoice } from './Invoice'
 import { PurchaseOrder } from './PurchaseOrder'
 
@@ -19,6 +20,8 @@ export class Accompaniment {
 
   public valueDelivered?: number
   public invoice?: Invoice
+
+  public annotations: Annotation[]
 
   public createdAt?: Date
   public updatedAt?: Date
@@ -39,7 +42,8 @@ export class Accompaniment {
         'valueDelivered',
         'invoiceId',
         'createdAt',
-        'updatedAt'
+        'updatedAt',
+        'annotations'
       )
     )
 

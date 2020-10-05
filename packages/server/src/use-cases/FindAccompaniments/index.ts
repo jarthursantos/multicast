@@ -1,5 +1,7 @@
 import { PrismaLastPurchaseOrderProvider } from 'providers/implementations/PrismaLastPurchaseOrderProvider'
-import { PrimsaAccompanimentsRepository } from 'repositories/implementations/PrismaAccompanimentsRepository'
+import { PrismaAccompanimentsRepository } from 'repositories/implementations/PrismaAccompanimentsRepository'
+import { PrismaAnnotationsRepository } from 'repositories/implementations/PrismaAnnotationsRepository'
+import { PrismaUsersRepository } from 'repositories/implementations/PrismaUsersRepository'
 import { WinThorPurchaseOrderRepository } from 'repositories/implementations/WinThorPurchaseOrderRepository'
 
 import { FindAccompanimentsController } from './FindAccompanimentsController'
@@ -11,8 +13,15 @@ const winThorPurchaseOrderRepository = new WinThorPurchaseOrderRepository(
   prismaLastPurchaseOrderProvider
 )
 
-const prismaAccompanimentsRepository = new PrimsaAccompanimentsRepository(
-  winThorPurchaseOrderRepository
+const prismaUsersRepository = new PrismaUsersRepository()
+
+const prismaAnnotationsRepository = new PrismaAnnotationsRepository(
+  prismaUsersRepository
+)
+
+const prismaAccompanimentsRepository = new PrismaAccompanimentsRepository(
+  winThorPurchaseOrderRepository,
+  prismaAnnotationsRepository
 )
 
 const findAccompanimentsUseCase = new FindAccompanimentsUseCase(

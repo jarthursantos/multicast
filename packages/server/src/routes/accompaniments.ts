@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express'
 import { validateBody } from 'middlewares/validate-body'
+import { createAnnotationsController } from 'use-cases/CreateAnnotations'
 import { findAccompanimentByIdController } from 'use-cases/FindAccompanimentById'
 import { findAccompanimentsController } from 'use-cases/FindAccompaniments'
 import { markAccompanimentAsReleasedController } from 'use-cases/MarkAccompanimentAsReleased'
@@ -25,6 +26,13 @@ router.put(
   validateBody(updateAccompanimentsSchema),
   (req: Request, res: Response) => {
     updateAccompanimentsController.handle(req, res)
+  }
+)
+
+router.post(
+  '/accompaniments/:id/annotations',
+  (req: Request, res: Response) => {
+    createAnnotationsController.handle(req, res)
   }
 )
 

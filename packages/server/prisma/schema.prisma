@@ -125,6 +125,7 @@ model AccompanimentAnnotations {
 
   id              String   @id
   content         String
+
   createdAt       DateTime @default(now())
   userId          String
   accompanimentId String
