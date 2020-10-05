@@ -14,7 +14,11 @@ import {
   ChartWrapper,
   ChartsLegendContainer,
   ChartLegend,
-  ColorIndicator
+  ColorIndicator,
+  TimelineLegendContainer,
+  TimelineLabelContainer,
+  TimelineLabel,
+  TimelineLegend
 } from './styles'
 import Timeline from './Timeline'
 
@@ -47,7 +51,7 @@ const data = {
   datasets: [
     {
       label: 'Teste',
-      data: [180, 50, 100],
+      data: [11, 5],
       backgroundColor: colors,
       hoverBackgroundColor: colors
     }
@@ -92,7 +96,7 @@ const Dashboard: React.FC = () => {
                   height={100}
                   width={100}
                   data={data}
-                  options={buildOptions('Nº Pedidos')}
+                  options={buildOptions('Nº Pedidos (Qtd.)')}
                 />
               </ChartWrapper>
 
@@ -101,7 +105,7 @@ const Dashboard: React.FC = () => {
                   height={100}
                   width={100}
                   data={data}
-                  options={buildOptions('Valor Total')}
+                  options={buildOptions('Valor Total (R$)')}
                 />
               </ChartWrapper>
 
@@ -110,7 +114,7 @@ const Dashboard: React.FC = () => {
                   height={100}
                   width={100}
                   data={data}
-                  options={buildOptions('Valor Entregue')}
+                  options={buildOptions('Valor Entregue (R$)')}
                 />
               </ChartWrapper>
 
@@ -119,7 +123,7 @@ const Dashboard: React.FC = () => {
                   height={100}
                   width={100}
                   data={data}
-                  options={buildOptions('Valor Pendente')}
+                  options={buildOptions('Valor Pendente (R$)')}
                 />
               </ChartWrapper>
             </ChartsContainer>
@@ -127,14 +131,10 @@ const Dashboard: React.FC = () => {
             <ChartsLegendContainer>
               <ChartLegend>
                 <ColorIndicator color={colors[0]} />
-                <strong>Novos Pedidos</strong>
-              </ChartLegend>
-              <ChartLegend>
-                <ColorIndicator color={colors[1]} />
                 <strong>Em Andamento</strong>
               </ChartLegend>
               <ChartLegend>
-                <ColorIndicator color={colors[2]} />
+                <ColorIndicator color={colors[1]} />
                 <strong>Em Recebimento</strong>
               </ChartLegend>
             </ChartsLegendContainer>
@@ -143,6 +143,26 @@ const Dashboard: React.FC = () => {
           <Section>
             <h2>Timeline</h2>
 
+            <TimelineLegendContainer>
+              <TimelineLabelContainer>
+                <TimelineLabel className="danger">Atrasado</TimelineLabel>
+                <TimelineLabel className="warning">
+                  Dentro do Limite
+                </TimelineLabel>
+                <TimelineLabel className="inDay">Em dia</TimelineLabel>
+              </TimelineLabelContainer>
+
+              <TimelineLegend />
+            </TimelineLegendContainer>
+          </Section>
+
+          <Section>
+            <h3>Sem atualizações no acompanhamento</h3>
+
+            <Timeline />
+          </Section>
+
+          <Section>
             <h3>Última atualização no acompanhamento em 15/09/2020</h3>
 
             <Timeline />

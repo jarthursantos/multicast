@@ -1,109 +1,171 @@
-import React from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import Head from 'next/head'
 import styled from 'styled-components'
 
-import { Form, TextInput, NumberInput } from '@shared/web-components/Form'
+import { useWatchAction } from '@shared/action-watcher'
+import { useAxios, useSetToken } from '@shared/axios'
+import { Button } from '@shared/web-components'
+import {
+  Form,
+  ActionsContainer,
+  SubmitButton
+} from '@shared/web-components/Form'
+
+import AccompanimentData from '~/components/Forms/AccompanimentData'
+import Observations from '~/components/Forms/Observations'
+import RequestData from '~/components/Forms/RequestData'
+import { useCloseWindow } from '~/hooks/use-close-window'
+import { useWindowParams } from '~/hooks/use-window-params'
+import { useTypedSelector } from '~/store'
+import {
+  markAccompanimentAsSendRequestAction,
+  markAccompanimentAsReviewedRequestAction,
+  markAccompanimentAsReleasedRequestAction,
+  updateAccompanimentRequestAction
+} from '~/store/modules/accompaniments/actions'
+import { Types } from '~/store/modules/accompaniments/types'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
+
+interface SuccessActionResult {
+  type: string
+  payload: {
+    accompaniment: Accompaniment
+  }
+}
 
 const Next = () => {
+  const dispatch = useDispatch()
+  const setToken = useSetToken()
+  const params = useWindowParams<{ id: string; token: string }>()
+
+  const [api, haveToken] = useAxios()
+  const [accompaniment, setAccompaniment] = useState<Accompaniment>()
+
+  const { updatingAccompaniment } = useTypedSelector(
+    state => state.accompaniments
+  )
+
+  const {
+    markingAsSended,
+    markingAsReviewed,
+    markingAsReleased
+  } = useTypedSelector(state => state.accompaniments)
+
+  const handleMarkAsSended = useCallback(() => {
+    dispatch(markAccompanimentAsSendRequestAction(accompaniment.id))
+  }, [dispatch, accompaniment])
+  const handleMarkAsReviewed = useCallback(() => {
+    dispatch(markAccompanimentAsReviewedRequestAction(accompaniment.id))
+  }, [dispatch, accompaniment])
+  const handleMarkAsReleased = useCallback(() => {
+    dispatch(markAccompanimentAsReleasedRequestAction(accompaniment.id))
+  }, [dispatch, accompaniment])
+
+  const sended = useMemo(() => !!accompaniment?.sendedAt, [accompaniment])
+  const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
+  const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
+
+  const handleSubmit = useCallback(
+    (data: any) =>
+      dispatch(updateAccompanimentRequestAction(accompaniment.id, data)),
+    [dispatch, accompaniment]
+  )
+
+  useEffect(() => {
+    async function findAccompaniment() {
+      try {
+        const { data } = await api.get<Accompaniment>(
+          `accompaniments/${params.id}`
+        )
+
+        setAccompaniment(data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if (haveToken) {
+      findAccompaniment()
+    } else if (params) {
+      setToken(params.token)
+    }
+  }, [setToken, params, api, haveToken])
+
+  useWatchAction<SuccessActionResult>(
+    [
+      Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS,
+      Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS,
+      Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
+    ],
+    ({ payload }) => {
+      setAccompaniment(payload.accompaniment)
+    }
+  )
+
+  useCloseWindow()
+
   return (
     <React.Fragment>
       <Head>
         <title>FollowUP Compras - Acompanhamento</title>
       </Head>
 
-      <Wrapper>
-        <Form onSubmit={console.log}>
+      {accompaniment && (
+        <Form onSubmit={handleSubmit} initialData={accompaniment}>
           <Container>
-            <div>
-              <h3>Dados do Pedido</h3>
+            <RequestData />
 
-              <Inline>
-                <NumberInput name="number" label="Nº Pedido" />
-                <TextInput name="emittedAt" label="Emissão" />
-              </Inline>
+            <AccompanimentData disabled={!sended || !reviewed || !released} />
 
-              <Inline>
-                <NumberInput name="provider.code" label="Cód. Fornec." />
-                <TextInput name="provider.name" label="Fornecedor" />
-              </Inline>
-
-              <TextInput name="buyer.name" label="Comprador" />
-
-              <Inline>
-                <NumberInput name="amountValue" label="Valor Total" />
-                <NumberInput name="deliveredValue" label="Valor Entregue" />
-                <NumberInput name="pendingValue" label="Valor Pendente" />
-              </Inline>
-
-              <Inline>
-                <TextInput name="freight" label="Frete" />
-                <TextInput name="shippingName" label="Transportadora" />
-              </Inline>
-            </div>
-
-            <div>
-              <h3>Dados do Andamento</h3>
-
-              <TextInput name="emittedAt" label="Liberação para Faturamento" />
-
-              <TextInput name="emittedAt" label="Previsão do Faturamento" />
-
-              <TextInput name="emittedAt" label="Arquivo XML / Faturamento" />
-
-              <Inline>
-                <NumberInput name="provider.code" label="Nº Nota Fiscal" />
-                <TextInput name="provider.name" label="Valor Nota Fiscal" />
-              </Inline>
-
-              <TextInput name="emittedAt" label="FOB SP" />
-
-              <TextInput name="emittedAt" label="Previsão do Agendamento" />
-            </div>
-
-            <div>
-              <h3>Observações</h3>
-
-              <TextInput name="shippingName" label="Transportadora" />
-            </div>
+            <Observations />
           </Container>
+
+          <ActionsContainer>
+            {!sended && (
+              <Button
+                label="Confirmar Envio do Pedido"
+                onClick={handleMarkAsSended}
+                loading={markingAsSended}
+              />
+            )}
+            {!reviewed && sended && (
+              <Button
+                label="Confirmar Revisão do Pedido"
+                onClick={handleMarkAsReviewed}
+                loading={markingAsReviewed}
+              />
+            )}
+            {!released && reviewed && sended && (
+              <Button
+                label="Confirmar Liberação p/ Faturar"
+                onClick={handleMarkAsReleased}
+                loading={markingAsReleased}
+              />
+            )}
+
+            {released && reviewed && sended && (
+              <SubmitButton label="Salvar" loading={updatingAccompaniment} />
+            )}
+          </ActionsContainer>
         </Form>
-      </Wrapper>
+      )}
     </React.Fragment>
   )
 }
-
-const Wrapper = styled.div``
 
 const Container = styled.div`
   display: flex;
 
   & > * {
-    width: 350px;
+    width: 345px;
   }
 
-  & > * + * {
-    border-left: 1px solid #bbb;
-  }
+  padding: 8px;
 
   & > div {
-    padding: 16px;
-
-    & > * + * {
-      margin-top: 12px;
-    }
-  }
-`
-
-const Inline = styled.div`
-  display: flex;
-
-  & > * {
-    flex: 1;
-  }
-
-  & > * + * {
-    margin-left: 12px;
+    padding: 8px;
   }
 `
 

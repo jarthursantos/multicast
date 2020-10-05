@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 
+import { useSetToken } from '@shared/axios'
 import { AuthPage, Credentials, LoginSuccessData } from '@shared/web-pages'
 
 import { logInSuccess } from '~/store/modules/auth/actions'
@@ -15,14 +16,18 @@ const Next = () => {
   const dispatch = useDispatch()
   const router = useRouter()
 
+  const updateToken = useSetToken()
+
   const handleLoginSuccess = useCallback(
     ({ keepConnected }: Credentials, { user, token }: LoginSuccessData) => {
+      updateToken(token)
+
       dispatch(keepConnectedRequest(keepConnected))
       dispatch(logInSuccess(user, token))
 
       router.push('/home')
     },
-    [dispatch, router]
+    [dispatch, updateToken, router]
   )
 
   return (

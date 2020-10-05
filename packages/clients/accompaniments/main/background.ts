@@ -16,10 +16,16 @@ if (isProd) {
 
   const mainWindow = createWindow('auth', {
     width: 1000,
-    height: 600
+    height: 580
+  })
+
+  mainWindow.on('closed', () => {
+    app.quit()
   })
 
   if (isProd) {
+    mainWindow.removeMenu()
+
     await mainWindow.loadURL('app://./auth.html')
   } else {
     const port = process.argv[2]
@@ -27,15 +33,22 @@ if (isProd) {
   }
 })()
 
-ipcMain.on('openAccompaniment', async (_, id: string) => {
+ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
   const accompanimentWindow = createWindow('accompaniments', {
-    width: 1050,
-    height: 575,
-    resizable: false
+    width: 1055,
+    height: 565,
+    resizable: false,
+    webPreferences: {
+      enableRemoteModule: true
+    }
   })
 
   accompanimentWindow.removeMenu()
-  accompanimentWindow.webContents.send('accompanimentId', id)
+  // accompanimentWindow.webContents.openDevTools()
+
+  accompanimentWindow.webContents.once('did-finish-load', () => {
+    accompanimentWindow.webContents.send('params-sended', { id, token })
+  })
 
   if (isProd) {
     await accompanimentWindow.loadURL('app://./accompaniments.html')

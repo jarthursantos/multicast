@@ -1,12 +1,13 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { ToastContainer, Slide } from 'react-toastify'
 
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ThemeProvider } from 'styled-components'
 
-import { AxiosContext } from '@shared/axios'
+import { AxiosContextProvider } from '@shared/axios'
 import { GlobalStyle, selectTheme, Themes } from '@shared/web-styles'
 
 import { ReduxActionFromMain } from '~/providers/ReduxActionFromMain'
@@ -42,13 +43,20 @@ export default function (props: AppProps) {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
-            <AxiosContext.Provider
-              value={{ baseURL: 'http://192.168.1.2:3340' }}
-            >
+            <AxiosContextProvider baseURL="http://192.168.1.16:3333">
               <Component {...pageProps} />
 
               <GlobalStyle />
-            </AxiosContext.Provider>
+
+              <ToastContainer
+                position="bottom-center"
+                closeButton={false}
+                autoClose={3000}
+                transition={Slide}
+                style={{ marginBottom: -24 }}
+                newestOnTop
+              />
+            </AxiosContextProvider>
           </ThemeProvider>
 
           <ReduxActionFromMain />

@@ -6,30 +6,30 @@ import { Container } from './styles'
 
 const FilterSituations: React.FC = () => {
   const [nonRevised, setNonRevised] = useState(true)
-  const [nonUnlocked, setNonUnlocked] = useState(true)
-  const [nonEstimatedBilling, setNonEstimatedBilling] = useState(true)
+  const [nonReleased, setNonReleased] = useState(true)
+  const [nonExpectedBilling, setNonExpectedBilling] = useState(true)
   const [nonBilled, setNonBilled] = useState(true)
-  const [nonFOB, setNonFOB] = useState(true)
-  const [nonEstimatedSchedule, setNonEstimatedSchedule] = useState(true)
+  const [nonFreeOnBoard, setNonFreeOnBoard] = useState(true)
+  const [nonScheduling, setNonScheduling] = useState(true)
   const [nonScheduled, setNonScheduled] = useState(true)
 
   const handleSelectAll = useCallback(() => {
     setNonRevised(true)
-    setNonUnlocked(true)
-    setNonEstimatedBilling(true)
+    setNonReleased(true)
+    setNonExpectedBilling(true)
     setNonBilled(true)
-    setNonFOB(true)
-    setNonEstimatedSchedule(true)
+    setNonFreeOnBoard(true)
+    setNonScheduling(true)
     setNonScheduled(true)
   }, [])
 
   const handleInvert = useCallback(() => {
     setNonRevised(old => !old)
-    setNonUnlocked(old => !old)
-    setNonEstimatedBilling(old => !old)
+    setNonReleased(old => !old)
+    setNonExpectedBilling(old => !old)
     setNonBilled(old => !old)
-    setNonFOB(old => !old)
-    setNonEstimatedSchedule(old => !old)
+    setNonFreeOnBoard(old => !old)
+    setNonScheduling(old => !old)
     setNonScheduled(old => !old)
   }, [])
 
@@ -45,14 +45,14 @@ const FilterSituations: React.FC = () => {
 
       <Checkbox
         label="Sem Liberação"
-        value={nonUnlocked}
-        onValueChange={setNonUnlocked}
+        value={nonReleased}
+        onValueChange={setNonReleased}
       />
 
       <Checkbox
         label="Sem Previsão de Faturamento"
-        value={nonEstimatedBilling}
-        onValueChange={setNonEstimatedBilling}
+        value={nonExpectedBilling}
+        onValueChange={setNonExpectedBilling}
       />
 
       <Checkbox
@@ -63,14 +63,14 @@ const FilterSituations: React.FC = () => {
 
       <Checkbox
         label="Sem Agendamento FOB"
-        value={nonFOB}
-        onValueChange={setNonFOB}
+        value={nonFreeOnBoard}
+        onValueChange={setNonFreeOnBoard}
       />
 
       <Checkbox
         label="Sem Previsão de Agendamento"
-        value={nonEstimatedSchedule}
-        onValueChange={setNonEstimatedSchedule}
+        value={nonScheduling}
+        onValueChange={setNonScheduling}
       />
 
       <Checkbox

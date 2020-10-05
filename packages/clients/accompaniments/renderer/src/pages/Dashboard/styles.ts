@@ -27,12 +27,13 @@ export const Container = styled.div`
 export const Content = styled.div`
   width: 100%;
   max-width: 1020px;
+  padding-bottom: 24px;
 `
 
 export const Section = styled.section`
   display: flex;
   flex-direction: column;
-  padding: 24px 32px;
+  padding: 24px 32px 8px;
 
   h2 {
     color: ${({ theme }) => theme.colors.text.primary.dark};
@@ -55,6 +56,7 @@ export const ChartsContainer = styled.div`
 `
 
 export const ChartWrapper = styled.div`
+  flex: 1;
   width: 250px;
   height: 250px;
 `
@@ -89,4 +91,73 @@ export const ColorIndicator = styled.div<{ color: string }>`
   border-radius: 8px;
   height: 16px;
   width: 16px;
+`
+
+export const TimelineLegendContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const TimelineLabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+export const TimelineLabel = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  color: ${({ theme }) => theme.colors.text.secondary.dark};
+  font-size: 14px;
+
+  &.danger {
+    align-items: flex-start;
+
+    &::after {
+      border-bottom-color: rgb(222, 33, 33);
+      margin-left: 8px;
+    }
+  }
+
+  &.warning {
+    align-items: center;
+
+    &::after {
+      border-bottom-color: rgba(237, 206, 26, 1);
+    }
+  }
+
+  &.inDay {
+    align-items: flex-end;
+
+    &::after {
+      border-bottom-color: rgba(28, 218, 120, 1);
+      margin-right: 8px;
+    }
+  }
+
+  &::after {
+    content: '';
+    margin-top: 2px;
+
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid;
+
+    width: 0;
+    height: 0;
+  }
+`
+
+export const TimelineLegend = styled.div`
+  background: rgb(222, 33, 33);
+  background: linear-gradient(
+    90deg,
+    rgba(222, 33, 33, 1) 0%,
+    rgba(237, 206, 26, 1) 50%,
+    rgba(28, 218, 120, 1) 100%
+  );
+  height: 8px;
+  border-radius: 4px;
 `

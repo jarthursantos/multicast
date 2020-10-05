@@ -26,7 +26,7 @@ export const Wrapper = styled.div`
   }
 
   #situation {
-    width: 130px;
+    width: 180px;
   }
 `
 

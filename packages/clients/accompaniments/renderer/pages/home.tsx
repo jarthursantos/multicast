@@ -1,30 +1,38 @@
 import React, { useCallback, useState } from 'react'
-import { MdNewReleases, MdDashboard, MdRefresh } from 'react-icons/md'
+import { MdDashboard, MdRefresh } from 'react-icons/md'
+import LoadingIndicator from 'react-loading'
+import { useDispatch } from 'react-redux'
 
-import { ipcRenderer } from 'electron'
 import Head from 'next/head'
 
 import { ActionIconButton, ButtonGroup } from '@shared/web-components/Button'
 import { Pager } from '@shared/web-components/Pager'
 import { Ribbon, TabBar, TabOptions } from '@shared/web-components/Ribbon'
 
+import Backdrop from '~/components/Backdrop'
 import { MdFilter } from '~/components/Icons/Filter'
 import { MdPendingAction } from '~/components/Icons/PendingAction'
 import { MdReceiptLong } from '~/components/Icons/ReceiptLong'
 import Dashboard from '~/pages/Dashboard'
 import InProgress from '~/pages/InProgress'
-import News from '~/pages/News'
 import Receiving from '~/pages/Receiving'
+import { useTypedSelector } from '~/store'
+import { StoreContextProvider } from '~/store/context'
+import { loadAccompanimentsRequestAction } from '~/store/modules/accompaniments/actions'
 
 const Home = () => {
+  const dispatch = useDispatch()
+
+  const { loading } = useTypedSelector(state => state.accompaniments)
+
   const [currentPage, setPage] = useState<string>()
 
-  const handle = useCallback(() => {
-    ipcRenderer.send('openAccompaniment', 'test')
-  }, [])
+  const handleRefresh = useCallback(() => {
+    dispatch(loadAccompanimentsRequestAction())
+  }, [dispatch])
 
   return (
-    <React.Fragment>
+    <StoreContextProvider>
       <Head>
         <title>FollowUP Compras - Pedidos</title>
       </Head>
@@ -41,13 +49,6 @@ const Home = () => {
                 name="resume"
                 label="Resumo Geral"
                 icon={<MdDashboard />}
-                width={85}
-              />
-
-              <ButtonGroup.Button
-                name="new"
-                label="Novos Pedidos"
-                icon={<MdNewReleases />}
                 width={85}
               />
 
@@ -70,14 +71,14 @@ const Home = () => {
 
             <ActionIconButton
               icon={<MdFilter />}
-              onClick={handle}
+              onClick={console.log}
               width={80}
               label="Filtrar Pedidos"
             />
 
             <ActionIconButton
               icon={<MdRefresh />}
-              onClick={handle}
+              onClick={handleRefresh}
               width={80}
               label="Atualizar Pedidos"
             />
@@ -91,10 +92,6 @@ const Home = () => {
                 <Dashboard />
               </Pager.Page>
 
-              <Pager.Page name="new">
-                <News />
-              </Pager.Page>
-
               <Pager.Page name="inProgress">
                 <InProgress />
               </Pager.Page>
@@ -103,10 +100,21 @@ const Home = () => {
                 <Receiving />
               </Pager.Page>
             </Pager>
+
+            {loading && (
+              <Backdrop>
+                <LoadingIndicator
+                  color="#333"
+                  type="spin"
+                  width={40}
+                  height={40}
+                />
+              </Backdrop>
+            )}
           </Ribbon.Content>
         </Ribbon.Container>
       </Ribbon>
-    </React.Fragment>
+    </StoreContextProvider>
   )
 }
 

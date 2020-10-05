@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   MdApps,
   MdLocalShipping,
@@ -14,26 +14,86 @@ import { DataGrid, Pager } from '@shared/web-components'
 import { MdPendingAction } from '~/components/Icons/PendingAction'
 import ProductsContainer from '~/components/ProductsContainer'
 import SituationGroup from '~/components/SituationGroup'
+import { useOpenWindow } from '~/hooks/use-open-window'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 
 import {
-  allAccompanimentsColumns,
-  nonRevisedColumns,
-  revisedColumns,
-  unlockedColumns,
-  estimatedBillingColumns,
-  billedColumns,
-  fobColumns,
-  schedulingForecastColumns
+  useNonRevisedData,
+  useRevisedData,
+  useReleasedData,
+  useExpectedBillingData,
+  useBilledData,
+  useFreeOnBoardData,
+  useSchedulingData,
+  useAllAccompanimentsData
 } from './columns'
 import { Wrapper, Header, Container, ProductsWrapper } from './styles'
 
-interface Accompaniment {
-  number: number
-  provider: string
-}
-
 const InProgress: React.FC = () => {
   const [currentSituation, setCurrentSituation] = useState<string>()
+
+  const [
+    allAccompaniments,
+    allAccompanimentsColumns,
+    allAccompanimentsCount,
+    allAccompanimentsDelayed
+  ] = useAllAccompanimentsData()
+
+  const [
+    nonRevisedAccompaniments,
+    nonRevisedColumns,
+    nonRevisedCount,
+    nonRevisedDelayed
+  ] = useNonRevisedData()
+
+  const [
+    revisedAccompaniments,
+    revisedColumns,
+    revisedCount,
+    revisedDelayed
+  ] = useRevisedData()
+
+  const [
+    releasedAccompaniments,
+    releasedColumns,
+    releasedCount,
+    releasedDelayed
+  ] = useReleasedData()
+
+  const [
+    expectedBillingAccompaniments,
+    expectedBillingColumns,
+    expectedBillingCount,
+    expectedBillingDelayed
+  ] = useExpectedBillingData()
+
+  const [
+    billedAccompaniments,
+    billedColumns,
+    billedCount,
+    billedDelayed
+  ] = useBilledData()
+
+  const [
+    freeOnBoardAccompaniments,
+    freeOnBoardColumns,
+    freeOnBoardCount,
+    freeOnBoardDelayed
+  ] = useFreeOnBoardData()
+
+  const [
+    schedulingAccompaniments,
+    schedulingColumns,
+    schedulingCount,
+    schedulingDelayed
+  ] = useSchedulingData()
+
+  const handleOpenAccompaniment = useOpenWindow('Accompaniment')
+
+  const handleDoubleClickRow = useCallback(
+    (item: Accompaniment) => handleOpenAccompaniment(item.id),
+    [handleOpenAccompaniment]
+  )
 
   return (
     <Wrapper>
@@ -46,57 +106,57 @@ const InProgress: React.FC = () => {
             name="allAccompaniments"
             label="Todos"
             icon={<MdApps />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={allAccompanimentsDelayed}
+            accompanimentCount={allAccompanimentsCount}
           />
           <SituationGroup.Button
             name="nonRevised"
-            label="Não Revisados"
+            label="A Enviar"
             icon={<MdVisibilityOff />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={nonRevisedDelayed}
+            accompanimentCount={nonRevisedCount}
           />
           <SituationGroup.Button
             name="revised"
-            label="Revisados"
+            label="A Revisar"
             icon={<MdVisibility />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={revisedDelayed}
+            accompanimentCount={revisedCount}
           />
           <SituationGroup.Button
-            name="unlocked"
-            label="Liberados"
+            name="released"
+            label="A Liberar"
             icon={<MdLockOpen />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={releasedDelayed}
+            accompanimentCount={releasedCount}
           />
           <SituationGroup.Button
-            name="estimatedBilling"
-            label="Prev. Faturamento"
+            name="expectedBilling"
+            label="A Faturar"
             icon={<MdPendingAction />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={expectedBillingDelayed}
+            accompanimentCount={expectedBillingCount}
           />
           <SituationGroup.Button
             name="billed"
             label="Faturados"
             icon={<MdReceipt />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={billedDelayed}
+            accompanimentCount={billedCount}
           />
           <SituationGroup.Button
-            name="fob"
+            name="freeOnBoard"
             label="FOB"
             icon={<MdLocalShipping />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={freeOnBoardDelayed}
+            accompanimentCount={freeOnBoardCount}
           />
           <SituationGroup.Button
-            name="schedulingForecast"
-            label="Prev. Agendamento"
+            name="scheduling"
+            label="A Agendar"
             icon={<MdToday />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={schedulingDelayed}
+            accompanimentCount={schedulingCount}
           />
         </SituationGroup>
       </Header>
@@ -105,65 +165,73 @@ const InProgress: React.FC = () => {
         <Pager currentPage={currentSituation}>
           <Pager.Page name="allAccompaniments">
             <DataGrid<Accompaniment>
-              keyBinding="number"
+              keyBinding="id"
+              data={allAccompaniments}
               columns={allAccompanimentsColumns}
-              data={[{ number: 1, provider: '1' }]}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
           <Pager.Page name="nonRevised">
             <DataGrid<Accompaniment>
-              keyBinding="number"
+              keyBinding="id"
               columns={nonRevisedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              data={nonRevisedAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
           <Pager.Page name="revised">
             <DataGrid<Accompaniment>
-              keyBinding="number"
+              keyBinding="id"
               columns={revisedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              data={revisedAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
-          <Pager.Page name="unlocked">
+          <Pager.Page name="released">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={unlockedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={releasedColumns}
+              data={releasedAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
-          <Pager.Page name="estimatedBilling">
+          <Pager.Page name="expectedBilling">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={estimatedBillingColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={expectedBillingColumns}
+              data={expectedBillingAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
           <Pager.Page name="billed">
             <DataGrid<Accompaniment>
-              keyBinding="number"
+              keyBinding="id"
               columns={billedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              data={billedAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
-          <Pager.Page name="fob">
+          <Pager.Page name="freeOnBoard">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={fobColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={freeOnBoardColumns}
+              data={freeOnBoardAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
 
-          <Pager.Page name="schedulingForecast">
+          <Pager.Page name="scheduling">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={schedulingForecastColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={schedulingColumns}
+              data={schedulingAccompaniments}
+              onRowDoubleClick={handleDoubleClickRow}
             />
           </Pager.Page>
         </Pager>

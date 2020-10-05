@@ -1,6 +1,7 @@
 const withPlugins = require('next-compose-plugins');
 const withTM = require('next-transpile-modules')(
   [
+    '@shared/action-watcher',
     '@shared/axios',
     '@shared/web-components',
     '@shared/web-pages',

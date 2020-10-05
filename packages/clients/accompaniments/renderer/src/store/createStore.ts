@@ -1,7 +1,12 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 
-export default (reducers: any, middlewares: any) => {
-  const applyedMiddlewares = applyMiddleware(...middlewares)
+import { actionWatcherEnhancer } from '@shared/action-watcher'
 
-  return createStore(reducers, {}, applyedMiddlewares)
+export default (reducers: any, middlewares: any[]) => {
+  const applyedMiddlewares = compose(
+    actionWatcherEnhancer,
+    applyMiddleware(...middlewares)
+  )
+
+  return createStore(reducers, applyedMiddlewares)
 }

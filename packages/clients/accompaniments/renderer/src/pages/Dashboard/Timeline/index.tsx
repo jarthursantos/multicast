@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useOpenWindow } from '~/hooks/use-open-window'
+
 import {
   Wrapper,
   HeaderContainer,
@@ -10,6 +12,8 @@ import {
 } from './styles'
 
 const Timeline: React.FC = () => {
+  const handleOpenAccompaniment = useOpenWindow('Accompaniment')
+
   return (
     <Wrapper>
       <HeaderContainer>
@@ -23,7 +27,7 @@ const Timeline: React.FC = () => {
       </HeaderContainer>
 
       <BodyContainer>
-        <Item>
+        <Item onClick={() => handleOpenAccompaniment(15000)}>
           <ItemLabel id="number">15000</ItemLabel>
           <ItemLabel id="providerCode">83</ItemLabel>
           <ItemLabel id="providerName">Tintas Lux LTDA</ItemLabel>
@@ -48,7 +52,7 @@ const Timeline: React.FC = () => {
           <ItemLabel id="fantasy">Tintas Lux LTDA</ItemLabel>
           <ItemLabel id="invoice">687146</ItemLabel>
           <ItemLabel id="emittedAt">01/10/2020</ItemLabel>
-          <ItemLabel id="situation">Sem Faturamento</ItemLabel>
+          <ItemLabel id="situation">Sem Prev. de Faturamento</ItemLabel>
         </Item>
       </BodyContainer>
     </Wrapper>

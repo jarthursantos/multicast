@@ -1,31 +1,209 @@
+import { useMemo } from 'react'
+
 import { CellType } from '@shared/web-components/DataGrid/Body/Row/Cell/types'
 import { ColumnProps } from '@shared/web-components/DataGrid/types'
+
+import {
+  useBilledAccompaniments,
+  useExpectedBillingAccompaniments,
+  useFreeOnBoardAccompaniments,
+  useInProgressAccompaniments,
+  useNonRevisedAccompaniments,
+  useReleasedAccompaniments,
+  useRevisedAccompaniments,
+  useSchedulingAccompaniments
+} from '~/store/context'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
+
+export function useAllAccompanimentsData(): ResumeData {
+  const accompaniments = useInProgressAccompaniments()
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, allAccompanimentsColumns, inDay, delayed]
+  }, [accompaniments, allAccompanimentsColumns])
+}
+
+export function useNonRevisedData(): ResumeData {
+  const accompaniments = useNonRevisedAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'releasedAt',
+    'expectedBilling',
+    'xmlFileAt',
+    'invoiceNumber',
+    'freeOnBoardAt',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useRevisedData(): ResumeData {
+  const accompaniments = useRevisedAccompaniments()
+
+  const columns = excludeColumns(
+    'releasedAt',
+    'expectedBilling',
+    'xmlFileAt',
+    'invoiceNumber',
+    'freeOnBoardAt',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useReleasedData(): ResumeData {
+  const accompaniments = useReleasedAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'expectedBilling',
+    'xmlFileAt',
+    'invoiceNumber',
+    'freeOnBoardAt',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useExpectedBillingData(): ResumeData {
+  const accompaniments = useExpectedBillingAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'releasedAt',
+    'xmlFileAt',
+    'invoiceNumber',
+    'freeOnBoardAt',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useBilledData(): ResumeData {
+  const accompaniments = useBilledAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'releasedAt',
+    'expectedBilling',
+    'invoiceNumber',
+    'freeOnBoardAt',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useFreeOnBoardData(): ResumeData {
+  const accompaniments = useFreeOnBoardAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'releasedAt',
+    'expectedBilling',
+    'xmlFileAt',
+    'invoiceNumber',
+    'schedulingForecastAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useSchedulingData(): ResumeData {
+  const accompaniments = useSchedulingAccompaniments()
+
+  const columns = excludeColumns(
+    'reviewedAt',
+    'releasedAt',
+    'expectedBilling',
+    'xmlFileAt',
+    'invoiceNumber',
+    'freeOnBoardAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+function calcCounts(accompaniments: Accompaniment[]) {
+  return accompaniments.reduce(
+    (curr, accompaniment) => {
+      if (accompaniment.delay > 2) {
+        return { ...curr, delayed: curr.delayed + 1 }
+      }
+
+      return { ...curr, inDay: curr.inDay + 1 }
+    },
+    { inDay: 0, delayed: 0 }
+  )
+}
+
+function excludeColumns(...paths: string[]): ColumnProps[] {
+  return allAccompanimentsColumns.filter(column => {
+    const exclude = Boolean(paths.find(path => path === column.cell.path))
+
+    return !exclude
+  })
+}
 
 export const allAccompanimentsColumns: ColumnProps[] = [
   {
     header: {
       title: 'Nº Pedido',
-      width: 100,
+      width: 80,
       align: 'center'
     },
     cell: {
-      path: 'number',
-      type: CellType.NUMBER
+      type: CellType.NUMBER,
+      path: 'purchaseOrder.number'
     },
     footer: {
-      value: '1',
-      align: 'right'
+      value: '10'
     }
   },
   {
     header: {
       title: 'Cód. Fornec.',
-      width: 120,
+      width: 100,
       align: 'center'
     },
     cell: {
       type: CellType.NUMBER,
-      path: 'provider.code'
+      path: 'purchaseOrder.provider.code'
     }
   },
   {
@@ -36,19 +214,18 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.TEXT,
-      path: 'provider.name',
-      align: 'left'
+      path: 'purchaseOrder.provider.name'
     }
   },
   {
     header: {
       title: 'Emissão',
-      width: 100,
+      width: 90,
       align: 'center'
     },
     cell: {
       type: CellType.DATE,
-      path: 'emittedAt'
+      path: 'purchaseOrder.emittedAt'
     }
   },
   {
@@ -65,13 +242,12 @@ export const allAccompanimentsColumns: ColumnProps[] = [
   {
     header: {
       title: 'Marca',
-      width: 150,
-      align: 'center'
+      width: 120,
+      align: 'left'
     },
     cell: {
       type: CellType.TEXT,
-      path: 'fantasy',
-      align: 'center'
+      path: 'purchaseOrder.provider.fantasy'
     }
   },
   {
@@ -82,36 +258,33 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.CONTABIL,
-      path: 'amountValue'
+      path: 'purchaseOrder.amountValue'
     },
     footer: {
       value: 'R$ 1.000,00',
-      align: 'right',
       type: 'contabil'
     }
   },
   {
     header: {
       title: 'Comprador',
-      width: 250,
+      width: 200,
       align: 'left'
     },
     cell: {
       type: CellType.TEXT,
-      path: 'buyer.name',
-      align: 'left'
+      path: 'purchaseOrder.buyer.name'
     }
   },
   {
     header: {
       title: 'Transportadora',
-      width: 250,
+      width: 200,
       align: 'left'
     },
     cell: {
       type: CellType.TEXT,
-      path: 'shippingName',
-      align: 'left'
+      path: 'code'
     }
   },
   {
@@ -122,8 +295,19 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.TEXT,
-      path: 'freight',
+      path: 'purchaseOrder.freight',
       align: 'center'
+    }
+  },
+  {
+    header: {
+      title: 'Representante',
+      width: 200,
+      align: 'left'
+    },
+    cell: {
+      type: CellType.TEXT,
+      path: 'purchaseOrder.provider.representative.name'
     }
   },
   {
@@ -145,7 +329,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'unlockedAt'
+      path: 'releasedAt'
     }
   },
   {
@@ -156,7 +340,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'estimatedBilling'
+      path: 'expectedBilling'
     }
   },
   {
@@ -189,7 +373,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'fobAt'
+      path: 'freeOnBoardAt'
     }
   },
   {
@@ -205,74 +389,4 @@ export const allAccompanimentsColumns: ColumnProps[] = [
   }
 ]
 
-export const nonRevisedColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'unlockedAt',
-  'estimatedBilling',
-  'xmlFileAt',
-  'invoiceNumber',
-  'fobAt',
-  'schedulingForecastAt'
-)
-
-export const revisedColumns: ColumnProps[] = excludeColumns(
-  'unlockedAt',
-  'estimatedBilling',
-  'xmlFileAt',
-  'invoiceNumber',
-  'fobAt',
-  'schedulingForecastAt'
-)
-
-export const unlockedColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'estimatedBilling',
-  'xmlFileAt',
-  'invoiceNumber',
-  'fobAt',
-  'schedulingForecastAt'
-)
-
-export const estimatedBillingColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'unlockedAt',
-  'xmlFileAt',
-  'invoiceNumber',
-  'fobAt',
-  'schedulingForecastAt'
-)
-
-export const billedColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'unlockedAt',
-  'estimatedBilling',
-  'invoiceNumber',
-  'fobAt',
-  'schedulingForecastAt'
-)
-
-export const fobColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'unlockedAt',
-  'estimatedBilling',
-  'xmlFileAt',
-  'invoiceNumber',
-  'schedulingForecastAt'
-)
-
-export const schedulingForecastColumns: ColumnProps[] = excludeColumns(
-  'reviewedAt',
-  'unlockedAt',
-  'estimatedBilling',
-  'xmlFileAt',
-  'invoiceNumber',
-  'fobAt'
-)
-
-function excludeColumns(...paths: string[]): ColumnProps[] {
-  return allAccompanimentsColumns.filter(column => {
-    const exclude = Boolean(paths.find(path => path === column.cell.path))
-
-    return !exclude
-  })
-}
+export type ResumeData = [Accompaniment[], ColumnProps[], number, number]

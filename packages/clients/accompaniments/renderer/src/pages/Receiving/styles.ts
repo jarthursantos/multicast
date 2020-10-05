@@ -5,7 +5,7 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-rows: 88px calc(100vh - 88px - 33px - 120px);
+  grid-template-rows: 88px calc(100vh - 88px - 30px - 120px);
   grid-template-areas:
     'HEADER PRODUCTS'
     'CONTENT PRODUCTS';

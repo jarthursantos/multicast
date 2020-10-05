@@ -10,22 +10,29 @@ import { DataGrid, Pager } from '@shared/web-components'
 
 import ProductsContainer from '~/components/ProductsContainer'
 import SituationGroup from '~/components/SituationGroup'
+import {
+  useScheduledAccompaniments,
+  useReceivingAccompaniments,
+  useDownloadedAccompaniments,
+  useUnlockedAccompaniments
+} from '~/store/context'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 
 import {
-  allAccompanimentsColumns,
-  nonRevisedColumns,
-  revisedColumns,
+  scheduledColumns,
+  receivingColumns,
+  downloadedColumns,
   unlockedColumns
 } from './columns'
 import { Wrapper, Header, Container, ProductsWrapper } from './styles'
 
-interface Accompaniment {
-  number: number
-  provider: string
-}
-
 const Receiving: React.FC = () => {
   const [currentSituation, setCurrentSituation] = useState<string>()
+
+  const scheduledAccompaniments = useScheduledAccompaniments()
+  const receivingAccompaniments = useReceivingAccompaniments()
+  const downloadedAccompaniments = useDownloadedAccompaniments()
+  const unlockedAccompaniments = useUnlockedAccompaniments()
 
   return (
     <Wrapper>
@@ -69,33 +76,33 @@ const Receiving: React.FC = () => {
         <Pager currentPage={currentSituation}>
           <Pager.Page name="scheduled">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={allAccompanimentsColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={scheduledColumns}
+              data={scheduledAccompaniments}
             />
           </Pager.Page>
 
           <Pager.Page name="received">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={nonRevisedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={receivingColumns}
+              data={receivingAccompaniments}
             />
           </Pager.Page>
 
           <Pager.Page name="downloaded">
             <DataGrid<Accompaniment>
-              keyBinding="number"
-              columns={revisedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              keyBinding="id"
+              columns={downloadedColumns}
+              data={downloadedAccompaniments}
             />
           </Pager.Page>
 
           <Pager.Page name="unlocked">
             <DataGrid<Accompaniment>
-              keyBinding="number"
+              keyBinding="id"
               columns={unlockedColumns}
-              data={[{ number: 1, provider: '1' }]}
+              data={unlockedAccompaniments}
             />
           </Pager.Page>
         </Pager>
