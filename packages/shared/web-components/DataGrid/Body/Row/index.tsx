@@ -2,7 +2,13 @@ import React, { memo } from 'react'
 
 import dot from 'dot-object'
 
-import { useColumnsCell, useRowStyle, useRowWidth } from '../../context'
+import {
+  useColumnsCell,
+  useRowClick,
+  useRowDoubleClick,
+  useRowStyle,
+  useRowWidth
+} from '../../context'
 import Cell from './Cell'
 import { Container } from './styles'
 import { RowProps } from './types'
@@ -13,8 +19,16 @@ const Row: React.FC<RowProps> = ({ id, data }) => {
 
   const columns = useColumnsCell()
 
+  const handleClick = useRowClick(data)
+  const handleDoubleClick = useRowDoubleClick(data)
+
   return (
-    <Container className={`row-${id}`} style={{ ...style, width }}>
+    <Container
+      className={`row-${id}`}
+      style={{ ...style, width }}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+    >
       {columns.map((cell, index) => (
         <Cell
           value={dot.pick(cell.path, data)}

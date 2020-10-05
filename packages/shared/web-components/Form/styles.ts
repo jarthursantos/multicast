@@ -21,6 +21,7 @@ export const Form = styled(Unform)`
 
 export interface InputContainerStyleProps {
   disabled?: boolean
+  hasError?: boolean
 }
 
 export const InputContainer = styled.div<InputContainerStyleProps>`
@@ -28,6 +29,48 @@ export const InputContainer = styled.div<InputContainerStyleProps>`
   flex-direction: column;
   min-width: 10px;
   position: relative;
+
+  input {
+    border-width: 2px;
+    border-style: solid;
+    min-width: 10px;
+
+    &[type='text'] {
+      text-transform: uppercase;
+    }
+
+    &[type='email'] {
+      text-transform: lowercase;
+    }
+
+    border-radius: 4px;
+    color: #666;
+    font-size: 14px;
+    padding: 6px 8px;
+    min-height: 40px;
+    transition: border 0.2s;
+
+    ::placeholder {
+      color: #999;
+    }
+
+    :disabled {
+      border-color: #eee;
+    }
+
+    ${({ hasError }) =>
+      hasError
+        ? css`
+            border-color: #de3b3b !important;
+          `
+        : css`
+            border-color: #ccc;
+
+            :focus {
+              border: 2px solid #999;
+            }
+          `};
+  }
 
   & > div.relative {
     position: relative;
@@ -47,56 +90,10 @@ export const InputContainer = styled.div<InputContainerStyleProps>`
 export const InputLabel = styled.label`
   color: #666;
   font-size: 13px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-
-export interface InputStyleProps {
-  hasError?: boolean
-}
-
-export const Input = styled.input<InputStyleProps>`
-  border-width: 2px;
-  border-style: solid;
-  min-width: 10px;
-
-  &[type='text'] {
-    text-transform: uppercase;
-  }
-
-  &[type='email'] {
-    text-transform: lowercase;
-  }
-
-  border-radius: 4px;
-  color: #666;
-  font-size: 14px;
-  padding: 6px 8px;
-  min-height: 40px;
-  transition: border 0.2s;
-
-  ::placeholder {
-    color: #999;
-  }
-
-  :disabled {
-    border-color: #eee;
-  }
-
-  ${({ hasError }) =>
-    hasError
-      ? css`
-          border-color: #de3b3b !important;
-        `
-      : css`
-          border-color: #ccc;
-
-          :focus {
-            border: 2px solid #999;
-          }
-        `};
 `
 
 export const InputError = styled.span.attrs({
@@ -107,4 +104,14 @@ export const InputError = styled.span.attrs({
   font-size: 11px;
   line-height: 18px;
   color: #de3b3b !important;
+`
+
+export const ActionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  border-top: 1px solid ${({ theme }) => theme.colors.border.primary};
+  padding: 12px 16px;
+  margin-top: 0 !important;
 `

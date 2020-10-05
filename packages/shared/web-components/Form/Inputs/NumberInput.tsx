@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 
 import { useField } from '@unform/core'
 
-import { InputContainer, Input, InputLabel, InputError } from '../styles'
+import { InputContainer, InputLabel, InputError } from '../styles'
 import { InputProps } from '../types'
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> &
@@ -55,17 +55,16 @@ const NumberInput: React.FC<Props> = ({
   }, [fieldName, inputRef, registerField])
 
   return (
-    <InputContainer {...rest}>
+    <InputContainer {...rest} hasError={!!error}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
-      <Input
+      <input
         size={1}
         {...inputProps}
         type="number"
         ref={inputRef}
         id={fieldName}
         style={{ width }}
-        hasError={!!error}
         onFocus={clearError}
         step={double ? 0.1 : 1}
         defaultValue={defaultValue}

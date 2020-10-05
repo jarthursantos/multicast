@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["esnext", "dom"],
+    "lib": ["ES5", "ES6", "ESNext", "DOM", "DOM.Iterable"],
     "module": "commonjs",
     "allowJs": false,
     "checkJs": false,

@@ -17,25 +17,28 @@ export function GridContextProvider<Data>({
   children,
   columns,
   keyBinding,
-  data
+  data,
+  onRowClick,
+  onRowDoubleClick
 }: Props<Data> & { children: ReactNode }) {
-  const resolveRowStyle = useCallback((item: Data) => {
-    console.log({ item })
-
+  const resolveRowStyle = useCallback((_item: Data) => {
     return {}
   }, [])
 
-  const handles = useMemo<ContextHandles>(
-    () => ({
-      resolveRowStyle,
-      columns,
-      keyBinding,
-      data
-    }),
-    [resolveRowStyle, columns]
+  return (
+    <GridContext.Provider
+      value={{
+        resolveRowStyle,
+        columns,
+        keyBinding,
+        data,
+        onRowClick,
+        onRowDoubleClick
+      }}
+    >
+      {children}
+    </GridContext.Provider>
   )
-
-  return <GridContext.Provider value={handles}>{children}</GridContext.Provider>
 }
 
 export function useColumnsFooter(): Array<FooterCellProps & { key: string }> {
@@ -82,4 +85,19 @@ export function useRowWidth() {
   }, [columns])
 
   return width
+}
+
+export function useRowClick(data: any) {
+  const { onRowClick } = useContext(GridContext)
+
+  return useCallback(() => onRowClick && onRowClick(data), [onRowClick, data])
+}
+
+export function useRowDoubleClick(data: any) {
+  const { onRowDoubleClick } = useContext(GridContext)
+
+  return useCallback(() => onRowDoubleClick && onRowDoubleClick(data), [
+    onRowDoubleClick,
+    data
+  ])
 }

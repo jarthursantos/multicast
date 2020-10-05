@@ -4,6 +4,8 @@ import { FooterCellProps } from './Footer/Cell/types'
 import { HeaderCellProps } from './Header/Cell/types'
 
 export interface ContextHandles {
+  onRowClick(item: any): void
+  onRowDoubleClick(item: any): void
   resolveRowStyle(item: any): React.CSSProperties | undefined
   columns: ColumnProps[]
   data: any[]

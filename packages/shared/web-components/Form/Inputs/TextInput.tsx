@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 
 import { useField } from '@unform/core'
 
-import { InputContainer, Input, InputLabel, InputError } from '../styles'
+import { InputContainer, InputLabel, InputError } from '../styles'
 import { InputProps } from '../types'
 
 type Props = InputProps & React.HTMLAttributes<HTMLDivElement>
@@ -27,16 +27,15 @@ const TextInput: React.FC<Props> = ({ name, label, inputProps, ...rest }) => {
   }, [fieldName, inputRef, registerField])
 
   return (
-    <InputContainer {...rest}>
+    <InputContainer {...rest} hasError={!!error}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
-      <Input
+      <input
         size={1}
         type="text"
         {...inputProps}
         ref={inputRef}
         id={fieldName}
-        hasError={!!error}
         onFocus={clearError}
         defaultValue={defaultValue}
       />

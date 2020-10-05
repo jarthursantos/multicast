@@ -1,4 +1,5 @@
 export * from './CheckboxInput'
+export * from './DateInput'
 export * from './MailInput'
 export * from './NumberInput'
 export * from './SelectInput'
