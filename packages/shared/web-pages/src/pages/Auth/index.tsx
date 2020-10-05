@@ -28,7 +28,7 @@ import { AuthProps, Credentials, LoginSuccessData } from './types'
 const AuthPage: React.FC<AuthProps> = props => {
   const { icon, title, version, credentials, onLogInSuccess } = props
 
-  const api = useAxios()
+  const [api] = useAxios()
 
   const formRef = useRef<FormHandles>(null)
   const validateForm = useFormValidator(formRef, authSchema)
