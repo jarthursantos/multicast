@@ -13,6 +13,7 @@ import {
   createSessionSchema
 } from 'use-cases/CreateSession'
 
+import { accompanimentsRouter } from './accompaniments'
 import { dischargeTablesRouter } from './discharge-tables'
 import { employeesRouter } from './employees'
 import { invoicesRouter } from './invoices'
@@ -60,6 +61,7 @@ router.use(schedulesRouter)
 router.use(providersRouter)
 router.use(invoicesRouter)
 router.use(dischargeTablesRouter)
+router.use(accompanimentsRouter)
 
 router.use(reportsRouter)
 

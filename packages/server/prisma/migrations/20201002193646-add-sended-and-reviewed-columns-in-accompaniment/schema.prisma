@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -104,7 +104,7 @@ model Accompaniments {
   id                String    @id
   number            Int
   sendedAt          DateTime?
-  reviewedAt        DateTime?
+  reviwedAt         DateTime?
   releasedAt        DateTime?
   expectedBillingAt DateTime?
   billingAt         DateTime?

@@ -8,6 +8,9 @@ interface RawProvider {
   fantasy: string
   cnpj: string
   principalCode: number
+  representativeName: string
+  representativePhone: string
+  representativeMail: string
 }
 
 export class WinThorProviderRepository implements IProviderRepository {
@@ -70,14 +73,28 @@ export class WinThorProviderRepository implements IProviderRepository {
   }
 
   private parseRawProvider(raw: RawProvider): Provider {
-    const { code, name, fantasy, principalCode, cnpj } = raw
+    const {
+      code,
+      name,
+      fantasy,
+      principalCode,
+      cnpj,
+      representativeName,
+      representativePhone,
+      representativeMail
+    } = raw
 
     return new Provider({
       code,
       fantasy,
       name,
       cnpj,
-      principalCode
+      principalCode,
+      representative: {
+        name: representativeName,
+        phone: representativePhone,
+        email: representativeMail
+      }
     })
   }
 }
