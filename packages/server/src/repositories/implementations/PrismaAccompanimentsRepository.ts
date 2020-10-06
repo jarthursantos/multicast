@@ -32,7 +32,10 @@ export class PrismaAccompanimentsRepository
             'invoiceId',
             'invoice',
             'purchaseOrder',
-            'annotations'
+            'annotations',
+            'number',
+            'value',
+            'emittedAt'
           ),
           number: purchaseOrder.number
         }
@@ -104,7 +107,10 @@ export class PrismaAccompanimentsRepository
           'invoiceId',
           'invoice',
           'purchaseOrder',
-          'annotations'
+          'annotations',
+          'number',
+          'value',
+          'emittedAt'
         )
       }
     })

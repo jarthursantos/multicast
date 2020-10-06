@@ -13,7 +13,7 @@ export class CreateAnnotationsController {
       const annotation = await this.createAnnotationsCase.execute(
         id,
         body,
-        auth.user.id
+        auth.user
       )
 
       return res.json(annotation)

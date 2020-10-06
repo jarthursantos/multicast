@@ -1,14 +1,15 @@
 import { format } from 'date-fns'
 import * as Yup from 'yup'
 
-// TODO
 export const updateAccompanimentsSchema = Yup.object().shape({
   releasedAt: Yup.date()
     .nullable()
     .when(
       'expectedBillingAt',
       (expectedBillingAt: Date, releasedAt: Yup.DateSchema<Date>) => {
-        return expectedBillingAt ? releasedAt.required() : releasedAt
+        return expectedBillingAt
+          ? releasedAt.required('Campo obrigatório')
+          : releasedAt
       }
     ),
 
@@ -16,43 +17,49 @@ export const updateAccompanimentsSchema = Yup.object().shape({
     .nullable()
     .min(Yup.ref('releasedAt'), buildMinMessage)
     .when(
-      'billingAt',
-      (billingAt: Date, expectedBillingAt: Yup.DateSchema<Date>) => {
-        return billingAt ? expectedBillingAt.required() : expectedBillingAt
+      'emittedAt',
+      (emittedAt: Date, expectedBillingAt: Yup.DateSchema<Date>) => {
+        return emittedAt
+          ? expectedBillingAt.required('Campo obrigatório')
+          : expectedBillingAt
       }
     ),
 
-  billingAt: Yup.date()
+  emittedAt: Yup.date()
     .nullable()
     .min(Yup.ref('expectedBillingAt'), buildMinMessage)
     .when(
       'schedulingAt',
-      (schedulingAt: Date, billingAt: Yup.DateSchema<Date>) => {
-        return schedulingAt ? billingAt.required() : billingAt
+      (schedulingAt: Date, emittedAt: Yup.DateSchema<Date>) => {
+        return schedulingAt
+          ? emittedAt.required('Campo obrigatório')
+          : emittedAt
       }
     ),
 
+  number: Yup.number()
+    .integer()
+    .transform(value => value || null)
+    .nullable()
+    .when(
+      'schedulingAt',
+      (schedulingAt: Date, number: Yup.DateSchema<Date>) => {
+        return schedulingAt ? number.required('Campo obrigatório') : number
+      }
+    ),
+
+  value: Yup.number()
+    .transform(value => value || null)
+    .nullable()
+    .when('schedulingAt', (schedulingAt: Date, value: Yup.DateSchema<Date>) => {
+      return schedulingAt ? value.required('Campo obrigatório') : value
+    }),
+
   freeOnBoardAt: Yup.date()
     .nullable()
-    .min(Yup.ref('billingAt'), buildMinMessage),
+    .min(Yup.ref('emittedAt'), buildMinMessage),
 
-  schedulingAt: Yup.date().nullable().min(Yup.ref('billingAt'), buildMinMessage)
-
-  // valueDelivered: Yup.number().when(
-  //   'schedulingAt',
-  //   (schedulingAt: Date, valueDelivered: Yup.DateSchema<Date>) => {
-  //     return schedulingAt ? valueDelivered.required() : valueDelivered
-  //   }
-  // ),
-
-  // invoiceId: Yup.number()
-  //   .integer()
-  //   .when(
-  //     'schedulingAt',
-  //     (schedulingAt: Date, invoiceId: Yup.DateSchema<Date>) => {
-  //       return schedulingAt ? invoiceId.required() : invoiceId
-  //     }
-  //   )
+  schedulingAt: Yup.date().nullable().min(Yup.ref('emittedAt'), buildMinMessage)
 })
 
 function buildMinMessage({ path, min }: { path: string; min: string | Date }) {
