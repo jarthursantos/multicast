@@ -49,8 +49,8 @@ const actionWatcherEnhancer = (createStore: any) => (
 }
 
 function useWatchAction<T extends Action>(
-  actionsTypes: string | string[],
   handler: (action?: T) => void,
+  actionsTypes: string | string[],
   deps: DependencyList = []
 ) {
   useEffect(() => {
