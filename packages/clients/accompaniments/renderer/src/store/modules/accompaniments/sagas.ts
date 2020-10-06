@@ -5,6 +5,8 @@ import { all, takeLatest, call, put } from 'redux-saga/effects'
 import { api, extractErrorMessage } from '@shared/axios'
 
 import {
+  addAnnotationFailureAction,
+  addAnnotationSuccessAction,
   loadAccompanimentsFailureAction,
   loadAccompanimentsSuccessAction,
   markAccompanimentAsReleasedFailureAction,
@@ -18,6 +20,8 @@ import {
 } from './actions'
 import {
   Accompaniment,
+  AddAnnotationRequestAction,
+  Annotation,
   MarkAccompanimentAsReleadedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendRequestAction,
@@ -62,6 +66,30 @@ export function* updateAccompaniment({
     toast.error(message)
 
     yield put(updateAccompanimentFailureAction(message))
+  }
+}
+
+export function* addAnnotation({ payload }: AddAnnotationRequestAction) {
+  try {
+    const { id, data } = payload
+
+    const response = yield call(
+      api.post,
+      `/accompaniments/${id}/annotations`,
+      data
+    )
+
+    const annotation: Annotation = response.data
+
+    toast.success('Observação adicionada')
+
+    yield put(addAnnotationSuccessAction(id, annotation))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    toast.error(message)
+
+    yield put(addAnnotationFailureAction(message))
   }
 }
 
@@ -141,6 +169,8 @@ export default all([
   takeLatest(Types.LOAD_ACCOMPANIMENTS_REQUEST, loadAccompaniments),
 
   takeLatest(Types.UPDATE_ACCOMPANIMENT_REQUEST, updateAccompaniment),
+
+  takeLatest(Types.ADD_ANNOTATION_REQUEST, addAnnotation),
 
   takeLatest(
     Types.MARK_ACCOMPANIMENT_SENDED_REQUEST,

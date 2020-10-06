@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+import { useFormValidator } from 'hookable-unform'
 
 import { useWatchAction } from '@shared/action-watcher'
 import { Button } from '@shared/web-components'
 import {
   Form,
-  SubmitButton,
-  ActionsContainer
+  ActionsContainer,
+  FormHandles
 } from '@shared/web-components/Form'
 
 import AccompanimentData from '~/components/Forms/AccompanimentData'
@@ -24,12 +26,19 @@ import {
 import { Types, Accompaniment } from '~/store/modules/accompaniments/types'
 import { closeWindow } from '~/util/close-window'
 
-import { Container } from './styles'
-import { SuccessActionResult } from './types'
+import { schema } from './schema'
+import { Wrapper, Container } from './styles'
+import {
+  AccompanimentSuccessActionResult,
+  AnnotationSuccessActionResult
+} from './types'
 
 const AccompanimentPage: React.FC = () => {
   const dispatch = useDispatch()
   const params = useWindowParams<{ id: string; token: string }>()
+
+  const formRef = useRef<FormHandles>(null)
+  const validateForm = useFormValidator(formRef, schema)
 
   const [accompaniment, setAccompaniment] = useState<Accompaniment>()
   const remoteAccompaniment = useAccompaniment(params?.id, params?.token)
@@ -44,6 +53,21 @@ const AccompanimentPage: React.FC = () => {
     markingAsReleased
   } = useTypedSelector(state => state.accompaniments)
 
+  const sended = useMemo(() => !!accompaniment?.sendedAt, [accompaniment])
+  const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
+  const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
+
+  const initialData = useMemo(() => {
+    if (!accompaniment) {
+      return undefined
+    }
+
+    return {
+      ...accompaniment,
+      ...(accompaniment.invoice || {})
+    }
+  }, [accompaniment])
+
   const handleMarkAsSended = useCallback(() => {
     dispatch(markAccompanimentAsSendRequestAction(accompaniment.id))
   }, [dispatch, accompaniment])
@@ -54,18 +78,22 @@ const AccompanimentPage: React.FC = () => {
     dispatch(markAccompanimentAsReleasedRequestAction(accompaniment.id))
   }, [dispatch, accompaniment])
 
-  const sended = useMemo(() => !!accompaniment?.sendedAt, [accompaniment])
-  const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
-  const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
-
   const handleSubmit = useCallback(
-    (data: any) => {
-      console.log({ data })
+    async (data: any) => {
+      const { success } = await validateForm()
 
-      dispatch(updateAccompanimentRequestAction(accompaniment.id, data))
+      if (success) {
+        formRef.current?.setErrors({})
+
+        dispatch(updateAccompanimentRequestAction(accompaniment.id, data))
+      }
     },
-    [dispatch, accompaniment]
+    [dispatch, accompaniment, validateForm, formRef]
   )
+
+  const handleSubmitForm = useCallback(() => {
+    formRef.current?.submitForm()
+  }, [formRef])
 
   useEffect(() => {
     if (remoteAccompaniment) {
@@ -73,7 +101,7 @@ const AccompanimentPage: React.FC = () => {
     }
   }, [remoteAccompaniment])
 
-  useWatchAction<SuccessActionResult>(
+  useWatchAction<AccompanimentSuccessActionResult>(
     ({ payload }) => {
       setAccompaniment(payload.accompaniment)
     },
@@ -84,19 +112,58 @@ const AccompanimentPage: React.FC = () => {
     ]
   )
 
+  useWatchAction<AnnotationSuccessActionResult>(
+    ({ payload }) => {
+      setAccompaniment(oldValue => ({
+        ...oldValue,
+        annotations: [...oldValue.annotations, payload.annotation]
+      }))
+    },
+    [Types.ADD_ANNOTATION_SUCCESS]
+  )
+
   useWatchAction(closeWindow, Types.UPDATE_ACCOMPANIMENT_SUCCESS)
 
   return (
-    <Form onSubmit={handleSubmit} initialData={accompaniment}>
+    <Wrapper>
       <Container>
-        <RequestData />
+        <Form onSubmit={handleSubmit} initialData={initialData} ref={formRef}>
+          <RequestData />
 
-        <AccompanimentData disabled={!sended || !reviewed || !released} />
+          <AccompanimentData
+            disabled={!sended || !reviewed || !released}
+            isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
+          />
+        </Form>
 
-        <Observations />
+        <Observations
+          accompanimentId={params?.id}
+          observations={accompaniment?.annotations || []}
+        />
       </Container>
 
       <ActionsContainer>
+        <Button
+          secondary
+          label="Anexar ao E-Mail"
+          loading={updatingAccompaniment}
+          onClick={handleSubmitForm}
+        />
+
+        <Button
+          secondary
+          label="Exportar"
+          loading={updatingAccompaniment}
+          onClick={handleSubmitForm}
+        />
+
+        <Button
+          secondary
+          label="Imprimir"
+          loading={updatingAccompaniment}
+          onClick={handleSubmitForm}
+        />
+
         {!sended && (
           <Button
             label="Confirmar Envio do Pedido"
@@ -120,10 +187,25 @@ const AccompanimentPage: React.FC = () => {
         )}
 
         {released && reviewed && sended && (
-          <SubmitButton label="Salvar" loading={updatingAccompaniment} />
+          <>
+            {accompaniment?.invoice && (
+              <Button
+                secondary
+                label="Renovar Saldo"
+                loading={updatingAccompaniment}
+                onClick={handleSubmitForm}
+              />
+            )}
+
+            <Button
+              label="Salvar"
+              loading={updatingAccompaniment}
+              onClick={handleSubmitForm}
+            />
+          </>
         )}
       </ActionsContainer>
-    </Form>
+    </Wrapper>
   )
 }
 

@@ -4,6 +4,9 @@ import {
   LoadAccompanimentsSuccessAction,
   LoadAccompanimentsFailureAction,
   LoadAccompanimentsRequestAction,
+  AddAnnotationRequestAction,
+  AddAnnotationSuccessAction,
+  AddAnnotationFailureAction,
   MarkAccompanimentAsSendRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsReleadedRequestAction,
@@ -15,7 +18,9 @@ import {
   MarkAccompanimentAsReviewedFailureAction,
   UpdateAccompanimentRequestAction,
   UpdateAccompanimentSuccessAction,
-  UpdateAccompanimentFailureAction
+  UpdateAccompanimentFailureAction,
+  AnnotationContent,
+  Annotation
 } from './types'
 
 export function loadAccompanimentsRequestAction(): LoadAccompanimentsRequestAction {
@@ -69,6 +74,36 @@ export function updateAccompanimentFailureAction(
 ): UpdateAccompanimentFailureAction {
   return {
     type: Types.UPDATE_ACCOMPANIMENT_FAILURE,
+    payload: { message }
+  }
+}
+
+export function addAnnotationRequestAction(
+  id: string,
+  data: AnnotationContent
+): AddAnnotationRequestAction {
+  return {
+    type: Types.ADD_ANNOTATION_REQUEST,
+    payload: { id, data }
+  }
+}
+
+export function addAnnotationSuccessAction(
+  id: string,
+  annotation: Annotation
+): AddAnnotationSuccessAction {
+  return {
+    propagate: true,
+    type: Types.ADD_ANNOTATION_SUCCESS,
+    payload: { id, annotation }
+  }
+}
+
+export function addAnnotationFailureAction(
+  message: string
+): AddAnnotationFailureAction {
+  return {
+    type: Types.ADD_ANNOTATION_FAILURE,
     payload: { message }
   }
 }

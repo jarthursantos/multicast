@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Container, ConteinerProps } from './styles'
+import { Container, ContainerProps } from './styles'
 
-const ColorIndicator: React.VFC<ConteinerProps> = props => {
+const ColorIndicator: React.VFC<ContainerProps> = props => {
   return <Container {...props} />
 }
 

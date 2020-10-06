@@ -351,7 +351,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'xmlFileAt'
+      path: 'invoice.emittedAt'
     }
   },
   {
@@ -362,7 +362,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.NUMBER,
-      path: 'invoiceNumber'
+      path: 'invoice.number'
     }
   },
   {

@@ -7,6 +7,7 @@ import Head from 'next/head'
 import { useSetToken } from '@shared/axios'
 import { AuthPage, Credentials, LoginSuccessData } from '@shared/web-pages'
 
+import { loadAccompanimentsRequestAction } from '~/store/modules/accompaniments/actions'
 import { logInSuccess } from '~/store/modules/auth/actions'
 import { keepConnectedRequest } from '~/store/modules/preferences/actions'
 
@@ -24,6 +25,7 @@ const Next = () => {
 
       dispatch(keepConnectedRequest(keepConnected))
       dispatch(logInSuccess(user, token))
+      dispatch(loadAccompanimentsRequestAction())
 
       router.push('/home')
     },

@@ -1,27 +1,93 @@
-import React from 'react'
+import React, { useCallback, useRef } from 'react'
+import { MdFeedback } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
-import { Button } from '@shared/web-components'
+import { useFormValidator } from 'hookable-unform'
 
-import { Container } from '../styles'
+import { useWatchAction } from '@shared/action-watcher'
+import {
+  Form,
+  TextInput,
+  SubmitButton,
+  FormHandles
+} from '@shared/web-components'
+
+import { useTypedSelector } from '~/store'
+import { addAnnotationRequestAction } from '~/store/modules/accompaniments/actions'
+import {
+  Annotation,
+  AnnotationContent,
+  Types
+} from '~/store/modules/accompaniments/types'
+
 import Observation from './Observation'
-import { ScrollBar, Content } from './styles'
+import { schema } from './schema'
+import {
+  Container,
+  ScrollBar,
+  EmptyMessageWrapper,
+  Content,
+  FieldsWrapper
+} from './styles'
 
-const Observations: React.FC = () => {
+interface Props {
+  accompanimentId: string
+  observations: Annotation[]
+}
+
+const Observations: React.VFC<Props> = ({ accompanimentId, observations }) => {
+  const dispatch = useDispatch()
+
+  const formRef = useRef<FormHandles>(null)
+  const validateForm = useFormValidator(formRef, schema)
+
+  const { additingAnnotation } = useTypedSelector(state => state.accompaniments)
+
+  const handleAddAnnotation = useCallback(
+    async (data: AnnotationContent) => {
+      const { success } = await validateForm()
+
+      if (success) {
+        formRef.current?.setErrors({})
+
+        dispatch(addAnnotationRequestAction(accompanimentId, data))
+      }
+    },
+    [validateForm, dispatch, accompanimentId, formRef]
+  )
+
+  useWatchAction(
+    () => formRef.current?.clearField('content'),
+    [Types.ADD_ANNOTATION_SUCCESS],
+    [formRef]
+  )
+
   return (
     <Container>
       <h3>Obervações</h3>
 
-      <ScrollBar>
-        <Content>
-          <Observation
-            content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor aliquid quia veniam sed, deleniti vel magni nobis, ratione enim hic officiis velit veritatis animi suscipit voluptates voluptatem, optio fugiat corrupti?"
-            createdAt={new Date()}
-            createdBy={{ name: 'Arthur Santos' }}
-          />
-        </Content>
-      </ScrollBar>
+      {observations.length !== 0 ? (
+        <ScrollBar>
+          <Content>
+            {observations.map(observation => (
+              <Observation key={observation.id} {...observation} />
+            ))}
+          </Content>
+        </ScrollBar>
+      ) : (
+        <EmptyMessageWrapper>
+          <MdFeedback />
+          Nenhuma observação nesse acompanhamento
+        </EmptyMessageWrapper>
+      )}
 
-      <Button label="Adicionar Observação" />
+      <Form onSubmit={handleAddAnnotation} ref={formRef}>
+        <FieldsWrapper>
+          <TextInput name="content" label="Nova Observação" />
+
+          <SubmitButton label="Adicionar" loading={additingAnnotation} />
+        </FieldsWrapper>
+      </Form>
     </Container>
   )
 }

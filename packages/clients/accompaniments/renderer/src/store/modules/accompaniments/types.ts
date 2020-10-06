@@ -1,3 +1,5 @@
+import { User } from '@shared/web-pages'
+
 import { BaseAction } from '../types'
 
 export enum Types {
@@ -8,6 +10,10 @@ export enum Types {
   UPDATE_ACCOMPANIMENT_REQUEST = '@accompaniments/UPDATE_ACCOMPANIMENT_REQUEST',
   UPDATE_ACCOMPANIMENT_SUCCESS = '@accompaniments/UPDATE_ACCOMPANIMENT_SUCCESS',
   UPDATE_ACCOMPANIMENT_FAILURE = '@accompaniments/UPDATE_ACCOMPANIMENT_FAILURE',
+
+  ADD_ANNOTATION_REQUEST = '@accompaniments/ADD_ANNOTATION_REQUEST',
+  ADD_ANNOTATION_SUCCESS = '@accompaniments/ADD_ANNOTATION_SUCCESS',
+  ADD_ANNOTATION_FAILURE = '@accompaniments/ADD_ANNOTATION_FAILURE',
 
   MARK_ACCOMPANIMENT_SENDED_REQUEST = '@accompaniments/MARK_ACCOMPANIMENT_SENDED_REQUEST',
   MARK_ACCOMPANIMENT_SENDED_SUCCESS = '@accompaniments/MARK_ACCOMPANIMENT_SENDED_SUCCESS',
@@ -57,6 +63,29 @@ export interface UpdateAccompanimentSuccessAction extends BaseAction {
 
 export interface UpdateAccompanimentFailureAction extends BaseAction {
   type: typeof Types.UPDATE_ACCOMPANIMENT_FAILURE
+  payload: {
+    message: string
+  }
+}
+
+export interface AddAnnotationRequestAction extends BaseAction {
+  type: typeof Types.ADD_ANNOTATION_REQUEST
+  payload: {
+    id: string
+    data: AnnotationContent
+  }
+}
+
+export interface AddAnnotationSuccessAction extends BaseAction {
+  type: typeof Types.ADD_ANNOTATION_SUCCESS
+  payload: {
+    id: string
+    annotation: Annotation
+  }
+}
+
+export interface AddAnnotationFailureAction extends BaseAction {
+  type: typeof Types.ADD_ANNOTATION_FAILURE
   payload: {
     message: string
   }
@@ -132,6 +161,9 @@ export type AccompanimentsActionTypes =
   | UpdateAccompanimentRequestAction
   | UpdateAccompanimentFailureAction
   | UpdateAccompanimentSuccessAction
+  | AddAnnotationRequestAction
+  | AddAnnotationSuccessAction
+  | AddAnnotationFailureAction
   | MarkAccompanimentAsSendRequestAction
   | MarkAccompanimentAsSendSuccessAction
   | MarkAccompanimentAsSendFailureAction
@@ -147,6 +179,7 @@ export interface AccompanimentsState {
   accompaniments: Accompaniment[]
 
   updatingAccompaniment: boolean
+  additingAnnotation: boolean
 
   markingAsSended: boolean
   markingAsReviewed: boolean
@@ -159,19 +192,38 @@ export interface Accompaniment {
   reviewedAt?: Date
   releasedAt?: Date
   expectedBillingAt?: Date
-  billingAt?: Date
   freeOnBoardAt?: Date
   schedulingAt?: Date
   valueDelivered: number
+  isOutstandingBalance: boolean
 
   invoiceId: string
+  invoice?: Invoice
 
   delay: number
 
   createdAt: Date
   updatedAt: Date
 
+  annotations: Annotation[]
+
   purchaseOrder: PurchaseOrder
+}
+
+export interface Invoice {
+  emittedAt: Date
+  number: number
+  value: number
+}
+
+export interface AnnotationContent {
+  content: string
+}
+
+export interface Annotation extends AnnotationContent {
+  id: string
+  user: User
+  createdAt: Date | string
 }
 
 export interface PurchaseOrder {

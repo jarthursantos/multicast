@@ -4,7 +4,7 @@ export const Container = styled.div`
   grid-area: FILTERS;
 
   position: fixed;
-  top: 150px;
+  top: 155px;
   bottom: 0;
   right: 0;
 

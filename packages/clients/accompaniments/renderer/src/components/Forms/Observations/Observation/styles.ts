@@ -10,6 +10,7 @@ export const Content = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary.dark};
   font-size: 14px;
   text-align: justify;
+  text-transform: uppercase;
 `
 
 export const CreationData = styled.div`

@@ -8,6 +8,7 @@ const INITIAL_STATE: AccompanimentsState = {
   loading: false,
 
   updatingAccompaniment: false,
+  additingAnnotation: false,
 
   markingAsSended: false,
   markingAsReviewed: false,
@@ -59,6 +60,32 @@ export default function accompaniments(
       }
       case Types.UPDATE_ACCOMPANIMENT_REQUEST: {
         draft.updatingAccompaniment = true
+
+        break
+      }
+
+      case Types.ADD_ANNOTATION_SUCCESS: {
+        const { id, annotation } = action.payload
+
+        const scheduleIndex = draft.accompaniments.findIndex(
+          current => current.id === id
+        )
+
+        if (scheduleIndex !== -1) {
+          draft.accompaniments[scheduleIndex].annotations.push(annotation)
+        }
+
+        draft.additingAnnotation = false
+
+        break
+      }
+      case Types.ADD_ANNOTATION_FAILURE: {
+        draft.additingAnnotation = false
+
+        break
+      }
+      case Types.ADD_ANNOTATION_REQUEST: {
+        draft.additingAnnotation = true
 
         break
       }

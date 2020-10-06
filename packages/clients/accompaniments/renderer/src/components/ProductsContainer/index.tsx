@@ -23,6 +23,7 @@ const ProductsContainer: React.FC = () => {
         data={[{ code: '1', provider: 'Teste' }]}
         keyBinding="code"
         columns={columns}
+        resolveRowStyle={() => ({})}
       />
     </Container>
   )

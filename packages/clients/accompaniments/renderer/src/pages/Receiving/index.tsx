@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   MdEventAvailable,
   MdLockOpen,
@@ -33,6 +33,19 @@ const Receiving: React.FC = () => {
   const receivingAccompaniments = useReceivingAccompaniments()
   const downloadedAccompaniments = useDownloadedAccompaniments()
   const unlockedAccompaniments = useUnlockedAccompaniments()
+
+  const handleResolveRowStyle = useCallback(
+    (accompaniment: Accompaniment): React.CSSProperties => {
+      const { isBonification } = accompaniment.purchaseOrder
+      const { isOutstandingBalance } = accompaniment
+
+      return {
+        ...(isBonification ? { color: 'blue' } : {}),
+        ...(isOutstandingBalance ? { fontWeight: 500 } : {})
+      }
+    },
+    []
+  )
 
   return (
     <Wrapper>
@@ -79,6 +92,7 @@ const Receiving: React.FC = () => {
               keyBinding="id"
               columns={scheduledColumns}
               data={scheduledAccompaniments}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -87,6 +101,7 @@ const Receiving: React.FC = () => {
               keyBinding="id"
               columns={receivingColumns}
               data={receivingAccompaniments}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -95,6 +110,7 @@ const Receiving: React.FC = () => {
               keyBinding="id"
               columns={downloadedColumns}
               data={downloadedAccompaniments}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -103,6 +119,7 @@ const Receiving: React.FC = () => {
               keyBinding="id"
               columns={unlockedColumns}
               data={unlockedAccompaniments}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
         </Pager>

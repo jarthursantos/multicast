@@ -95,6 +95,19 @@ const InProgress: React.FC = () => {
     [handleOpenAccompaniment]
   )
 
+  const handleResolveRowStyle = useCallback(
+    (accompaniment: Accompaniment): React.CSSProperties => {
+      const { isBonification } = accompaniment.purchaseOrder
+      const { isOutstandingBalance } = accompaniment
+
+      return {
+        ...(isBonification ? { color: 'blue' } : {}),
+        ...(isOutstandingBalance ? { fontWeight: 500 } : {})
+      }
+    },
+    []
+  )
+
   return (
     <Wrapper>
       <Header>
@@ -169,6 +182,7 @@ const InProgress: React.FC = () => {
               data={allAccompaniments}
               columns={allAccompanimentsColumns}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -178,6 +192,7 @@ const InProgress: React.FC = () => {
               columns={nonRevisedColumns}
               data={nonRevisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -187,6 +202,7 @@ const InProgress: React.FC = () => {
               columns={revisedColumns}
               data={revisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -196,6 +212,7 @@ const InProgress: React.FC = () => {
               columns={releasedColumns}
               data={releasedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -205,6 +222,7 @@ const InProgress: React.FC = () => {
               columns={expectedBillingColumns}
               data={expectedBillingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -214,6 +232,7 @@ const InProgress: React.FC = () => {
               columns={billedColumns}
               data={billedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -223,6 +242,7 @@ const InProgress: React.FC = () => {
               columns={freeOnBoardColumns}
               data={freeOnBoardAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
 
@@ -232,6 +252,7 @@ const InProgress: React.FC = () => {
               columns={schedulingColumns}
               data={schedulingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
+              resolveRowStyle={handleResolveRowStyle}
             />
           </Pager.Page>
         </Pager>

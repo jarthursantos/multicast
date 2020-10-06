@@ -6,7 +6,10 @@ import { Container, Inline } from '../styles'
 import { InvoiceContainer } from './styles'
 import { AccompanimentDataProps } from './types'
 
-const AccompanimentData: React.VFC<AccompanimentDataProps> = ({ disabled }) => {
+const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
+  disabled,
+  isFreeOnBoard
+}) => {
   return (
     <Container>
       <h3>Dados do Andamento</h3>
@@ -26,30 +29,18 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({ disabled }) => {
       <InvoiceContainer disabled={disabled}>
         <h3>Nota Fiscal</h3>
 
-        <DateInput
-          name="invoice.emittedAt"
-          label="Emissão"
-          inputProps={{ disabled }}
-        />
+        <DateInput name="emittedAt" label="Emissão" inputProps={{ disabled }} />
 
         <Inline>
-          <NumberInput
-            name="invoice.number"
-            label="Número"
-            inputProps={{ disabled }}
-          />
-          <NumberInput
-            name="invoice.value"
-            label="Valor"
-            inputProps={{ disabled }}
-          />
+          <NumberInput name="number" label="Número" inputProps={{ disabled }} />
+          <NumberInput name="value" label="Valor" inputProps={{ disabled }} />
         </Inline>
       </InvoiceContainer>
 
       <DateInput
         name="freeOnBoardAt"
         label="FOB SP"
-        inputProps={{ disabled }}
+        inputProps={{ disabled: disabled || !isFreeOnBoard }}
       />
 
       <DateInput

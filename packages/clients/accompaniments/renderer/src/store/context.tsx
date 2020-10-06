@@ -61,7 +61,7 @@ export function useBilledAccompaniments() {
   return accompaniments.filter(
     accompaniment =>
       accompaniment.expectedBillingAt !== null &&
-      accompaniment.billingAt === null
+      accompaniment.invoiceId === null
   )
 }
 
@@ -70,7 +70,7 @@ export function useFreeOnBoardAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.billingAt !== null &&
+      accompaniment.invoiceId !== null &&
       accompaniment.freeOnBoardAt === null &&
       accompaniment.purchaseOrder.freight === 'FOB'
   )
@@ -79,11 +79,28 @@ export function useFreeOnBoardAccompaniments() {
 export function useSchedulingAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments.filter(
-    accompaniment =>
+  return accompaniments.filter(accompaniment => {
+    if (accompaniment.schedulingAt !== null) {
+      return false
+    }
+
+    if (
+      accompaniment.purchaseOrder.freight === 'CIF' &&
+      accompaniment.invoiceId !== null
+    ) {
+      return true
+    }
+
+    if (
+      accompaniment.purchaseOrder.freight !== 'CIF' &&
       accompaniment.freeOnBoardAt !== null &&
-      accompaniment.schedulingAt === null
-  )
+      accompaniment.invoiceId !== null
+    ) {
+      return true
+    }
+
+    return false
+  })
 }
 
 export function useScheduledAccompaniments() {

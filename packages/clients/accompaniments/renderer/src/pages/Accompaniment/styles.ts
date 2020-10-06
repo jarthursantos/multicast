@@ -1,15 +1,22 @@
 import styled from 'styled-components'
 
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 export const Container = styled.div`
   display: flex;
 
-  & > * {
-    width: 380px;
-  }
-
   padding: 8px;
 
-  & > div {
-    padding: 8px;
+  form {
+    display: flex;
+
+    & > * {
+      margin: 0;
+      padding: 8px;
+      width: 374px;
+    }
   }
 `

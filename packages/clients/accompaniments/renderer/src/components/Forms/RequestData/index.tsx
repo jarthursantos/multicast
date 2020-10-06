@@ -128,14 +128,14 @@ const RequestData: React.FC = () => {
             </DataTuple>
 
             <DataTuple>
-              <ColorIndicator color={colors[0]} />
+              <ColorIndicator color={colors[0]} size={12} />
               <strong>Entregue</strong>
 
               <span>R$ 500.000,00</span>
             </DataTuple>
 
             <DataTuple>
-              <ColorIndicator color={colors[1]} />
+              <ColorIndicator color={colors[1]} size={12} />
               <strong>Pendente</strong>
 
               <span>R$ 500.000,00</span>

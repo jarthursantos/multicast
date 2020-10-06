@@ -1,8 +1,15 @@
-import { Accompaniment } from '~/store/modules/accompaniments/types'
+import { Accompaniment, Annotation } from '~/store/modules/accompaniments/types'
 
-export interface SuccessActionResult {
+export interface AccompanimentSuccessActionResult {
   type: string
   payload: {
     accompaniment: Accompaniment
+  }
+}
+
+export interface AnnotationSuccessActionResult {
+  type: string
+  payload: {
+    annotation: Annotation
   }
 }
