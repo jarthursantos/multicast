@@ -194,6 +194,7 @@ export interface Accompaniment {
   expectedBillingAt?: Date
   freeOnBoardAt?: Date
   schedulingAt?: Date
+  renewedAt?: Date
   valueDelivered: number
   isOutstandingBalance: boolean
 
