@@ -6,6 +6,7 @@ import { findAccompanimentsController } from 'use-cases/FindAccompaniments'
 import { markAccompanimentAsReleasedController } from 'use-cases/MarkAccompanimentAsReleased'
 import { markAccompanimentAsReviewedController } from 'use-cases/MarkAccompanimentAsReviewed'
 import { markAccompanimentAsSendedController } from 'use-cases/MarkAccompanimentAsSender'
+import { renewAccompanimentController } from 'use-cases/RenewAccompaniment'
 import {
   updateAccompanimentsController,
   updateAccompanimentsSchema
@@ -28,6 +29,10 @@ router.put(
     updateAccompanimentsController.handle(req, res)
   }
 )
+
+router.post('/accompaniments/:id/renew', (req: Request, res: Response) => {
+  renewAccompanimentController.handle(req, res)
+})
 
 router.post(
   '/accompaniments/:id/annotations',

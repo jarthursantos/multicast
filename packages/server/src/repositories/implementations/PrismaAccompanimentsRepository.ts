@@ -17,6 +17,24 @@ export class PrismaAccompanimentsRepository
     private invoiceRepository: IInvoicesRepository
   ) {}
 
+  async save(accompaniment: Accompaniment): Promise<void> {
+    await this.prisma.accompaniments.create({
+      data: {
+        ...omit(
+          accompaniment,
+          'invoiceId',
+          'invoice',
+          'purchaseOrder',
+          'annotations',
+          'number',
+          'value',
+          'emittedAt'
+        ),
+        number: accompaniment.purchaseOrder.number
+      }
+    })
+  }
+
   async registerPurchaseOrders(purchases: PurchaseOrder[]): Promise<void> {
     for (let i = 0; i < purchases.length; i++) {
       const purchaseOrder = purchases[i]
@@ -27,21 +45,7 @@ export class PrismaAccompanimentsRepository
         annotations: []
       })
 
-      await this.prisma.accompaniments.create({
-        data: {
-          ...omit(
-            accompaniment,
-            'invoiceId',
-            'invoice',
-            'purchaseOrder',
-            'annotations',
-            'number',
-            'value',
-            'emittedAt'
-          ),
-          number: purchaseOrder.number
-        }
-      })
+      await this.save(accompaniment)
     }
   }
 
