@@ -83,6 +83,7 @@ export class Invoice {
 
 export interface InvoiceBase {
   number: number
+  providerCode: number
   transactionNumber: number
   amountValue: number
   emittedAt: Date

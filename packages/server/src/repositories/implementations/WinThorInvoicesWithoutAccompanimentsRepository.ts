@@ -21,7 +21,8 @@ export class WinThorInvoicesWithoutAccompanimentsRepository
 
     const preEntry = await winthor.raw<InvoiceBase[]>(`
       SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
-                      PCMOVPREENT.NUMNOTA     "number",
+                      PCMOVPREENT.NUMNOTA     "number",,
+                      PCMOVPREENT.CODFORNEC   "providerCode"
                       PCNFENT.VLTOTAL         "amountValue",
                       PCNFENT.DTEMISSAO       "emittedAt"
       FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
@@ -32,9 +33,10 @@ export class WinThorInvoicesWithoutAccompanimentsRepository
 
     const normalEntry = await winthor.raw<InvoiceBase[]>(`
       SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
-                      PCMOV.NUMNOTA     "number",
-                      PCNFENT.VLTOTAL         "amountValue",
-                      PCNFENT.DTEMISSAO       "emittedAt"
+                      PCMOV.NUMNOTA     "number",,
+                      PCMOV.CODFORNEC   "providerCode"
+                      PCNFENT.VLTOTAL   "amountValue",
+                      PCNFENT.DTEMISSAO "emittedAt"
       FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
       WHERE NUMPED = ${number}
             AND PCMOV.DTCANCEL IS NULL
