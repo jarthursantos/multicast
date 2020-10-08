@@ -1,5 +1,5 @@
 import Arrival from './Arrival'
 import Finish from './Finish'
-import Release from './Release'
+import Released from './Released'
 
-export default { Arrival, Finish, Release }
+export default { Arrival, Finish, Released }

@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 
-import { useSetToken } from '@shared/axios'
+import { useAxios, useSetToken } from '@shared/axios'
 import { AuthPage, Credentials, LoginSuccessData } from '@shared/web-pages'
 
 import { loadAccompanimentsRequestAction } from '~/store/modules/accompaniments/actions'
@@ -17,6 +17,8 @@ const Next = () => {
   const dispatch = useDispatch()
   const router = useRouter()
 
+  const [, haveToken] = useAxios()
+
   const updateToken = useSetToken()
 
   const handleLoginSuccess = useCallback(
@@ -25,12 +27,19 @@ const Next = () => {
 
       dispatch(keepConnectedRequest(keepConnected))
       dispatch(logInSuccess(user, token))
-      dispatch(loadAccompanimentsRequestAction())
 
       router.push('/home')
     },
     [dispatch, updateToken, router]
   )
+
+  useEffect(() => {
+    if (!haveToken) {
+      return
+    }
+
+    dispatch(loadAccompanimentsRequestAction())
+  }, [haveToken, dispatch])
 
   return (
     <React.Fragment>

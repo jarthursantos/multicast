@@ -1,7 +1,17 @@
+import { useMemo } from 'react'
+
 import { CellType } from '@shared/web-components/DataGrid/Body/Row/Cell/types'
 import { ColumnProps } from '@shared/web-components/DataGrid/types'
 
 import { allAccompanimentsColumns } from '~/pages/InProgress/columns'
+import {
+  useDownloadedAccompaniments,
+  useNonScheduledAccompaniments,
+  useReceivingAccompaniments,
+  useScheduledAccompaniments,
+  useUnlockedAccompaniments
+} from '~/store/context'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 
 const columns: ColumnProps[] = [
   ...allAccompanimentsColumns,
@@ -51,22 +61,87 @@ const columns: ColumnProps[] = [
   }
 ]
 
-export const scheduledColumns: ColumnProps[] = excludeColumns(
-  'schedule.receivedAt',
-  'schedule.downloadedAt',
-  'schedule.unlockedAt'
-)
+export function useNonScheduledData(): ResumeData {
+  const accompaniments = useNonScheduledAccompaniments()
 
-export const receivingColumns: ColumnProps[] = excludeColumns(
-  'schedule.downloadedAt',
-  'schedule.unlockedAt'
-)
+  const columns = excludeColumns(
+    'schedule.scheduledAt',
+    'schedule.receivedAt',
+    'schedule.downloadedAt',
+    'schedule.unlockedAt'
+  )
 
-export const downloadedColumns: ColumnProps[] = excludeColumns(
-  'schedule.unlockedAt'
-)
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
 
-export const unlockedColumns: ColumnProps[] = excludeColumns()
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useScheduledData(): ResumeData {
+  const accompaniments = useScheduledAccompaniments()
+
+  const columns = excludeColumns(
+    'schedule.receivedAt',
+    'schedule.downloadedAt',
+    'schedule.unlockedAt'
+  )
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useReceivingData(): ResumeData {
+  const accompaniments = useReceivingAccompaniments()
+
+  const columns = excludeColumns('schedule.downloadedAt', 'schedule.unlockedAt')
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useDownloadedData(): ResumeData {
+  const accompaniments = useDownloadedAccompaniments()
+
+  const columns = excludeColumns('schedule.unlockedAt')
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+export function useUnlockedData(): ResumeData {
+  const accompaniments = useUnlockedAccompaniments()
+
+  const columns = excludeColumns()
+
+  return useMemo(() => {
+    const { inDay, delayed } = calcCounts(accompaniments)
+
+    return [accompaniments, columns, inDay, delayed]
+  }, [accompaniments, columns])
+}
+
+function calcCounts(accompaniments: Accompaniment[]) {
+  return accompaniments.reduce(
+    (curr, accompaniment) => {
+      if (accompaniment.delay > 2) {
+        return { ...curr, delayed: curr.delayed + 1 }
+      }
+
+      return { ...curr, inDay: curr.inDay + 1 }
+    },
+    { inDay: 0, delayed: 0 }
+  )
+}
 
 function excludeColumns(...paths: string[]): ColumnProps[] {
   return columns.filter(column => {
@@ -75,3 +150,5 @@ function excludeColumns(...paths: string[]): ColumnProps[] {
     return !exclude
   })
 }
+
+export type ResumeData = [Accompaniment[], ColumnProps[], number, number]

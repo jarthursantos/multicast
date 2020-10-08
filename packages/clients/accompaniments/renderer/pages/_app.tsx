@@ -1,3 +1,6 @@
+import 'chart.js'
+import 'chartjs-plugin-labels'
+
 import React from 'react'
 import { Provider } from 'react-redux'
 import { ToastContainer, Slide } from 'react-toastify'

@@ -1,5 +1,23 @@
 import React, { useCallback, useState } from 'react'
-import { MdDashboard, MdRefresh, MdEvent } from 'react-icons/md'
+import {
+  MdDashboard,
+  MdRefresh,
+  MdEvent,
+  MdGroup,
+  MdPerson,
+  MdShoppingCart,
+  MdLockOpen,
+  MdArrowDownward,
+  MdArrowUpward,
+  MdLocalShipping,
+  MdTrendingUp,
+  MdPublic,
+  MdCompare,
+  MdTrackChanges,
+  MdInbox,
+  MdAssignmentLate,
+  MdToday
+} from 'react-icons/md'
 import LoadingIndicator from 'react-loading'
 import { useDispatch } from 'react-redux'
 
@@ -10,9 +28,11 @@ import { Pager } from '@shared/web-components/Pager'
 import { Ribbon, TabBar, TabOptions } from '@shared/web-components/Ribbon'
 
 import Backdrop from '~/components/Backdrop'
+import { MdBarChart } from '~/components/Icons/BarChart'
 import { MdFilter } from '~/components/Icons/Filter'
 import { MdPendingAction } from '~/components/Icons/PendingAction'
 import { MdReceiptLong } from '~/components/Icons/ReceiptLong'
+import { MdTableChart } from '~/components/Icons/TableChart'
 import BillstoPay from '~/pages/BillstoPay'
 import Dashboard from '~/pages/Dashboard'
 import InProgress from '~/pages/InProgress'
@@ -39,6 +59,9 @@ const Home = () => {
   const [currentPurchaseResumePage, setPurchaseResumePage] = useState<string>()
   const [currentRevenuesPage, setRevenuesPage] = useState<string>()
   const [currentStockPositionPage, setStockPositionPage] = useState<string>()
+  const [currentSalesByProviderPage, setSalesByProviderPage] = useState<
+    string
+  >()
 
   const handleRefresh = useCallback(() => {
     dispatch(loadAccompanimentsRequestAction())
@@ -47,7 +70,7 @@ const Home = () => {
   return (
     <StoreContextProvider>
       <Head>
-        <title>FollowUP Compras - Pedidos</title>
+        <title>FollowUP Compras - Pedidos - Em Andamento - A Enviar</title>
       </Head>
 
       <Ribbon>
@@ -55,7 +78,7 @@ const Home = () => {
           <TabBar.Button name="accompaniments" label="Pedidos" />
           <TabBar.Button name="schedule" label="Agenda" />
           <TabBar.Button name="billsToPay" label="Contas a Pagar" />
-          <TabBar.Button name="stock" label="Estoque" />
+          <TabBar.Button name="stock" label="Notificações do Estoque" />
           <TabBar.Button name="representatives" label="Representantes" />
           <TabBar.Button name="purchaseResume" label="Resumo de Compras" />
           <TabBar.Button name="revenues" label="Faturamento" />
@@ -154,21 +177,21 @@ const Home = () => {
               <ButtonGroup.Button
                 name="arrival"
                 label="Chegada de Produtos"
-                icon={<MdDashboard />}
+                icon={<MdArrowDownward />}
                 width={105}
               />
 
               <ButtonGroup.Button
                 name="release"
                 label="Liberação de Produtos"
-                icon={<MdPendingAction />}
+                icon={<MdLockOpen />}
                 width={108}
               />
 
               <ButtonGroup.Button
                 name="finish"
                 label="Término de Produtos"
-                icon={<MdReceiptLong />}
+                icon={<MdArrowUpward />}
                 width={105}
               />
             </ButtonGroup>
@@ -198,21 +221,21 @@ const Home = () => {
               <ButtonGroup.Button
                 name="general"
                 label="Tabela Geral"
-                icon={<MdDashboard />}
+                icon={<MdGroup />}
                 width={80}
               />
 
               <ButtonGroup.Button
                 name="perRepresentative"
                 label="Agrupar por Representante"
-                icon={<MdPendingAction />}
+                icon={<MdPerson />}
                 width={108}
               />
 
               <ButtonGroup.Button
                 name="perBuyer"
                 label="Agrupar por Comprador"
-                icon={<MdReceiptLong />}
+                icon={<MdShoppingCart />}
                 width={105}
               />
             </ButtonGroup>
@@ -242,28 +265,28 @@ const Home = () => {
               <ButtonGroup.Button
                 name="fromProvider"
                 label="Por Fornecedor"
-                icon={<MdDashboard />}
+                icon={<MdLocalShipping />}
                 width={85}
               />
 
               <ButtonGroup.Button
                 name="fromEvolution"
                 label="Por Evolução"
-                icon={<MdPendingAction />}
+                icon={<MdTrendingUp />}
                 width={80}
               />
 
               <ButtonGroup.Button
                 name="fromState"
                 label="Por Estado"
-                icon={<MdReceiptLong />}
+                icon={<MdPublic />}
                 width={80}
               />
 
               <ButtonGroup.Button
                 name="fromBuyer"
                 label="Por Comprador"
-                icon={<MdReceiptLong />}
+                icon={<MdShoppingCart />}
                 width={85}
               />
             </ButtonGroup>
@@ -275,110 +298,26 @@ const Home = () => {
               onClick={console.log}
               width={80}
               label="Aplicar Filtro"
-            />
-
-            <ActionIconButton
-              icon={<MdRefresh />}
-              onClick={handleRefresh}
-              width={85}
-              label="Recarregar Dados"
             />
           </TabOptions.Content>
 
           <TabOptions.Content name="revenues">
             <ButtonGroup
-              initialButton="perSupervidor"
+              initialButton="data"
               onSelectionChange={setRevenuesPage}
             >
               <ButtonGroup.Button
-                name="perSupervidor"
-                label="Por Supervisor"
-                icon={<MdDashboard />}
-                width={78}
+                name="data"
+                label="Dados"
+                icon={<MdTableChart />}
+                width={80}
               />
 
               <ButtonGroup.Button
-                name="perMonth"
-                label="Por Mês"
-                icon={<MdPendingAction />}
-                width={70}
-              />
-
-              <ButtonGroup.Button
-                name="perDeadline"
-                label="Por Prazo"
-                icon={<MdPendingAction />}
-                width={70}
-              />
-
-              <ButtonGroup.Button
-                name="perEvolution"
-                label="Por Evolução"
-                icon={<MdPendingAction />}
-                width={78}
-              />
-
-              <ButtonGroup.Button
-                name="perClass"
-                label="Por Classe"
-                icon={<MdPendingAction />}
-                width={70}
-              />
-
-              <ButtonGroup.Button
-                name="perRegion"
-                label="Por Região"
-                icon={<MdPendingAction />}
-                width={70}
-              />
-
-              <ButtonGroup.Button
-                name="perEmitter"
-                label="Por Emitente"
-                icon={<MdPendingAction />}
-                width={78}
-              />
-
-              <ButtonGroup.Button
-                name="analitic"
-                label="Analítico"
-                icon={<MdPendingAction />}
-                width={78}
-              />
-
-              <ButtonGroup.Button
-                name="perCharge"
-                label="Por Cobrança"
-                icon={<MdPendingAction />}
-                width={78}
-              />
-
-              <ButtonGroup.Button
-                name="perCheckOut"
-                label="Por Checkout"
-                icon={<MdPendingAction />}
-                width={78}
-              />
-
-              <ButtonGroup.Button
-                name="perSalesOrigin"
-                label="Por Origem Venda"
-                icon={<MdPendingAction />}
-                width={105}
-              />
-
-              <ButtonGroup.Button
-                name="perActuationArea"
-                label="Por Área de Atuação"
-                icon={<MdPendingAction />}
-                width={105}
-              />
-
-              <ButtonGroup.Button
-                name="perProvider"
-                label="Por Fornecedor"
-                icon={<MdPendingAction />}
-                width={85}
+                name="graphs"
+                label="Gráficos"
+                icon={<MdBarChart />}
+                width={80}
               />
             </ButtonGroup>
 
@@ -389,13 +328,6 @@ const Home = () => {
               onClick={console.log}
               width={80}
               label="Aplicar Filtro"
-            />
-
-            <ActionIconButton
-              icon={<MdRefresh />}
-              onClick={handleRefresh}
-              width={85}
-              label="Recarregar Dados"
             />
           </TabOptions.Content>
 
@@ -407,28 +339,28 @@ const Home = () => {
               <ButtonGroup.Button
                 name="general"
                 label="Estoque Geral"
-                icon={<MdDashboard />}
+                icon={<MdInbox />}
                 width={80}
               />
 
               <ButtonGroup.Button
                 name="syntheticMovement"
                 label="Movimento Sintético"
-                icon={<MdPendingAction />}
+                icon={<MdTrackChanges />}
                 width={90}
               />
 
               <ButtonGroup.Button
                 name="master"
                 label="Master"
-                icon={<MdReceiptLong />}
+                icon={<MdAssignmentLate />}
                 width={80}
               />
 
               <ButtonGroup.Button
                 name="comparative"
                 label="Comparativo"
-                icon={<MdReceiptLong />}
+                icon={<MdCompare />}
                 width={95}
               />
             </ButtonGroup>
@@ -441,28 +373,24 @@ const Home = () => {
               width={80}
               label="Aplicar Filtro"
             />
-
-            <ActionIconButton
-              icon={<MdRefresh />}
-              onClick={handleRefresh}
-              width={85}
-              label="Recarregar Dados"
-            />
           </TabOptions.Content>
 
           <TabOptions.Content name="salesByProvider">
-            <ButtonGroup initialButton="resume">
+            <ButtonGroup
+              initialButton="data"
+              onSelectionChange={setSalesByProviderPage}
+            >
               <ButtonGroup.Button
-                name="resume"
+                name="data"
                 label="Dados"
-                icon={<MdDashboard />}
+                icon={<MdTableChart />}
                 width={80}
               />
 
               <ButtonGroup.Button
-                name="inProgress"
+                name="month"
                 label="Por Mês"
-                icon={<MdPendingAction />}
+                icon={<MdToday />}
                 width={80}
               />
             </ButtonGroup>
@@ -474,13 +402,6 @@ const Home = () => {
               onClick={console.log}
               width={80}
               label="Aplicar Filtro"
-            />
-
-            <ActionIconButton
-              icon={<MdRefresh />}
-              onClick={handleRefresh}
-              width={85}
-              label="Recarregar Dados"
             />
           </TabOptions.Content>
         </Ribbon.Options>
@@ -528,7 +449,7 @@ const Home = () => {
               </Pager.Page>
 
               <Pager.Page name="release">
-                <Stock.Release />
+                <Stock.Released />
               </Pager.Page>
 
               <Pager.Page name="finish">
@@ -538,19 +459,7 @@ const Home = () => {
           </Ribbon.Content>
 
           <Ribbon.Content name="representatives">
-            <Pager currentPage={currentRepresentativePage}>
-              <Pager.Page name="general">
-                <Representatives.General />
-              </Pager.Page>
-
-              <Pager.Page name="perRepresentative">
-                <Representatives.PerRepresentative />
-              </Pager.Page>
-
-              <Pager.Page name="perBuyer">
-                <Representatives.PerBuyer />
-              </Pager.Page>
-            </Pager>
+            <Representatives currentPage={currentRepresentativePage} />
           </Ribbon.Content>
 
           <Ribbon.Content name="purchaseResume">
@@ -574,59 +483,7 @@ const Home = () => {
           </Ribbon.Content>
 
           <Ribbon.Content name="revenues">
-            <Pager currentPage={currentRevenuesPage}>
-              <Pager.Page name="perSupervidor">
-                <Revenues.PerSupervisor />
-              </Pager.Page>
-
-              <Pager.Page name="perMonth">
-                <Revenues.PerMonth />
-              </Pager.Page>
-
-              <Pager.Page name="perDeadline">
-                <Revenues.PerDeadline />
-              </Pager.Page>
-
-              <Pager.Page name="perEvolution">
-                <Revenues.PerEvolution />
-              </Pager.Page>
-
-              <Pager.Page name="perClass">
-                <Revenues.PerClass />
-              </Pager.Page>
-
-              <Pager.Page name="perRegion">
-                <Revenues.PerRegion />
-              </Pager.Page>
-
-              <Pager.Page name="perEmitter">
-                <Revenues.PerEmitter />
-              </Pager.Page>
-
-              <Pager.Page name="analitic">
-                <Revenues.Analitic />
-              </Pager.Page>
-
-              <Pager.Page name="perCharge">
-                <Revenues.PerCharge />
-              </Pager.Page>
-
-              <Pager.Page name="perCheckOut">
-                <Revenues.PerCheckOut />
-              </Pager.Page>
-
-              <Pager.Page name="perSalesOrigin">
-                <Revenues.PerSalesOrigin />
-              </Pager.Page>
-
-              <Pager.Page name="perActuationArea">
-                <Revenues.PerActuationArea />
-              </Pager.Page>
-
-              <Pager.Page name="perProvider">
-                <Revenues.PerProvider />
-              </Pager.Page>
-            </Pager>
+            <Revenues currentPage={currentRevenuesPage} />
           </Ribbon.Content>
 
           <Ribbon.Content name="stockPosition">
@@ -650,7 +507,7 @@ const Home = () => {
           </Ribbon.Content>
 
           <Ribbon.Content name="salesByProvider">
-            <SalesByProvider />
+            <SalesByProvider currentPage={currentSalesByProviderPage} />
           </Ribbon.Content>
         </Ribbon.Container>
       </Ribbon>

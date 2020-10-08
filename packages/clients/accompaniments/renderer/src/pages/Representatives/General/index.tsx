@@ -1,9 +1,25 @@
 import React from 'react'
 
-// import { Container } from './styles';
+import { DataGrid } from '@shared/web-components'
+
+import { useAllRepresentatives } from '../context'
+import { Representative } from '../types'
+import { columns } from './columns'
+import { Wrapper } from './styles'
 
 const General: React.FC = () => {
-  return <h1>General</h1>
+  const data = useAllRepresentatives()
+
+  return (
+    <Wrapper>
+      <DataGrid<Representative>
+        keyBinding="provider.code"
+        data={data}
+        columns={columns}
+        resolveRowStyle={() => ({})}
+      />
+    </Wrapper>
+  )
 }
 
 export default General

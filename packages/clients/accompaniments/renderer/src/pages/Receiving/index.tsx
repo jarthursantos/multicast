@@ -3,36 +3,62 @@ import {
   MdEventAvailable,
   MdLockOpen,
   MdAssignmentTurnedIn,
-  MdSystemUpdateAlt
+  MdSystemUpdateAlt,
+  MdEventBusy
 } from 'react-icons/md'
 
 import { DataGrid, Pager } from '@shared/web-components'
 
 import ProductsContainer from '~/components/ProductsContainer'
 import SituationGroup from '~/components/SituationGroup'
-import {
-  useScheduledAccompaniments,
-  useReceivingAccompaniments,
-  useDownloadedAccompaniments,
-  useUnlockedAccompaniments
-} from '~/store/context'
 import { Accompaniment } from '~/store/modules/accompaniments/types'
 
 import {
-  scheduledColumns,
-  receivingColumns,
-  downloadedColumns,
-  unlockedColumns
+  useNonScheduledData,
+  useScheduledData,
+  useReceivingData,
+  useDownloadedData,
+  useUnlockedData
 } from './columns'
 import { Wrapper, Header, Container, ProductsWrapper } from './styles'
 
 const Receiving: React.FC = () => {
   const [currentSituation, setCurrentSituation] = useState<string>()
 
-  const scheduledAccompaniments = useScheduledAccompaniments()
-  const receivingAccompaniments = useReceivingAccompaniments()
-  const downloadedAccompaniments = useDownloadedAccompaniments()
-  const unlockedAccompaniments = useUnlockedAccompaniments()
+  const [
+    nonScheduledAccompaniments,
+    nonScheduledAccompanimentsColumns,
+    nonScheduledAccompanimentsCount,
+    nonScheduledAccompanimentsDelayed
+  ] = useNonScheduledData()
+
+  const [
+    scheduledAccompaniments,
+    scheduledAccompanimentsColumns,
+    scheduledAccompanimentsCount,
+    scheduledAccompanimentsDelayed
+  ] = useScheduledData()
+
+  const [
+    receivingAccompaniments,
+    receivingAccompanimentsColumns,
+    receivingAccompanimentsCount,
+    receivingAccompanimentsDelayed
+  ] = useReceivingData()
+
+  const [
+    downloadedAccompaniments,
+    downloadedAccompanimentsColumns,
+    downloadedAccompanimentsCount,
+    downloadedAccompanimentsDelayed
+  ] = useDownloadedData()
+
+  const [
+    unlockedAccompaniments,
+    unlockedAccompanimentsColumns,
+    unlockedAccompanimentsCount,
+    unlockedAccompanimentsDelayed
+  ] = useUnlockedData()
 
   const handleResolveRowStyle = useCallback(
     (accompaniment: Accompaniment): React.CSSProperties => {
@@ -51,46 +77,66 @@ const Receiving: React.FC = () => {
     <Wrapper>
       <Header>
         <SituationGroup
-          initialGroup="scheduled"
+          initialGroup="nonScheduled"
           onGroupChange={setCurrentSituation}
         >
+          <SituationGroup.Button
+            name="nonScheduled"
+            label="Não Agendados"
+            icon={<MdEventBusy />}
+            delayCount={nonScheduledAccompanimentsDelayed}
+            accompanimentCount={nonScheduledAccompanimentsCount}
+          />
+
           <SituationGroup.Button
             name="scheduled"
             label="Agendados"
             icon={<MdEventAvailable />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={scheduledAccompanimentsDelayed}
+            accompanimentCount={scheduledAccompanimentsCount}
           />
+
           <SituationGroup.Button
             name="received"
             label="Recebidos"
             icon={<MdAssignmentTurnedIn />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={receivingAccompanimentsDelayed}
+            accompanimentCount={receivingAccompanimentsCount}
           />
+
           <SituationGroup.Button
             name="downloaded"
             label="Descarregados"
             icon={<MdSystemUpdateAlt />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={downloadedAccompanimentsDelayed}
+            accompanimentCount={downloadedAccompanimentsCount}
           />
+
           <SituationGroup.Button
             name="unlocked"
             label="Desbloqueados"
             icon={<MdLockOpen />}
-            delayCount={1}
-            accompanimentCount={10}
+            delayCount={unlockedAccompanimentsDelayed}
+            accompanimentCount={unlockedAccompanimentsCount}
           />
         </SituationGroup>
       </Header>
 
       <Container>
         <Pager currentPage={currentSituation}>
+          <Pager.Page name="nonScheduled">
+            <DataGrid<Accompaniment>
+              keyBinding="id"
+              columns={nonScheduledAccompanimentsColumns}
+              data={nonScheduledAccompaniments}
+              resolveRowStyle={handleResolveRowStyle}
+            />
+          </Pager.Page>
+
           <Pager.Page name="scheduled">
             <DataGrid<Accompaniment>
               keyBinding="id"
-              columns={scheduledColumns}
+              columns={scheduledAccompanimentsColumns}
               data={scheduledAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
             />
@@ -99,7 +145,7 @@ const Receiving: React.FC = () => {
           <Pager.Page name="received">
             <DataGrid<Accompaniment>
               keyBinding="id"
-              columns={receivingColumns}
+              columns={receivingAccompanimentsColumns}
               data={receivingAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
             />
@@ -108,7 +154,7 @@ const Receiving: React.FC = () => {
           <Pager.Page name="downloaded">
             <DataGrid<Accompaniment>
               keyBinding="id"
-              columns={downloadedColumns}
+              columns={downloadedAccompanimentsColumns}
               data={downloadedAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
             />
@@ -117,7 +163,7 @@ const Receiving: React.FC = () => {
           <Pager.Page name="unlocked">
             <DataGrid<Accompaniment>
               keyBinding="id"
-              columns={unlockedColumns}
+              columns={unlockedAccompanimentsColumns}
               data={unlockedAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
             />

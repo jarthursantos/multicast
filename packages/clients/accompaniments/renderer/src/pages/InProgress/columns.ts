@@ -384,7 +384,7 @@ export const allAccompanimentsColumns: ColumnProps[] = [
     },
     cell: {
       type: CellType.DATE,
-      path: 'schedulingForecastAt'
+      path: 'schedulingAt'
     }
   }
 ]

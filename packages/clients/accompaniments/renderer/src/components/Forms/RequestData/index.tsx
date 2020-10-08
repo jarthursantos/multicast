@@ -1,6 +1,3 @@
-import 'chart.js'
-import 'chartjs-plugin-labels'
-
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 

@@ -11,7 +11,6 @@ export const Wrapper = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: transparent;
-  /* border-color: ${({ theme }) => theme.colors.border.secondary}; */
   color: ${({ theme }) => theme.colors.text.secondary.dark};
   fill: ${({ theme }) => theme.colors.text.secondary.dark};
   padding: 8px 12px 8px 8px;
@@ -21,7 +20,6 @@ export const Wrapper = styled.div`
   &:hover {
     background: rgba(144, 145, 145, 0.1);
     border-color: rgba(144, 145, 145, 0.2);
-    /* border-color: ${darken(0.2, '#909191')}; */
     color: ${darken(0.2, '#909191')};
     fill: ${darken(0.2, '#909191')};
   }
@@ -29,7 +27,6 @@ export const Wrapper = styled.div`
   &.active {
     background: rgba(219, 68, 55, 0.1);
     border-color: rgba(219, 68, 55, 0.2);
-    /* border-color: #db4437; */
     color: #db4437;
     fill: #db4437;
   }

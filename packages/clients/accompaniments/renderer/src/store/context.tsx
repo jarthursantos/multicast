@@ -18,7 +18,9 @@ export const StoreContextProvider: React.FC = ({ children }) => {
 export function useInProgressAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments
+  return accompaniments.filter(
+    accompaniment => accompaniment.schedulingAt === null
+  )
 }
 
 export function useNonRevisedAccompaniments() {
@@ -103,11 +105,19 @@ export function useSchedulingAccompaniments() {
   })
 }
 
-export function useScheduledAccompaniments() {
+export function useNonScheduledAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
     accompaniment => accompaniment.schedulingAt !== null
+  )
+}
+
+export function useScheduledAccompaniments() {
+  const { accompaniments } = useContext(StoreContext)
+
+  return accompaniments.filter(
+    accompaniment => accompaniment.schedule !== undefined
   )
 }
 
@@ -115,7 +125,9 @@ export function useReceivingAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment => accompaniment.schedulingAt !== null
+    accompaniment =>
+      accompaniment.schedulingAt !== null &&
+      accompaniment.schedule !== undefined
   )
 }
 
@@ -123,7 +135,9 @@ export function useDownloadedAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment => accompaniment.schedulingAt !== null
+    accompaniment =>
+      accompaniment.schedulingAt !== null &&
+      accompaniment.schedule !== undefined
   )
 }
 
@@ -131,6 +145,8 @@ export function useUnlockedAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment => accompaniment.schedulingAt !== null
+    accompaniment =>
+      accompaniment.schedulingAt !== null &&
+      accompaniment.schedule !== undefined
   )
 }

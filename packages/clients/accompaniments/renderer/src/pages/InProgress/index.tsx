@@ -145,28 +145,28 @@ const InProgress: React.FC = () => {
           />
           <SituationGroup.Button
             name="expectedBilling"
-            label="A Faturar"
+            label="A Prever Faturamento"
             icon={<MdPendingAction />}
             delayCount={expectedBillingDelayed}
             accompanimentCount={expectedBillingCount}
           />
           <SituationGroup.Button
             name="billed"
-            label="Faturados"
+            label="A Faturar"
             icon={<MdReceipt />}
             delayCount={billedDelayed}
             accompanimentCount={billedCount}
           />
           <SituationGroup.Button
             name="freeOnBoard"
-            label="FOB"
+            label="A Agendar FOB"
             icon={<MdLocalShipping />}
             delayCount={freeOnBoardDelayed}
             accompanimentCount={freeOnBoardCount}
           />
           <SituationGroup.Button
             name="scheduling"
-            label="A Agendar"
+            label="A Prever Agendamento"
             icon={<MdToday />}
             delayCount={schedulingDelayed}
             accompanimentCount={schedulingCount}

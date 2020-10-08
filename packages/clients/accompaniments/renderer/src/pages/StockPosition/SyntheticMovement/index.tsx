@@ -1,9 +1,20 @@
 import React from 'react'
 
-// import { Container } from './styles';
+import { DataGrid } from '@shared/web-components'
+
+import { Wrapper } from '../styles'
 
 const SyntheticMovement: React.FC = () => {
-  return <h1>SyntheticMovement</h1>
+  return (
+    <Wrapper>
+      <DataGrid<{ code: string }>
+        keyBinding="code"
+        data={[{ code: '1' }]}
+        columns={[]}
+        resolveRowStyle={() => ({})}
+      />
+    </Wrapper>
+  )
 }
 
 export default SyntheticMovement

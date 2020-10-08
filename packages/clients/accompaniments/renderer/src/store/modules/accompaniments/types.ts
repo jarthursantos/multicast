@@ -208,6 +208,12 @@ export interface Accompaniment {
   annotations: Annotation[]
 
   purchaseOrder: PurchaseOrder
+  schedule: Schedule
+}
+
+export interface Schedule {
+  scheduledAt: Date
+  shippingName: string
 }
 
 export interface Invoice {

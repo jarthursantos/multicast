@@ -164,6 +164,13 @@ const AccompanimentPage: React.FC = () => {
           onClick={handleSubmitForm}
         />
 
+        <Button
+          secondary
+          label="Cancelar"
+          loading={updatingAccompaniment}
+          onClick={handleSubmitForm}
+        />
+
         {!sended && (
           <Button
             label="Confirmar Envio do Pedido"

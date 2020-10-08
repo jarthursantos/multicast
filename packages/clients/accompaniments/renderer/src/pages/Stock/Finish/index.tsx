@@ -1,9 +1,27 @@
 import React from 'react'
 
-// import { Container } from './styles';
+import { DataGrid, SplitContainer } from '@shared/web-components'
+
+import { providerColumns } from '../columns'
+import { columns } from './columns'
 
 const Finish: React.FC = () => {
-  return <h1>Finish</h1>
+  return (
+    <SplitContainer>
+      <DataGrid<{ code: number }>
+        keyBinding="code"
+        data={[{ code: 1 }]}
+        columns={providerColumns}
+        resolveRowStyle={() => ({})}
+      />
+      <DataGrid<{ code: number }>
+        keyBinding="code"
+        data={[{ code: 1 }]}
+        columns={columns}
+        resolveRowStyle={() => ({})}
+      />
+    </SplitContainer>
+  )
 }
 
 export default Finish
