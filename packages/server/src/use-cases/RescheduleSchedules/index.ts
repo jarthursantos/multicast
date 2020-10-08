@@ -16,7 +16,7 @@ const winThorInvoiceSituationsRepository = new WinThorInvoiceSituationsRepositor
 
 const scheduleSitationsProvider = new ScheduleSituationsProvider()
 
-const primsaInvoiceRepository = new PrismaInvoicesRepository(
+const prismaInvoiceRepository = new PrismaInvoicesRepository(
   winThorProviderRepository,
   winThorInvoiceSituationsRepository
 )
@@ -32,7 +32,7 @@ const prismaSchedulesRepository = new PrismaSchedulesRepository(
 )
 
 const prismaRescheduleInvoicesRepository = new PrismaRescheduleInvoicesRepository(
-  primsaInvoiceRepository,
+  prismaInvoiceRepository,
   prismaSchedulesRepository
 )
 

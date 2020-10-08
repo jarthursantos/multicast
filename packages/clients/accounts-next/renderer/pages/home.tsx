@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAxios } from '@shared/axios'
 
 const Home = () => {
-  const api = useAxios()
+  const [api] = useAxios()
 
   const handleGithub = useCallback(async () => {
     const { data } = await api.get('/users/jarthursantos')

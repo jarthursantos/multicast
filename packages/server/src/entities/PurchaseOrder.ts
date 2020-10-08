@@ -1,11 +1,11 @@
 import { Buyer } from './Buyer'
-import { Provider } from './Provider'
+import { DetailedProvider } from './Provider'
 
 export class PurchaseOrder {
   public number: number
   public emittedAt: Date
   public isBonification: boolean
-  public provider: Provider
+  public provider: DetailedProvider
   public buyer: Buyer
   public freight: string
   public amountValue: number

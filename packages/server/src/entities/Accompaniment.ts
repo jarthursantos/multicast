@@ -41,6 +41,7 @@ export class Accompaniment {
         'schedulingAt',
         'valueDelivered',
         'invoiceId',
+        'invoice',
         'createdAt',
         'updatedAt',
         'annotations'

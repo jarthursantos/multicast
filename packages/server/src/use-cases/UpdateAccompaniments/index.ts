@@ -1,7 +1,10 @@
 import { PrismaLastPurchaseOrderProvider } from 'providers/implementations/PrismaLastPurchaseOrderProvider'
 import { PrismaAccompanimentsRepository } from 'repositories/implementations/PrismaAccompanimentsRepository'
 import { PrismaAnnotationsRepository } from 'repositories/implementations/PrismaAnnotationsRepository'
+import { PrismaInvoicesRepository } from 'repositories/implementations/PrismaInvoicesRepository'
 import { PrismaUsersRepository } from 'repositories/implementations/PrismaUsersRepository'
+import { WinThorInvoiceSituationsRepository } from 'repositories/implementations/WinThorInvoiceSituationsRepository'
+import { WinThorProviderRepository } from 'repositories/implementations/WinThorProviderRepository'
 import { WinThorPurchaseOrderRepository } from 'repositories/implementations/WinThorPurchaseOrderRepository'
 
 import { UpdateAccompanimentsController } from './UpdateAccompanimentsController'
@@ -20,13 +23,24 @@ const prismaAnnotationsRepository = new PrismaAnnotationsRepository(
   prismaUsersRepository
 )
 
+const winThorProviderRepository = new WinThorProviderRepository()
+
+const winThorInvoiceSituationsRepository = new WinThorInvoiceSituationsRepository()
+
+const prismaInvoicesRepository = new PrismaInvoicesRepository(
+  winThorProviderRepository,
+  winThorInvoiceSituationsRepository
+)
+
 const prismaAccompanimentsRepository = new PrismaAccompanimentsRepository(
   winThorPurchaseOrderRepository,
-  prismaAnnotationsRepository
+  prismaAnnotationsRepository,
+  prismaInvoicesRepository
 )
 
 const updateAccompanimentsUseCase = new UpdateAccompanimentsUseCase(
-  prismaAccompanimentsRepository
+  prismaAccompanimentsRepository,
+  prismaInvoicesRepository
 )
 
 const updateAccompanimentsController = new UpdateAccompanimentsController(

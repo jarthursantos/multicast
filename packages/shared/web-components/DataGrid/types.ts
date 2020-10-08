@@ -1,5 +1,4 @@
 import { CellProps } from './Body/Row/Cell/types'
-import { RowStyle } from './Body/Row/types'
 import { FooterCellProps } from './Footer/Cell/types'
 import { HeaderCellProps } from './Header/Cell/types'
 
@@ -19,8 +18,8 @@ export interface GridProps {
 export interface DataGridProps<Data> extends GridProps {
   data: Data[]
   columns: ColumnProps[]
-  keyBinding: keyof Data
-  rowStyles?: RowStyle<Data>[]
+  keyBinding: keyof Data | string
+  resolveRowStyle(item: Data): React.CSSProperties | undefined
 
   onRowClick?(item: Data): void
   onRowDoubleClick?(item: Data): void

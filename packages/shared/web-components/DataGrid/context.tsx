@@ -19,12 +19,9 @@ export function GridContextProvider<Data>({
   keyBinding,
   data,
   onRowClick,
-  onRowDoubleClick
+  onRowDoubleClick,
+  resolveRowStyle
 }: Props<Data> & { children: ReactNode }) {
-  const resolveRowStyle = useCallback((_item: Data) => {
-    return {}
-  }, [])
-
   return (
     <GridContext.Provider
       value={{
@@ -61,6 +58,10 @@ export function useColumnsCell() {
 
 export function useRowStyle<Data>(item: Data) {
   const { resolveRowStyle } = useContext(GridContext)
+
+  if (!resolveRowStyle) {
+    return undefined
+  }
 
   return resolveRowStyle(item)
 }

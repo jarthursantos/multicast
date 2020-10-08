@@ -4,6 +4,7 @@ import { PurchaseOrder } from 'entities/PurchaseOrder'
 import { omit } from 'lodash'
 import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
 import { IAnnotationsRepository } from 'repositories/IAnnotationsRepository'
+import { IInvoicesRepository } from 'repositories/IInvoicesRepository'
 import { IPurchaseOrderRepository } from 'repositories/IPurchaseOrderRepository'
 
 export class PrismaAccompanimentsRepository
@@ -12,7 +13,8 @@ export class PrismaAccompanimentsRepository
 
   constructor(
     private purchaseOrderRepository: IPurchaseOrderRepository,
-    private annotationsRepository: IAnnotationsRepository
+    private annotationsRepository: IAnnotationsRepository,
+    private invoiceRepository: IInvoicesRepository
   ) {}
 
   async registerPurchaseOrders(purchases: PurchaseOrder[]): Promise<void> {
@@ -57,8 +59,12 @@ export class PrismaAccompanimentsRepository
         id
       )
 
+      const invoice = accompaniment.invoiceId
+        ? await this.invoiceRepository.findById(accompaniment.invoiceId)
+        : undefined
+
       return new Accompaniment(
-        { ...accompaniment, purchaseOrder, annotations },
+        { ...accompaniment, purchaseOrder, annotations, invoice },
         accompaniment.id
       )
     }
@@ -70,7 +76,7 @@ export class PrismaAccompanimentsRepository
     const result: Accompaniment[] = []
 
     const accompaniments = await this.prisma.accompaniments.findMany({
-      where: { cancelation: null },
+      where: { cancelation: undefined },
       orderBy: { number: 'asc' }
     })
 
@@ -81,15 +87,17 @@ export class PrismaAccompanimentsRepository
         accompaniment.number
       )
 
-      // TODO: populate with invoice
-
       const annotations = await this.annotationsRepository.findFromAccompaniment(
         accompaniment.id
       )
 
+      const invoice = accompaniment.invoiceId
+        ? await this.invoiceRepository.findById(accompaniment.invoiceId)
+        : undefined
+
       result.push(
         new Accompaniment(
-          { ...accompaniment, purchaseOrder, annotations },
+          { ...accompaniment, purchaseOrder, annotations, invoice },
           accompaniment.id
         )
       )
@@ -111,7 +119,10 @@ export class PrismaAccompanimentsRepository
           'number',
           'value',
           'emittedAt'
-        )
+        ),
+        invoice: accompaniment.invoice
+          ? { connect: { id: accompaniment.invoice.id } }
+          : undefined
       }
     })
 
@@ -123,8 +134,12 @@ export class PrismaAccompanimentsRepository
       accompaniment.id
     )
 
+    const invoice = updatedData.invoiceId
+      ? await this.invoiceRepository.findById(updatedData.invoiceId)
+      : undefined
+
     return new Accompaniment(
-      { ...updatedData, purchaseOrder, annotations },
+      { ...updatedData, purchaseOrder, annotations, invoice },
       accompaniment.id
     )
   }

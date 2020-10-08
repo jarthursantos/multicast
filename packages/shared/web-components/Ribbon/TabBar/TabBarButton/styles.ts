@@ -11,6 +11,7 @@ export const Container = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary.light};
   margin-bottom: -1px;
   padding: 8px 16px;
+  transition: all 0.2s ease-in-out;
 
   &.active {
     cursor: default;

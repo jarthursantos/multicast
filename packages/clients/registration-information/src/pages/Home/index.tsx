@@ -18,7 +18,7 @@ import {
 } from './styles'
 
 const Home: React.FC = () => {
-  const api = useAxios()
+  const [api] = useAxios()
   console.log({ extractErrorMessage, api })
 
   return (

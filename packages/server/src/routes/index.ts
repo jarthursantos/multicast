@@ -20,6 +20,7 @@ import { invoicesRouter } from './invoices'
 import { permissionsRouter } from './permissions'
 import { providersRouter } from './providers'
 import { reportsRouter } from './reports'
+import { representativesRouter } from './representatives'
 import { schedulesRouter } from './schedules'
 import { usersRouter } from './users'
 
@@ -62,6 +63,7 @@ router.use(providersRouter)
 router.use(invoicesRouter)
 router.use(dischargeTablesRouter)
 router.use(accompanimentsRouter)
+router.use(representativesRouter)
 
 router.use(reportsRouter)
 

@@ -1,14 +1,19 @@
+import { Buyer } from './Buyer'
 import { Representative } from './Representative'
 
-export class Provider {
-  public code: number
-  public name: string
-  public fantasy: string
-  public principalCode: number
-  public cnpj: string
-  public representative: Representative
+export interface Provider {
+  code: number
+  name: string
+  fantasy: string
+  principalCode: number
+  cnpj: string
+}
 
-  constructor(data: Provider) {
-    Object.assign(this, data)
-  }
+export interface DetailedProvider extends Provider {
+  representative: Representative
+  buyer: Buyer
+
+  city: string
+  state: string
+  deliveryTime: number
 }

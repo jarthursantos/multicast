@@ -1,4 +1,4 @@
-import { Provider } from 'entities/Provider'
+import { DetailedProvider } from 'entities/Provider'
 import { winthor } from 'libs/knex-winthor'
 import { IProviderRepository } from 'repositories/IProviderRepository'
 
@@ -11,10 +11,15 @@ interface RawProvider {
   representativeName: string
   representativePhone: string
   representativeMail: string
+  city: string
+  state: string
+  buyerCode: number
+  buyerName: string
+  deliveryTime: number
 }
 
 export class WinThorProviderRepository implements IProviderRepository {
-  async findById(id: number): Promise<Provider> {
+  async findById(id: number): Promise<DetailedProvider> {
     const result = await winthor
       .select<RawProvider[]>(
         'PCFORNEC.CODFORNEC AS code',
@@ -25,6 +30,9 @@ export class WinThorProviderRepository implements IProviderRepository {
         'IE as ie',
         'TELFAB as phone',
         'PCFORNEC.EMAIL as mail',
+        'PRAZOENTREGA as deliveryTime',
+        'PCFORNEC.CIDADE as city',
+        'PCFORNEC.ESTADO as state',
         'REPRES as representativeName',
         'TELREP as representativePhone',
         'REP_EMAIL as representativeMail',
@@ -43,7 +51,7 @@ export class WinThorProviderRepository implements IProviderRepository {
     return this.parseRawProvider(result[0])
   }
 
-  async findMany(): Promise<Provider[]> {
+  async findMany(): Promise<DetailedProvider[]> {
     const result = await winthor
       .select<RawProvider[]>(
         'PCFORNEC.CODFORNEC AS code',
@@ -54,6 +62,9 @@ export class WinThorProviderRepository implements IProviderRepository {
         'IE as ie',
         'TELFAB as phone',
         'PCFORNEC.EMAIL as mail',
+        'PRAZOENTREGA as deliveryTime',
+        'PCFORNEC.CIDADE as city',
+        'PCFORNEC.ESTADO as state',
         'REPRES as representativeName',
         'TELREP as representativePhone',
         'REP_EMAIL as representativeMail',
@@ -63,7 +74,7 @@ export class WinThorProviderRepository implements IProviderRepository {
       .from('PCFORNEC')
       .leftJoin('PCEMPR', 'CODCOMPRADOR', 'MATRICULA')
 
-    const providers: Provider[] = []
+    const providers: DetailedProvider[] = []
 
     result.forEach(provider => providers.push(this.parseRawProvider(provider)))
 
@@ -72,7 +83,7 @@ export class WinThorProviderRepository implements IProviderRepository {
     return providers
   }
 
-  private parseRawProvider(raw: RawProvider): Provider {
+  private parseRawProvider(raw: RawProvider): DetailedProvider {
     const {
       code,
       name,
@@ -81,20 +92,32 @@ export class WinThorProviderRepository implements IProviderRepository {
       cnpj,
       representativeName,
       representativePhone,
-      representativeMail
+      representativeMail,
+      deliveryTime,
+      buyerCode,
+      buyerName,
+      city,
+      state
     } = raw
 
-    return new Provider({
+    return {
       code,
       fantasy,
       name,
       cnpj,
+      city,
+      state,
+      deliveryTime,
       principalCode,
+      buyer: {
+        code: buyerCode,
+        name: buyerName
+      },
       representative: {
         name: representativeName,
         phone: representativePhone,
         email: representativeMail
       }
-    })
+    }
   }
 }

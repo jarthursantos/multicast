@@ -28,6 +28,8 @@ export class WinThorPurchaseOrderRepository
   constructor(private lastPurchaseOrderProvider: ILastPurchaseOrderProvider) {}
 
   async findByNumber(number: number): Promise<PurchaseOrder> {
+    // TODO: search in postgres
+
     const rawPurchase = await winthor
       .select<RawPurchaseOrder>(
         'PCPEDIDO.NUMPED         AS purchaseNumber',
@@ -94,6 +96,10 @@ export class WinThorPurchaseOrderRepository
   }
 
   private parseRawPurchase(rawData: RawPurchaseOrder): PurchaseOrder {
+    if (!rawData) {
+      return
+    }
+
     const {
       amountValue,
       deliveredValue,
@@ -127,6 +133,10 @@ export class WinThorPurchaseOrderRepository
         cnpj,
         principalCode,
         fantasy,
+        city: '',
+        state: '',
+        deliveryTime: 0,
+        buyer: { code: buyerCode, name: buyerName },
         representative: {
           name: representativeName,
           phone: representativePhone,

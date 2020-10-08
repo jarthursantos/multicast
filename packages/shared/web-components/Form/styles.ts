@@ -114,4 +114,8 @@ export const ActionsContainer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.border.primary};
   padding: 12px 16px;
   margin-top: 0 !important;
+
+  & > * + * {
+    margin-left: 8px;
+  }
 `

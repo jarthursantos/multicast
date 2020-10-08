@@ -5,7 +5,7 @@ import { ToastContainer, Slide } from 'react-toastify'
 
 import { ThemeProvider } from 'styled-components'
 
-import { AxiosContext } from '@shared/axios'
+import { AxiosContextProvider } from '@shared/axios'
 import { GlobalStyle, Themes, selectTheme } from '@shared/web-styles'
 
 import AuthPage from '~/pages/Auth'
@@ -13,7 +13,7 @@ import SettingsPage from '~/pages/Settings'
 
 const App = () => {
   return (
-    <AxiosContext.Provider value={{ baseURL: 'http://192.168.1.2:3340' }}>
+    <AxiosContextProvider baseURL="http://192.168.1.2:3340">
       <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
         <HashRouter>
           <Switch>
@@ -33,7 +33,7 @@ const App = () => {
           />
         </HashRouter>
       </ThemeProvider>
-    </AxiosContext.Provider>
+    </AxiosContextProvider>
   )
 }
 

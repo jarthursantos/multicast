@@ -15,7 +15,7 @@ import {
 } from './styles'
 
 const Home: React.FC = () => {
-  const api = useAxios()
+  const [api] = useAxios()
   const [employees, setEmployees] = useState<EmployeeData[]>()
 
   const handleSearch = useCallback(
