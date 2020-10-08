@@ -36,8 +36,6 @@ if (isProd) {
 const accompanimentWindows: { [key: string]: BrowserWindow } = {}
 
 ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
-  console.log({ accompanimentWindows })
-
   if (accompanimentWindows[id]) {
     accompanimentWindows[id].focus()
   } else {
@@ -53,7 +51,6 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
     accompanimentWindow.removeMenu()
 
     accompanimentWindows[id] = accompanimentWindow
-    console.log({ accompanimentWindows })
 
     accompanimentWindow.webContents.once('did-finish-load', () => {
       accompanimentWindow.webContents.send('params-sended', { id, token })
