@@ -110,8 +110,12 @@ model Accompaniments {
   billingAt         DateTime?
   freeOnBoardAt     DateTime?
   schedulingAt      DateTime?
+
+  renewedAt         DateTime?
   valueDelivered    Float?    @default(0.0)
+
   invoiceId         String?
+
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
