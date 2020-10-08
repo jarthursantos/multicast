@@ -1,4 +1,4 @@
-import { app, webContents, ipcMain } from 'electron'
+import { app, webContents, ipcMain, BrowserWindow } from 'electron'
 import serve from 'electron-serve'
 
 import { createWindow } from './helpers'
@@ -33,28 +33,44 @@ if (isProd) {
   }
 })()
 
+const accompanimentWindows: { [key: string]: BrowserWindow } = {}
+
 ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
-  const accompanimentWindow = createWindow('accompaniments', {
-    width: 1160,
-    height: 620,
-    resizable: false,
-    webPreferences: {
-      enableRemoteModule: true
-    }
-  })
+  console.log({ accompanimentWindows })
 
-  accompanimentWindow.removeMenu()
-  // accompanimentWindow.webContents.openDevTools()
-
-  accompanimentWindow.webContents.once('did-finish-load', () => {
-    accompanimentWindow.webContents.send('params-sended', { id, token })
-  })
-
-  if (isProd) {
-    await accompanimentWindow.loadURL('app://./accompaniments.html')
+  if (accompanimentWindows[id]) {
+    accompanimentWindows[id].focus()
   } else {
-    const port = process.argv[2]
-    await accompanimentWindow.loadURL(`http://localhost:${port}/accompaniments`)
+    const accompanimentWindow = createWindow('accompaniments', {
+      width: 1160,
+      height: 620,
+      resizable: false,
+      webPreferences: {
+        enableRemoteModule: true
+      }
+    })
+
+    accompanimentWindow.removeMenu()
+
+    accompanimentWindows[id] = accompanimentWindow
+    console.log({ accompanimentWindows })
+
+    accompanimentWindow.webContents.once('did-finish-load', () => {
+      accompanimentWindow.webContents.send('params-sended', { id, token })
+    })
+
+    accompanimentWindow.on('close', () => {
+      delete accompanimentWindows[id]
+    })
+
+    if (isProd) {
+      await accompanimentWindow.loadURL('app://./accompaniments.html')
+    } else {
+      const port = process.argv[2]
+      await accompanimentWindow.loadURL(
+        `http://localhost:${port}/accompaniments`
+      )
+    }
   }
 })
 
