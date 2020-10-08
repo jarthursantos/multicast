@@ -80,3 +80,10 @@ export class Invoice {
     this.updatedAt = this.updatedAt || new Date()
   }
 }
+
+export interface InvoiceBase {
+  number: number
+  transactionNumber: number
+  amountValue: number
+  emittedAt: Date
+}

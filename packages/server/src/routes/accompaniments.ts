@@ -3,6 +3,7 @@ import { validateBody } from 'middlewares/validate-body'
 import { createAnnotationsController } from 'use-cases/CreateAnnotations'
 import { findAccompanimentByIdController } from 'use-cases/FindAccompanimentById'
 import { findAccompanimentsController } from 'use-cases/FindAccompaniments'
+import { findInvoicesWithoutAccompanimentsController } from 'use-cases/FindInvoicesWithoutAccompaniments'
 import { markAccompanimentAsReleasedController } from 'use-cases/MarkAccompanimentAsReleased'
 import { markAccompanimentAsReviewedController } from 'use-cases/MarkAccompanimentAsReviewed'
 import { markAccompanimentAsSendedController } from 'use-cases/MarkAccompanimentAsSender'
@@ -27,6 +28,13 @@ router.put(
   validateBody(updateAccompanimentsSchema),
   (req: Request, res: Response) => {
     updateAccompanimentsController.handle(req, res)
+  }
+)
+
+router.get(
+  '/accompaniments/:id/untrackedInvoices',
+  (req: Request, res: Response) => {
+    findInvoicesWithoutAccompanimentsController.handle(req, res)
   }
 )
 
