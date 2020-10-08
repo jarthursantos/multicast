@@ -14,6 +14,9 @@ export class PrismaRenewAccompanimentRepository
 
     const renewedAccompaniment = new Accompaniment({
       ...renewed.purchaseOrder,
+      sendedAt: accompaniment.sendedAt,
+      reviewedAt: accompaniment.reviewedAt,
+      releasedAt: accompaniment.releasedAt,
       valueDelivered: renewed.valueDelivered + renewed.invoice.value,
       purchaseOrder: renewed.purchaseOrder,
       annotations: []
