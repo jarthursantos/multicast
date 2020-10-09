@@ -46,6 +46,7 @@ const SelectInput: React.FC<Props> = ({
         defaultValue={defaultValue}
         ref={selectRef}
         placeholder=""
+        loadingMessage={() => 'Carregando'}
         theme={theme => ({
           ...theme,
           colors: {
@@ -57,20 +58,40 @@ const SelectInput: React.FC<Props> = ({
           }
         })}
         styles={{
-          singleValue: () => ({
+          menu: provided => ({ ...provided, marginTop: 0 }),
+          loadingIndicator: provided => ({ ...provided, color: '#333' }),
+          singleValue: provided => ({
+            ...provided,
             fontSize: 14,
             color: '#666',
+            paddingTop: 6,
             textTransform: 'uppercase'
           }),
-          menu: provided => ({ ...provided, marginTop: 0 }),
-          input: () => ({ borderWidth: '2px !important', fontSize: 14 }),
-          control: provided => ({
+          valueContainer: provided => ({
+            ...provided,
+            height: 36,
+            padding: 0,
+            paddingLeft: 8
+          }),
+          input: provided => ({
             ...provided,
             borderWidth: '2px !important',
+            fontSize: 14,
+            marginLeft: -50
+          }),
+          control: provided => ({
+            ...provided,
+            height: 40,
+            minHeight: 40,
+            maxHeight: 40,
+            borderWidth: '2px !important',
             boxShadow: '0'
+          }),
+          menuList: provided => ({
+            ...provided,
+            fontSize: 14
           })
         }}
-        classNamePrefix="react-select"
         {...inputProps}
       />
 
