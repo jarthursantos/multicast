@@ -17,7 +17,13 @@ const SelectInput: React.FC<Props> = ({
   ...rest
 }) => {
   const selectRef = useRef(null)
-  const { fieldName, defaultValue, registerField, error } = useField(name)
+  const {
+    fieldName,
+    defaultValue,
+    registerField,
+    error,
+    clearError
+  } = useField(name)
 
   useEffect(() => {
     registerField({
@@ -28,24 +34,28 @@ const SelectInput: React.FC<Props> = ({
           if (!ref.state.value) {
             return []
           }
+
           return ref.state.value.map((option: OptionTypeBase) => option.value)
         }
+
         if (!ref.state.value) {
           return ''
         }
+
         return ref.state.value.value
       }
     })
   }, [fieldName, registerField, inputProps.isMulti])
 
   return (
-    <InputContainer {...rest}>
+    <InputContainer {...rest} hasError={!!error}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
       <ReactSelect
         defaultValue={defaultValue}
         ref={selectRef}
         placeholder=""
+        onFocus={clearError}
         loadingMessage={() => 'Carregando'}
         theme={theme => ({
           ...theme,
@@ -77,7 +87,10 @@ const SelectInput: React.FC<Props> = ({
             ...provided,
             borderWidth: '2px !important',
             fontSize: 14,
-            marginLeft: -50
+            marginLeft: -50,
+            ...(error
+              ? { borderColor: '#de3b3b', ':hover': { borderColor: '#de3b3b' } }
+              : {})
           }),
           control: provided => ({
             ...provided,
@@ -85,7 +98,10 @@ const SelectInput: React.FC<Props> = ({
             minHeight: 40,
             maxHeight: 40,
             borderWidth: '2px !important',
-            boxShadow: '0'
+            boxShadow: '0',
+            ...(error
+              ? { borderColor: '#de3b3b', ':hover': { borderColor: '#de3b3b' } }
+              : {})
           }),
           menuList: provided => ({
             ...provided,
