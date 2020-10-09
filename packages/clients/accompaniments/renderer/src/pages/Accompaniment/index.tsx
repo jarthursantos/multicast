@@ -72,8 +72,6 @@ const AccompanimentPage: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: any) => {
-      console.log({ data })
-
       const { success } = await validateForm()
 
       if (success) {
