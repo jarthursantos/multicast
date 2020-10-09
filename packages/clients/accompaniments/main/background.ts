@@ -41,7 +41,7 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
   } else {
     const accompanimentWindow = createWindow('accompaniments', {
       width: 1160,
-      height: 620,
+      height: 565,
       resizable: false,
       webPreferences: {
         enableRemoteModule: true
@@ -49,6 +49,7 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
     })
 
     accompanimentWindow.removeMenu()
+    // accompanimentWindow.webContents.openDevTools()
 
     accompanimentWindows[id] = accompanimentWindow
 

@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { NumberInput, DateInput } from '@shared/web-components/Form'
+import { DateInput, SelectInput } from '@shared/web-components/Form'
 
-import { Container, Inline } from '../styles'
-import { InvoiceContainer } from './styles'
+import { Container } from '../styles'
 import { AccompanimentDataProps } from './types'
 
 const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
   disabled,
-  isFreeOnBoard
+  isFreeOnBoard,
+  options
 }) => {
   return (
     <Container>
@@ -26,16 +26,23 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
         inputProps={{ disabled }}
       />
 
-      <InvoiceContainer disabled={disabled}>
-        <h3>Nota Fiscal</h3>
+      <DateInput
+        name="billingAt"
+        label="Arquivo XML"
+        inputProps={{ disabled }}
+      />
 
-        <DateInput name="emittedAt" label="Emissão" inputProps={{ disabled }} />
-
-        <Inline>
-          <NumberInput name="number" label="Número" inputProps={{ disabled }} />
-          <NumberInput name="value" label="Valor" inputProps={{ disabled }} />
-        </Inline>
-      </InvoiceContainer>
+      <SelectInput
+        name="transactionNumber"
+        label="Nota Fiscal"
+        inputProps={{
+          noOptionsMessage: () => 'Nenhuma Nota Encontrada',
+          isClearable: options?.length !== 0,
+          isDisabled: disabled,
+          isLoading: !options,
+          options
+        }}
+      />
 
       <DateInput
         name="freeOnBoardAt"

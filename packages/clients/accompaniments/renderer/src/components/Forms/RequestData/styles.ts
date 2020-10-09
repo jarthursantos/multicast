@@ -1,32 +1,21 @@
 import styled from 'styled-components'
 
-export const ValuesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  border: 2px dashed #ccc;
-  background: #f0f0f0;
-  border-radius: 4px;
-  padding: 12px;
-  flex: 1;
-
-  margin-top: 24px;
-  h3 {
-    font-size: 13px;
-  }
-`
-
-export const ChartWrapper = styled.div`
-  height: 110px;
-  width: 110px;
-`
-
 export const DataWrapper = styled.div`
   display: flex;
   align-items: center;
 
+  padding: 12px;
+
+  border: 2px dashed #ccc;
+  background: #f0f0f0;
+  border-radius: 4px;
   flex: 1;
   margin-top: 12px;
+`
+
+export const ChartWrapper = styled.div`
+  height: 100px;
+  width: 100px;
 `
 
 export const DataContainer = styled.div`

@@ -41,7 +41,10 @@ const AccompanimentPage: React.FC = () => {
   const validateForm = useFormValidator(formRef, schema)
 
   const [accompaniment, setAccompaniment] = useState<Accompaniment>()
-  const remoteAccompaniment = useAccompaniment(params?.id, params?.token)
+  const [remoteAccompaniment, invoices] = useAccompaniment(
+    params?.id,
+    params?.token
+  )
 
   const { updatingAccompaniment } = useTypedSelector(
     state => state.accompaniments
@@ -57,17 +60,6 @@ const AccompanimentPage: React.FC = () => {
   const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
   const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
 
-  const initialData = useMemo(() => {
-    if (!accompaniment) {
-      return undefined
-    }
-
-    return {
-      ...accompaniment,
-      ...(accompaniment.invoice || {})
-    }
-  }, [accompaniment])
-
   const handleMarkAsSended = useCallback(() => {
     dispatch(markAccompanimentAsSendRequestAction(accompaniment.id))
   }, [dispatch, accompaniment])
@@ -80,6 +72,8 @@ const AccompanimentPage: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: any) => {
+      console.log({ data })
+
       const { success } = await validateForm()
 
       if (success) {
@@ -127,10 +121,14 @@ const AccompanimentPage: React.FC = () => {
   return (
     <Wrapper>
       <Container>
-        <Form onSubmit={handleSubmit} initialData={initialData} ref={formRef}>
-          <RequestData />
+        <Form onSubmit={handleSubmit} initialData={accompaniment} ref={formRef}>
+          <RequestData
+            amountValue={accompaniment?.purchaseOrder.amountValue || 0}
+            deliveredValue={accompaniment?.purchaseOrder.deliveredValue || 0}
+          />
 
           <AccompanimentData
+            options={invoices}
             disabled={!sended || !reviewed || !released}
             isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
           />

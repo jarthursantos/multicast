@@ -17,49 +17,44 @@ export const schema = Yup.object().shape({
     .nullable()
     .min(Yup.ref('releasedAt'), buildMinMessage)
     .when(
-      'emittedAt',
-      (emittedAt: Date, expectedBillingAt: Yup.DateSchema<Date>) => {
-        return emittedAt
+      'billingAt',
+      (billingAt: Date, expectedBillingAt: Yup.DateSchema<Date>) => {
+        return billingAt
           ? expectedBillingAt.required('Campo obrigatório')
           : expectedBillingAt
       }
     ),
 
-  emittedAt: Yup.date()
+  billingAt: Yup.date()
     .nullable()
     .min(Yup.ref('expectedBillingAt'), buildMinMessage)
     .when(
       'schedulingAt',
-      (schedulingAt: Date, emittedAt: Yup.DateSchema<Date>) => {
+      (schedulingAt: Date, billingAt: Yup.DateSchema<Date>) => {
         return schedulingAt
-          ? emittedAt.required('Campo obrigatório')
-          : emittedAt
+          ? billingAt.required('Campo obrigatório')
+          : billingAt
       }
     ),
 
-  number: Yup.number()
+  transactionNumber: Yup.number()
     .integer()
     .transform(value => value || null)
     .nullable()
     .when(
       'schedulingAt',
-      (schedulingAt: Date, number: Yup.DateSchema<Date>) => {
-        return schedulingAt ? number.required('Campo obrigatório') : number
+      (schedulingAt: Date, transactionNumber: Yup.DateSchema<Date>) => {
+        return schedulingAt
+          ? transactionNumber.required('Campo obrigatório')
+          : transactionNumber
       }
     ),
 
-  value: Yup.number()
-    .transform(value => value || null)
-    .nullable()
-    .when('schedulingAt', (schedulingAt: Date, value: Yup.DateSchema<Date>) => {
-      return schedulingAt ? value.required('Campo obrigatório') : value
-    }),
-
   freeOnBoardAt: Yup.date()
     .nullable()
-    .min(Yup.ref('emittedAt'), buildMinMessage),
+    .min(Yup.ref('billingAt'), buildMinMessage),
 
-  schedulingAt: Yup.date().nullable().min(Yup.ref('emittedAt'), buildMinMessage)
+  schedulingAt: Yup.date().nullable().min(Yup.ref('billingAt'), buildMinMessage)
 })
 
 function buildMinMessage({ min }: { min: string | Date }) {

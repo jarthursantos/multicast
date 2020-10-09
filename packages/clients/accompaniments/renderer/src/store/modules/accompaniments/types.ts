@@ -223,6 +223,14 @@ export interface Invoice {
   value: number
 }
 
+export interface UntrackedInvoice {
+  number: number
+  emittedAt: Date
+  amountValue: number
+  providerCode: number
+  transactionNumber: number
+}
+
 export interface AnnotationContent {
   content: string
 }

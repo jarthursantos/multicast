@@ -1,18 +1,14 @@
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 
+import { formatPrice } from '@shared/web-components/DataGrid/Body/Row/Cell/Contabil/format'
 import { DateInput, NumberInput, TextInput } from '@shared/web-components/Form'
 
 import ColorIndicator from '~/components/ColorIndicator'
 
 import { Container, Inline, InlineWithLargeField } from '../styles'
-import {
-  ValuesContainer,
-  DataWrapper,
-  ChartWrapper,
-  DataContainer,
-  DataTuple
-} from './styles'
+import { DataWrapper, ChartWrapper, DataContainer, DataTuple } from './styles'
+import { RequestDataProps } from './types'
 
 const colors = ['#f94144', '#f3722c']
 
@@ -47,7 +43,10 @@ function buildOptions() {
   }
 }
 
-const RequestData: React.FC = () => {
+const RequestData: React.VFC<RequestDataProps> = ({
+  amountValue,
+  deliveredValue
+}) => {
   return (
     <Container>
       <h3>Dados do Pedido</h3>
@@ -104,42 +103,38 @@ const RequestData: React.FC = () => {
         />
       </InlineWithLargeField>
 
-      <ValuesContainer>
-        <h3>Valores</h3>
+      <DataWrapper>
+        <ChartWrapper>
+          <Doughnut
+            height={100}
+            width={100}
+            data={data}
+            options={buildOptions()}
+          />
+        </ChartWrapper>
 
-        <DataWrapper>
-          <ChartWrapper>
-            <Doughnut
-              height={100}
-              width={100}
-              data={data}
-              options={buildOptions()}
-            />
-          </ChartWrapper>
+        <DataContainer>
+          <DataTuple>
+            <strong>Total</strong>
 
-          <DataContainer>
-            <DataTuple>
-              <strong>Total</strong>
+            <span>{formatPrice(amountValue)}</span>
+          </DataTuple>
 
-              <span>R$ 1.000.000,00</span>
-            </DataTuple>
+          <DataTuple>
+            <ColorIndicator color={colors[0]} size={12} />
+            <strong>Entregue</strong>
 
-            <DataTuple>
-              <ColorIndicator color={colors[0]} size={12} />
-              <strong>Entregue</strong>
+            <span>{formatPrice(deliveredValue)}</span>
+          </DataTuple>
 
-              <span>R$ 500.000,00</span>
-            </DataTuple>
+          <DataTuple>
+            <ColorIndicator color={colors[1]} size={12} />
+            <strong>Pendente</strong>
 
-            <DataTuple>
-              <ColorIndicator color={colors[1]} size={12} />
-              <strong>Pendente</strong>
-
-              <span>R$ 500.000,00</span>
-            </DataTuple>
-          </DataContainer>
-        </DataWrapper>
-      </ValuesContainer>
+            <span>{formatPrice(amountValue - deliveredValue)}</span>
+          </DataTuple>
+        </DataContainer>
+      </DataWrapper>
     </Container>
   )
 }
