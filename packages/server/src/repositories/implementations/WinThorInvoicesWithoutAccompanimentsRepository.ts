@@ -55,7 +55,10 @@ export class WinThorInvoicesWithoutAccompanimentsRepository
       }
     })
 
-    return result
+    return result.map(entry => ({
+      ...entry,
+      amountValue: entry.amountValue || 0
+    }))
   }
 }
 

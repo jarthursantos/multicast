@@ -125,7 +125,7 @@ export class WinThorPurchaseOrderRepository
       deliveredValue,
       emittedAt,
       freight: freight === 'C' ? 'CIF' : 'FOB',
-      isBonification: bonification === 'S',
+      isBonification: bonification !== 'N',
       buyer: { code: buyerCode, name: buyerName },
       provider: {
         code: providerCode,
