@@ -55,6 +55,7 @@ const SelectInput: React.FC<Props> = ({
         defaultValue={defaultValue}
         ref={selectRef}
         placeholder=""
+        id={fieldName}
         onFocus={clearError}
         loadingMessage={() => 'Carregando'}
         theme={theme => ({
