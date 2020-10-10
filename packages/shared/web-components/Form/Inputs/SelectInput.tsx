@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactSelect, { OptionTypeBase, Props as SelectProps } from 'react-select'
 
 import { useField } from '@unform/core'
@@ -16,7 +16,8 @@ const SelectInput: React.FC<Props> = ({
   inputProps = {},
   ...rest
 }) => {
-  const selectRef = useRef(null)
+  const { options } = inputProps
+
   const {
     fieldName,
     defaultValue,
@@ -25,38 +26,36 @@ const SelectInput: React.FC<Props> = ({
     clearError
   } = useField(name)
 
+  const [opened, setOpened] = useState(false)
+  const [selection, setSelection] = useState<OptionTypeBase>()
+
+  useEffect(() => {
+    setSelection(options?.find(option => option.value === defaultValue))
+  }, [defaultValue, options])
+
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: selectRef.current,
-      getValue: (ref: any) => {
-        if (inputProps.isMulti) {
-          if (!ref.state.value) {
-            return []
-          }
-
-          return ref.state.value.map((option: OptionTypeBase) => option.value)
-        }
-
-        if (!ref.state.value) {
-          return ''
-        }
-
-        return ref.state.value.value
+      getValue: () => selection?.value,
+      setValue: (_: any, value: any) => {
+        setSelection(
+          options?.find(option => option.value === value || value === option)
+        )
       }
     })
-  }, [fieldName, registerField, inputProps.isMulti])
+  }, [fieldName, registerField, selection, options])
 
   return (
     <InputContainer {...rest} hasError={!!error}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
       <ReactSelect
-        defaultValue={defaultValue}
-        ref={selectRef}
-        placeholder=""
         id={fieldName}
+        placeholder=""
+        value={selection}
+        onChange={setSelection}
         onFocus={clearError}
+        onMenuOpen={() => setOpened(true)}
         loadingMessage={() => 'Carregando'}
         theme={theme => ({
           ...theme,
@@ -75,7 +74,7 @@ const SelectInput: React.FC<Props> = ({
             ...provided,
             fontSize: 14,
             color: '#666',
-            paddingTop: 6,
+            paddingTop: opened ? 8 : 0,
             textTransform: 'uppercase'
           }),
           valueContainer: provided => ({
@@ -106,7 +105,8 @@ const SelectInput: React.FC<Props> = ({
           }),
           menuList: provided => ({
             ...provided,
-            fontSize: 14
+            fontSize: 14,
+            textTransform: 'uppercase'
           })
         }}
         {...inputProps}

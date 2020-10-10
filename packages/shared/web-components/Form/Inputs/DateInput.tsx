@@ -47,8 +47,19 @@ const DateInput: React.FC<Props> = ({ name, label, inputProps, ...rest }) => {
       name: fieldName,
       ref: inputRef.current,
       getValue: () => date,
-      setValue: (value: Date | string) => setDate(value),
-      clearValue: () => setDate(null)
+      setValue: (_: any, value: Date | string) => {
+        setDate(value)
+
+        if (value instanceof Date) {
+          setTextValue(format(value, 'dd/MM/yyyy'))
+        } else if (typeof value === 'string') {
+          setTextValue(format(parseISO(value), 'dd/MM/yyyy'))
+        }
+      },
+      clearValue: () => {
+        setDate(null)
+        setTextValue('')
+      }
     })
   }, [fieldName, inputRef, registerField, date])
 
