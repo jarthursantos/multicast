@@ -18,7 +18,7 @@ export class RenewAccompanimentUseCase {
       throw new Error('Acompanhamento já renovado')
     }
 
-    if (!accompaniment.invoice) {
+    if (!accompaniment.transactionNumber) {
       throw new Error('Acompanhamento não possuí nota fiscal')
     }
 

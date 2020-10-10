@@ -42,8 +42,6 @@ export class HBSReceiptScheduleProvider implements IReceiptScheduleProvider {
             ),
             emittedAt: format(new Date(), 'dd/MM/yyyy'),
             invoices: data.invoices.map(invoice => {
-              console.log({ invoice })
-
               return {
                 ...invoice,
                 receiptValue: invoice.receiptValue.toFixed(2).replace('.', ','),

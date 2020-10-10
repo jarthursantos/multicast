@@ -10,8 +10,6 @@ export class MarkAccompanimentAsSendedUseCase {
       throw new Error('Acompanhamento não axiste')
     }
 
-    console.log({ accompaniment })
-
     accompaniment.sendedAt = new Date()
 
     await this.accompanimentsRepository.update(accompaniment)

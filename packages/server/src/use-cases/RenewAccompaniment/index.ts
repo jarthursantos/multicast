@@ -5,6 +5,7 @@ import { PrismaInvoicesRepository } from 'repositories/implementations/PrismaInv
 import { PrismaRenewAccompanimentRepository } from 'repositories/implementations/PrismaRenewAccompanimentRepository'
 import { PrismaUsersRepository } from 'repositories/implementations/PrismaUsersRepository'
 import { WinThorInvoiceSituationsRepository } from 'repositories/implementations/WinThorInvoiceSituationsRepository'
+import { WinThorInvoicesWithoutAccompanimentsRepository } from 'repositories/implementations/WinThorInvoicesWithoutAccompanimentsRepository'
 import { WinThorProviderRepository } from 'repositories/implementations/WinThorProviderRepository'
 import { WinThorPurchaseOrderRepository } from 'repositories/implementations/WinThorPurchaseOrderRepository'
 
@@ -32,10 +33,13 @@ const prismaInvoicesRepository = new PrismaInvoicesRepository(
   winThorInvoiceSituationsRepository
 )
 
+const winThorInvoicesWithoutAccompanimentsRepository = new WinThorInvoicesWithoutAccompanimentsRepository()
+
 const prismaAccompanimentsRepository = new PrismaAccompanimentsRepository(
   winThorPurchaseOrderRepository,
   prismaAnnotationsRepository,
-  prismaInvoicesRepository
+  prismaInvoicesRepository,
+  winThorInvoicesWithoutAccompanimentsRepository
 )
 
 const prismaRenewAccompanimentRepository = new PrismaRenewAccompanimentRepository(

@@ -1,15 +1,13 @@
-import { Invoice } from 'entities/Invoice'
-import { InvoiceSituations } from 'entities/InvoiceSituations'
 import { assign, omit } from 'lodash'
 import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
-import { IInvoicesRepository } from 'repositories/IInvoicesRepository'
+import { IInvoicesWithoutAccompanimentsRepository } from 'repositories/IInvoicesWithoutAccompanimentsRepository'
 
 import { UpdateAccompanimentsRequestDTO } from './UpdateAccompanimentsDTO'
 
 export class UpdateAccompanimentsUseCase {
   constructor(
     private accompanimentsRepository: IAccompanimentsRepository,
-    private invoicesRepository: IInvoicesRepository
+    private invoicesWithoutAccompanimentsRepository: IInvoicesWithoutAccompanimentsRepository
   ) {}
 
   async execute(id: string, data: UpdateAccompanimentsRequestDTO) {
@@ -19,46 +17,26 @@ export class UpdateAccompanimentsUseCase {
       throw new Error('Acompanhamento não existe')
     }
 
-    const updateData = assign(
-      accompaniment,
-      omit(data, 'emittedAt', 'number', 'value')
-    )
+    const updateData = assign(accompaniment, omit(data, 'transactionNumber'))
 
-    const { number, value, emittedAt } = data
+    const { transactionNumber } = data
 
-    const invoiceData = [number, value, emittedAt]
-    const informedFieldsCount = invoiceData.filter(Boolean).length
+    if (transactionNumber) {
+      const transaction = await this.invoicesWithoutAccompanimentsRepository.findByTransaction(
+        transactionNumber
+      )
 
-    if (informedFieldsCount !== 0) {
-      if (informedFieldsCount !== 3) {
-        throw new Error('Falta informações da nota fiscal')
+      if (!transaction) {
+        throw new Error('Transação não existe')
       }
 
-      if (accompaniment.invoice) {
-        const updatedInvoice = assign(accompaniment.invoice, {
-          number,
-          value,
-          emittedAt
-        })
+      const { number, providerCode } = transaction
 
-        await this.invoicesRepository.update(updatedInvoice)
-      } else {
-        const provider = accompaniment.purchaseOrder.provider
-
-        const invoice = new Invoice({
-          providerCode: provider.code,
-          provider,
-          number,
-          value,
-          emittedAt,
-          origin: 'FOLLOWUP',
-          situation: InvoiceSituations.INVOICE_NON_LAUNCHED
-        })
-
-        await this.invoicesRepository.save(invoice)
-
-        updateData.invoice = invoice
-      }
+      updateData.invoiceNumber = number
+      updateData.invoiceProvider = providerCode
+    } else if (accompaniment.transactionNumber) {
+      updateData.invoiceNumber = null
+      updateData.invoiceProvider = null
     }
 
     const updatedAccompaniment = await this.accompanimentsRepository.update(

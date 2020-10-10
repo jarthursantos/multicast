@@ -37,7 +37,8 @@ const prismaInvoicesRepository = new PrismaInvoicesRepository(
 const prismaAccompanimentsRepository = new PrismaAccompanimentsRepository(
   winThorPurchaseOrderRepository,
   prismaAnnotationsRepository,
-  prismaInvoicesRepository
+  prismaInvoicesRepository,
+  winThorInvoicesWithoutAccompanimentsRepository
 )
 
 const findInvoicesWithoutAccompanimentsUseCase = new FindInvoicesWithoutAccompanimentsUseCase(

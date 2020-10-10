@@ -27,8 +27,6 @@ class QueueManager {
   }
 
   add(queue: string, job: any) {
-    console.log('job added', { queue, job })
-
     return this.queues[queue].queue.add(job)
   }
 
@@ -38,8 +36,6 @@ class QueueManager {
 
       queue.process(handler)
     })
-
-    console.log('queue processed')
   }
 }
 

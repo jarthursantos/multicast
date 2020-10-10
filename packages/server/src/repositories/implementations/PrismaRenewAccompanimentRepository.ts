@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { Accompaniment } from 'entities/Accompaniment'
 import { RenewAccompanimentResult } from 'entities/RenewAccompanimentResult'
+import { assign } from 'lodash'
 import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
 import { IRenewAccompanimentRepository } from 'repositories/IRenewAccompanimentRepository'
 
@@ -11,18 +12,25 @@ export class PrismaRenewAccompanimentRepository
   constructor(private accompanimentsRepository: IAccompanimentsRepository) {}
 
   async renew(accompaniment: Accompaniment): Promise<RenewAccompanimentResult> {
-    const renewedAccompaniment = new Accompaniment({
-      ...accompaniment.purchaseOrder,
-      sendedAt: accompaniment.sendedAt,
-      reviewedAt: accompaniment.reviewedAt,
-      releasedAt: accompaniment.releasedAt,
-      valueDelivered:
-        accompaniment.valueDelivered + accompaniment.invoice.value,
-      purchaseOrder: accompaniment.purchaseOrder,
+    const { purchaseOrder } = accompaniment
+
+    const renewedData = new Accompaniment({
+      ...purchaseOrder,
+      purchaseOrder,
       annotations: []
     })
 
-    await this.accompanimentsRepository.save(renewedAccompaniment)
+    await this.accompanimentsRepository.save(renewedData)
+
+    const updateRenewedData = assign(renewedData, {
+      sendedAt: accompaniment.sendedAt,
+      reviewedAt: accompaniment.reviewedAt,
+      releasedAt: accompaniment.releasedAt
+    })
+
+    const renewedAccompaniment = await this.accompanimentsRepository.update(
+      updateRenewedData
+    )
 
     accompaniment.renewedAt = new Date()
 

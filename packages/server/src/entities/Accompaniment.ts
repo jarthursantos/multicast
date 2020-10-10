@@ -18,8 +18,11 @@ export class Accompaniment {
   public freeOnBoardAt?: Date
   public schedulingAt?: Date
 
+  public transactionNumber?: number
+  public invoiceNumber?: number
+  public invoiceProvider?: number
+
   public renewedAt?: Date
-  public valueDelivered?: number
 
   public invoice?: Invoice
 
@@ -41,8 +44,10 @@ export class Accompaniment {
         'billingAt',
         'freeOnBoardAt',
         'schedulingAt',
+        'transactionNumber',
+        'invoiceNumber',
+        'invoiceProvider',
         'renewedAt',
-        'valueDelivered',
         'invoiceId',
         'invoice',
         'createdAt',

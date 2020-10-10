@@ -1,10 +1,8 @@
 export interface UpdateAccompanimentsRequestDTO {
   releasedAt?: Date
   expectedBillingAt?: Date
-  emittedAt: Date
-  number: number
-  value: number
+  billingAt: Date
+  transactionNumber: number
   freeOnBoardAt?: Date
   schedulingAt?: Date
 }
-// TODO
