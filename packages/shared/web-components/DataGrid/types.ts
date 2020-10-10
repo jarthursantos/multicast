@@ -6,9 +6,9 @@ export interface ContextHandles {
   onRowClick(item: any): void
   onRowDoubleClick(item: any): void
   resolveRowStyle(item: any): React.CSSProperties | undefined
+  keyExtractor(data: any): string
   columns: ColumnProps[]
   data: any[]
-  keyBinding: string | number | symbol
 }
 
 export interface GridProps {
@@ -18,7 +18,7 @@ export interface GridProps {
 export interface DataGridProps<Data> extends GridProps {
   data: Data[]
   columns: ColumnProps[]
-  keyBinding: keyof Data | string
+  keyExtractor(data: Data): string
   resolveRowStyle(item: Data): React.CSSProperties | undefined
 
   onRowClick?(item: Data): void

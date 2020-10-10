@@ -16,7 +16,7 @@ const GridContext = createContext<ContextHandles>(null)
 export function GridContextProvider<Data>({
   children,
   columns,
-  keyBinding,
+  keyExtractor,
   data,
   onRowClick,
   onRowDoubleClick,
@@ -27,7 +27,7 @@ export function GridContextProvider<Data>({
       value={{
         resolveRowStyle,
         columns,
-        keyBinding,
+        keyExtractor,
         data,
         onRowClick,
         onRowDoubleClick
@@ -72,10 +72,10 @@ export function useSortedData<Data>(): Data[] {
   return data
 }
 
-export function useKeybinding() {
-  const { keyBinding } = useContext(GridContext)
+export function useKeyExtractor() {
+  const { keyExtractor } = useContext(GridContext)
 
-  return keyBinding
+  return keyExtractor
 }
 
 export function useRowWidth() {
