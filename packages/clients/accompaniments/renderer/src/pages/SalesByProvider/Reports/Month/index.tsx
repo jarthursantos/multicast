@@ -10,7 +10,7 @@ const Month: React.VFC<MonthProps> = ({ valuesData, evolutionData }) => {
   return (
     <PerMonthWrapper>
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={valuesData}
         columns={valuesColumns}
         resolveRowStyle={() => ({})}
@@ -20,7 +20,7 @@ const Month: React.VFC<MonthProps> = ({ valuesData, evolutionData }) => {
       <Separator />
 
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={evolutionData}
         columns={evolutionColumns}
         resolveRowStyle={() => ({})}

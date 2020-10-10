@@ -20,7 +20,10 @@ import {
   UpdateAccompanimentSuccessAction,
   UpdateAccompanimentFailureAction,
   AnnotationContent,
-  Annotation
+  Annotation,
+  RenewAccompanimentFailureAction,
+  RenewAccompanimentSuccessAction,
+  RenewAccompanimentRequestAction
 } from './types'
 
 export function loadAccompanimentsRequestAction(): LoadAccompanimentsRequestAction {
@@ -74,6 +77,35 @@ export function updateAccompanimentFailureAction(
 ): UpdateAccompanimentFailureAction {
   return {
     type: Types.UPDATE_ACCOMPANIMENT_FAILURE,
+    payload: { message }
+  }
+}
+
+export function renewAccompanimentRequestAction(
+  id: string
+): RenewAccompanimentRequestAction {
+  return {
+    type: Types.RENEW_ACCOMPANIMENT_REQUEST,
+    payload: { id }
+  }
+}
+
+export function renewAccompanimentSuccessAction(
+  accompaniment: Accompaniment,
+  renewedAccompaniment: Accompaniment
+): RenewAccompanimentSuccessAction {
+  return {
+    propagate: true,
+    type: Types.RENEW_ACCOMPANIMENT_SUCCESS,
+    payload: { accompaniment, renewedAccompaniment }
+  }
+}
+
+export function renewAccompanimentFailureAction(
+  message: string
+): RenewAccompanimentFailureAction {
+  return {
+    type: Types.RENEW_ACCOMPANIMENT_FAILURE,
     payload: { message }
   }
 }

@@ -5,6 +5,6 @@ export interface AccompanimentDataProps {
 }
 
 export interface OptionData {
-  value: string
+  value: string | number
   label: string
 }

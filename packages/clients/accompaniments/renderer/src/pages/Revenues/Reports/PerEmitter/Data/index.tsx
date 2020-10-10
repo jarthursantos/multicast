@@ -9,7 +9,7 @@ const Data: React.FC = () => {
   return (
     <Wrapper>
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: 1 }]}
         columns={columns}
         resolveRowStyle={() => ({})}

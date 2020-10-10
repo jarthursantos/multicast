@@ -8,7 +8,7 @@ const SyntheticMovement: React.FC = () => {
   return (
     <Wrapper>
       <DataGrid<{ code: string }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: '1' }]}
         columns={[]}
         resolveRowStyle={() => ({})}

@@ -63,7 +63,7 @@ export function useBilledAccompaniments() {
   return accompaniments.filter(
     accompaniment =>
       accompaniment.expectedBillingAt !== null &&
-      accompaniment.invoiceId === null
+      accompaniment.transactionNumber === null
   )
 }
 
@@ -72,7 +72,7 @@ export function useFreeOnBoardAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.invoiceId !== null &&
+      accompaniment.transactionNumber &&
       accompaniment.freeOnBoardAt === null &&
       accompaniment.purchaseOrder.freight === 'FOB'
   )
@@ -88,7 +88,7 @@ export function useSchedulingAccompaniments() {
 
     if (
       accompaniment.purchaseOrder.freight === 'CIF' &&
-      accompaniment.invoiceId !== null
+      accompaniment.transactionNumber
     ) {
       return true
     }
@@ -96,7 +96,7 @@ export function useSchedulingAccompaniments() {
     if (
       accompaniment.purchaseOrder.freight !== 'CIF' &&
       accompaniment.freeOnBoardAt !== null &&
-      accompaniment.invoiceId !== null
+      accompaniment.transactionNumber
     ) {
       return true
     }

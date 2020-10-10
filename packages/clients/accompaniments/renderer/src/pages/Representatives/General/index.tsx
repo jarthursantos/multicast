@@ -13,7 +13,7 @@ const General: React.FC = () => {
   return (
     <Wrapper>
       <DataGrid<Representative>
-        keyBinding="provider.code"
+        keyExtractor={obj => `${obj.provider.code}`}
         data={data}
         columns={columns}
         resolveRowStyle={() => ({})}

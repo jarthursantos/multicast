@@ -17,7 +17,7 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
       <DateInput
         name="releasedAt"
         label="Liberação para Faturamento"
-        inputProps={{ disabled, readOnly: true }}
+        inputProps={{ disabled }}
       />
 
       <DateInput

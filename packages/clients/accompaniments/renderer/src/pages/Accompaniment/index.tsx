@@ -21,6 +21,7 @@ import {
   markAccompanimentAsReleasedRequestAction,
   markAccompanimentAsReviewedRequestAction,
   markAccompanimentAsSendRequestAction,
+  renewAccompanimentRequestAction,
   updateAccompanimentRequestAction
 } from '~/store/modules/accompaniments/actions'
 import { Types, Accompaniment } from '~/store/modules/accompaniments/types'
@@ -46,7 +47,7 @@ const AccompanimentPage: React.FC = () => {
     params?.token
   )
 
-  const { updatingAccompaniment } = useTypedSelector(
+  const { updatingAccompaniment, renewingAccompaniment } = useTypedSelector(
     state => state.accompaniments
   )
 
@@ -69,6 +70,10 @@ const AccompanimentPage: React.FC = () => {
   const handleMarkAsReleased = useCallback(() => {
     dispatch(markAccompanimentAsReleasedRequestAction(accompaniment.id))
   }, [dispatch, accompaniment])
+
+  const handleRenew = useCallback(() => {
+    dispatch(renewAccompanimentRequestAction(accompaniment.id))
+  }, [accompaniment, dispatch])
 
   const handleSubmit = useCallback(
     async (data: any) => {
@@ -139,72 +144,57 @@ const AccompanimentPage: React.FC = () => {
       </Container>
 
       <ActionsContainer>
-        <Button
-          secondary
-          label="Anexar ao E-Mail"
-          loading={updatingAccompaniment}
-          onClick={handleSubmitForm}
-        />
-
-        <Button
-          secondary
-          label="Exportar"
-          loading={updatingAccompaniment}
-          onClick={handleSubmitForm}
-        />
-
-        <Button
-          secondary
-          label="Imprimir"
-          loading={updatingAccompaniment}
-          onClick={handleSubmitForm}
-        />
-
-        <Button
-          secondary
-          label="Cancelar"
-          loading={updatingAccompaniment}
-          onClick={handleSubmitForm}
-        />
-
-        {!sended && (
-          <Button
-            label="Confirmar Envio do Pedido"
-            onClick={handleMarkAsSended}
-            loading={markingAsSended}
-          />
-        )}
-        {!reviewed && sended && (
-          <Button
-            label="Confirmar Revisão do Pedido"
-            onClick={handleMarkAsReviewed}
-            loading={markingAsReviewed}
-          />
-        )}
-        {!released && reviewed && sended && (
-          <Button
-            label="Confirmar Liberação p/ Faturar"
-            onClick={handleMarkAsReleased}
-            loading={markingAsReleased}
-          />
-        )}
-
-        {released && reviewed && sended && (
+        {accompaniment && (
           <>
-            {accompaniment?.invoice && (
+            <Button secondary label="Anexar ao E-Mail" />
+
+            <Button secondary label="Exportar" />
+
+            <Button secondary label="Imprimir" />
+
+            <Button secondary label="Cancelar" />
+
+            {!sended && (
               <Button
-                secondary
-                label="Renovar Saldo"
-                loading={updatingAccompaniment}
-                onClick={handleSubmitForm}
+                label="Confirmar Envio do Pedido"
+                onClick={handleMarkAsSended}
+                loading={markingAsSended}
+              />
+            )}
+            {!reviewed && sended && (
+              <Button
+                label="Confirmar Revisão do Pedido"
+                onClick={handleMarkAsReviewed}
+                loading={markingAsReviewed}
+              />
+            )}
+            {!released && reviewed && sended && (
+              <Button
+                label="Confirmar Liberação p/ Faturar"
+                onClick={handleMarkAsReleased}
+                loading={markingAsReleased}
               />
             )}
 
-            <Button
-              label="Salvar"
-              loading={updatingAccompaniment}
-              onClick={handleSubmitForm}
-            />
+            {released && reviewed && sended && (
+              <>
+                {accompaniment.transactionNumber &&
+                  !accompaniment.renewedAt && (
+                    <Button
+                      secondary
+                      label="Renovar Saldo"
+                      loading={renewingAccompaniment}
+                      onClick={handleRenew}
+                    />
+                  )}
+
+                <Button
+                  label="Salvar"
+                  loading={updatingAccompaniment}
+                  onClick={handleSubmitForm}
+                />
+              </>
+            )}
           </>
         )}
       </ActionsContainer>

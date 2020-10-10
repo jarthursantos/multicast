@@ -6,20 +6,20 @@ const Data: React.FC = () => {
   return (
     <SplitContainer resizeWidth="1fr">
       <DataGrid<{ code: string }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: '1' }]}
         columns={[]}
         resolveRowStyle={() => ({})}
       />
       <SplitContainer resizeWidth="1fr">
         <DataGrid<{ code: string }>
-          keyBinding="code"
+          keyExtractor={obj => `${obj.code}`}
           data={[{ code: '1' }]}
           columns={[]}
           resolveRowStyle={() => ({})}
         />
         <DataGrid<{ code: string }>
-          keyBinding="code"
+          keyExtractor={obj => `${obj.code}`}
           data={[{ code: '1' }]}
           columns={[]}
           resolveRowStyle={() => ({})}

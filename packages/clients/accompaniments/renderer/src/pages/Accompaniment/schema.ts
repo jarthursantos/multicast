@@ -29,9 +29,9 @@ export const schema = Yup.object().shape({
     .nullable()
     .min(Yup.ref('expectedBillingAt'), buildMinMessage)
     .when(
-      'schedulingAt',
-      (schedulingAt: Date, billingAt: Yup.DateSchema<Date>) => {
-        return schedulingAt
+      'transactionNumber',
+      (transactionNumber: number, billingAt: Yup.DateSchema<Date>) => {
+        return transactionNumber
           ? billingAt.required('Campo obrigatório')
           : billingAt
       }

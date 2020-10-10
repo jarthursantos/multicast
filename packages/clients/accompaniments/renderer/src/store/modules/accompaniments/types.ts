@@ -11,6 +11,10 @@ export enum Types {
   UPDATE_ACCOMPANIMENT_SUCCESS = '@accompaniments/UPDATE_ACCOMPANIMENT_SUCCESS',
   UPDATE_ACCOMPANIMENT_FAILURE = '@accompaniments/UPDATE_ACCOMPANIMENT_FAILURE',
 
+  RENEW_ACCOMPANIMENT_REQUEST = '@accompaniments/RENEW_ACCOMPANIMENT_REQUEST',
+  RENEW_ACCOMPANIMENT_SUCCESS = '@accompaniments/RENEW_ACCOMPANIMENT_SUCCESS',
+  RENEW_ACCOMPANIMENT_FAILURE = '@accompaniments/RENEW_ACCOMPANIMENT_FAILURE',
+
   ADD_ANNOTATION_REQUEST = '@accompaniments/ADD_ANNOTATION_REQUEST',
   ADD_ANNOTATION_SUCCESS = '@accompaniments/ADD_ANNOTATION_SUCCESS',
   ADD_ANNOTATION_FAILURE = '@accompaniments/ADD_ANNOTATION_FAILURE',
@@ -63,6 +67,28 @@ export interface UpdateAccompanimentSuccessAction extends BaseAction {
 
 export interface UpdateAccompanimentFailureAction extends BaseAction {
   type: typeof Types.UPDATE_ACCOMPANIMENT_FAILURE
+  payload: {
+    message: string
+  }
+}
+
+export interface RenewAccompanimentRequestAction extends BaseAction {
+  type: typeof Types.RENEW_ACCOMPANIMENT_REQUEST
+  payload: {
+    id: string
+  }
+}
+
+export interface RenewAccompanimentSuccessAction extends BaseAction {
+  type: typeof Types.RENEW_ACCOMPANIMENT_SUCCESS
+  payload: {
+    accompaniment: Accompaniment
+    renewedAccompaniment: Accompaniment
+  }
+}
+
+export interface RenewAccompanimentFailureAction extends BaseAction {
+  type: typeof Types.RENEW_ACCOMPANIMENT_FAILURE
   payload: {
     message: string
   }
@@ -161,6 +187,9 @@ export type AccompanimentsActionTypes =
   | UpdateAccompanimentRequestAction
   | UpdateAccompanimentFailureAction
   | UpdateAccompanimentSuccessAction
+  | RenewAccompanimentRequestAction
+  | RenewAccompanimentFailureAction
+  | RenewAccompanimentSuccessAction
   | AddAnnotationRequestAction
   | AddAnnotationSuccessAction
   | AddAnnotationFailureAction
@@ -180,6 +209,7 @@ export interface AccompanimentsState {
 
   updatingAccompaniment: boolean
   additingAnnotation: boolean
+  renewingAccompaniment: boolean
 
   markingAsSended: boolean
   markingAsReviewed: boolean
@@ -200,6 +230,8 @@ export interface Accompaniment {
 
   invoiceId: string
   invoice?: Invoice
+
+  transactionNumber?: number
 
   delay: number
 

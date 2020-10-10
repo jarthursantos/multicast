@@ -40,7 +40,7 @@ export function useAccompaniment(
           setInvoices(
             data.map(({ number, amountValue, transactionNumber }) => ({
               label: `${number} - ${formatPrice(amountValue)}`,
-              value: `${transactionNumber}`
+              value: transactionNumber
             }))
           )
         } else {

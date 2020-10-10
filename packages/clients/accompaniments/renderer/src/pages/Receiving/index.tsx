@@ -126,7 +126,7 @@ const Receiving: React.FC = () => {
         <Pager currentPage={currentSituation}>
           <Pager.Page name="nonScheduled">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={nonScheduledAccompanimentsColumns}
               data={nonScheduledAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
@@ -135,7 +135,7 @@ const Receiving: React.FC = () => {
 
           <Pager.Page name="scheduled">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={scheduledAccompanimentsColumns}
               data={scheduledAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
@@ -144,7 +144,7 @@ const Receiving: React.FC = () => {
 
           <Pager.Page name="received">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={receivingAccompanimentsColumns}
               data={receivingAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
@@ -153,7 +153,7 @@ const Receiving: React.FC = () => {
 
           <Pager.Page name="downloaded">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={downloadedAccompanimentsColumns}
               data={downloadedAccompaniments}
               resolveRowStyle={handleResolveRowStyle}
@@ -162,7 +162,7 @@ const Receiving: React.FC = () => {
 
           <Pager.Page name="unlocked">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={unlockedAccompanimentsColumns}
               data={unlockedAccompaniments}
               resolveRowStyle={handleResolveRowStyle}

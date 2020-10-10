@@ -23,7 +23,7 @@ const PerRepresentative: React.FC = () => {
   return (
     <SplitContainer resizeLocation="left" resizeWidth={300}>
       <DataGrid<RepresentedRepresentativeGroup>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.provider.code}`}
         data={data}
         onRowClick={setSelection}
         columns={representativeColumns}
@@ -31,7 +31,7 @@ const PerRepresentative: React.FC = () => {
       />
 
       <DataGrid<Representative>
-        keyBinding="provider.code"
+        keyExtractor={obj => `${obj.provider.code}`}
         data={representatives}
         columns={providersColumns}
         resolveRowStyle={() => ({})}

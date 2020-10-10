@@ -178,7 +178,7 @@ const InProgress: React.FC = () => {
         <Pager currentPage={currentSituation}>
           <Pager.Page name="allAccompaniments">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               data={allAccompaniments}
               columns={allAccompanimentsColumns}
               onRowDoubleClick={handleDoubleClickRow}
@@ -188,7 +188,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="nonRevised">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={nonRevisedColumns}
               data={nonRevisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -198,7 +198,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="revised">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={revisedColumns}
               data={revisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -208,7 +208,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="released">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={releasedColumns}
               data={releasedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -218,7 +218,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="expectedBilling">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={expectedBillingColumns}
               data={expectedBillingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -228,7 +228,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="billed">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={billedColumns}
               data={billedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -238,7 +238,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="freeOnBoard">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={freeOnBoardColumns}
               data={freeOnBoardAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
@@ -248,7 +248,7 @@ const InProgress: React.FC = () => {
 
           <Pager.Page name="scheduling">
             <DataGrid<Accompaniment>
-              keyBinding="id"
+              keyExtractor={accompaniment => accompaniment.id}
               columns={schedulingColumns}
               data={schedulingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}

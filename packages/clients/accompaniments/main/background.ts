@@ -49,7 +49,7 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
     })
 
     accompanimentWindow.removeMenu()
-    // accompanimentWindow.webContents.openDevTools()
+    accompanimentWindow.webContents.openDevTools()
 
     accompanimentWindows[id] = accompanimentWindow
 

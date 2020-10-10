@@ -9,13 +9,13 @@ const FromBuyer: React.FC = () => {
   return (
     <SplitContainer resizeWidth="1fr">
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: 1 }]}
         columns={columns}
         resolveRowStyle={() => ({})}
       />
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: 1 }]}
         columns={invoiceColumns}
         resolveRowStyle={() => ({})}

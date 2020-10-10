@@ -21,7 +21,7 @@ const ProductsContainer: React.FC = () => {
     >
       <DataGrid<Product>
         data={[{ code: '1', provider: 'Teste' }]}
-        keyBinding="code"
+        keyExtractor={product => product.code}
         columns={columns}
         resolveRowStyle={() => ({})}
       />

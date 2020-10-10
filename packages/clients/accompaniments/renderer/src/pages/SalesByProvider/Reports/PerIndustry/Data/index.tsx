@@ -8,13 +8,13 @@ const Data: React.FC = () => {
   return (
     <SplitContainer>
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: 1 }]}
         columns={industryColumns}
         resolveRowStyle={() => ({})}
       />
       <DataGrid<{ code: number }>
-        keyBinding="code"
+        keyExtractor={obj => `${obj.code}`}
         data={[{ code: 1 }]}
         columns={providerColumns}
         resolveRowStyle={() => ({})}

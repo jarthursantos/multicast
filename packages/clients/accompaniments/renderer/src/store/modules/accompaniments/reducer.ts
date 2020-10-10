@@ -9,6 +9,7 @@ const INITIAL_STATE: AccompanimentsState = {
 
   updatingAccompaniment: false,
   additingAnnotation: false,
+  renewingAccompaniment: false,
 
   markingAsSended: false,
   markingAsReviewed: false,
@@ -41,12 +42,12 @@ export default function accompaniments(
       case Types.UPDATE_ACCOMPANIMENT_SUCCESS: {
         const { accompaniment } = action.payload
 
-        const scheduleIndex = draft.accompaniments.findIndex(
+        const accompanimentIndex = draft.accompaniments.findIndex(
           current => current.id === accompaniment.id
         )
 
-        if (scheduleIndex !== -1) {
-          draft.accompaniments[scheduleIndex] = accompaniment
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex] = accompaniment
         }
 
         draft.updatingAccompaniment = false
@@ -64,15 +65,43 @@ export default function accompaniments(
         break
       }
 
+      case Types.RENEW_ACCOMPANIMENT_SUCCESS: {
+        const { accompaniment, renewedAccompaniment } = action.payload
+
+        draft.accompaniments.push(renewedAccompaniment)
+
+        const accompanimentIndex = draft.accompaniments.findIndex(
+          current => current.id === accompaniment.id
+        )
+
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex] = accompaniment
+        }
+
+        draft.updatingAccompaniment = false
+
+        break
+      }
+      case Types.RENEW_ACCOMPANIMENT_FAILURE: {
+        draft.updatingAccompaniment = false
+
+        break
+      }
+      case Types.RENEW_ACCOMPANIMENT_REQUEST: {
+        draft.updatingAccompaniment = true
+
+        break
+      }
+
       case Types.ADD_ANNOTATION_SUCCESS: {
         const { id, annotation } = action.payload
 
-        const scheduleIndex = draft.accompaniments.findIndex(
+        const accompanimentIndex = draft.accompaniments.findIndex(
           current => current.id === id
         )
 
-        if (scheduleIndex !== -1) {
-          draft.accompaniments[scheduleIndex].annotations.push(annotation)
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex].annotations.push(annotation)
         }
 
         draft.additingAnnotation = false
@@ -93,12 +122,12 @@ export default function accompaniments(
       case Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS: {
         const { accompaniment } = action.payload
 
-        const scheduleIndex = draft.accompaniments.findIndex(
+        const accompanimentIndex = draft.accompaniments.findIndex(
           current => current.id === accompaniment.id
         )
 
-        if (scheduleIndex !== -1) {
-          draft.accompaniments[scheduleIndex] = accompaniment
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex] = accompaniment
         }
 
         draft.markingAsSended = false
@@ -116,12 +145,12 @@ export default function accompaniments(
       case Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS: {
         const { accompaniment } = action.payload
 
-        const scheduleIndex = draft.accompaniments.findIndex(
+        const accompanimentIndex = draft.accompaniments.findIndex(
           current => current.id === accompaniment.id
         )
 
-        if (scheduleIndex !== -1) {
-          draft.accompaniments[scheduleIndex] = accompaniment
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex] = accompaniment
         }
 
         draft.markingAsReviewed = false
@@ -139,12 +168,12 @@ export default function accompaniments(
       case Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS: {
         const { accompaniment } = action.payload
 
-        const scheduleIndex = draft.accompaniments.findIndex(
+        const accompanimentIndex = draft.accompaniments.findIndex(
           current => current.id === accompaniment.id
         )
 
-        if (scheduleIndex !== -1) {
-          draft.accompaniments[scheduleIndex] = accompaniment
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments[accompanimentIndex] = accompaniment
         }
 
         draft.markingAsReleased = false

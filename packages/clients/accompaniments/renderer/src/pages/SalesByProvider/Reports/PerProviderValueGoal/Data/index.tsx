@@ -7,7 +7,7 @@ import { columns } from './columns'
 const Data: React.FC = () => {
   return (
     <DataGrid<{ code: number }>
-      keyBinding="code"
+      keyExtractor={obj => `${obj.code}`}
       data={[{ code: 1 }]}
       columns={columns}
       resolveRowStyle={() => ({})}

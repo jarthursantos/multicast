@@ -15,6 +15,8 @@ import {
   markAccompanimentAsReviewedSuccessAction,
   markAccompanimentAsSendFailureAction,
   markAccompanimentAsSendSuccessAction,
+  renewAccompanimentFailureAction,
+  renewAccompanimentSuccessAction,
   updateAccompanimentFailureAction,
   updateAccompanimentSuccessAction
 } from './actions'
@@ -25,6 +27,7 @@ import {
   MarkAccompanimentAsReleadedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendRequestAction,
+  RenewAccompanimentRequestAction,
   Types,
   UpdateAccompanimentRequestAction
 } from './types'
@@ -66,6 +69,36 @@ export function* updateAccompaniment({
     toast.error(message)
 
     yield put(updateAccompanimentFailureAction(message))
+  }
+}
+
+export function* renewAccompaniment({
+  payload
+}: RenewAccompanimentRequestAction) {
+  try {
+    const { id } = payload
+
+    const response = yield call(api.post, `/accompaniments/${id}/renew`)
+
+    const {
+      accompaniment,
+      renewedAccompaniment
+    }: {
+      accompaniment: Accompaniment
+      renewedAccompaniment: Accompaniment
+    } = response.data
+
+    toast.success('Acompanhamento Renovado')
+
+    yield put(
+      renewAccompanimentSuccessAction(accompaniment, renewedAccompaniment)
+    )
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    toast.error(message)
+
+    yield put(renewAccompanimentFailureAction(message))
   }
 }
 
@@ -169,6 +202,8 @@ export default all([
   takeLatest(Types.LOAD_ACCOMPANIMENTS_REQUEST, loadAccompaniments),
 
   takeLatest(Types.UPDATE_ACCOMPANIMENT_REQUEST, updateAccompaniment),
+
+  takeLatest(Types.RENEW_ACCOMPANIMENT_REQUEST, renewAccompaniment),
 
   takeLatest(Types.ADD_ANNOTATION_REQUEST, addAnnotation),
 
