@@ -1,4 +1,5 @@
 import { Invoice } from 'entities/Invoice'
+import { InvoiceSituations } from 'entities/InvoiceSituations'
 import { User } from 'entities/User'
 import { assign } from 'lodash'
 import { IInvoiceHistoryRepository } from 'repositories/IInvoiceHistoryRepository'
@@ -27,13 +28,19 @@ export class UpdateInvoicesUseCase {
     )
 
     invoicesWithSameData.forEach(invoiceWithSameData => {
-      if (
-        !invoiceWithSameData.canceledAt &&
-        invoiceWithSameData.divergence !== 'RESCHEDULED' &&
-        id !== invoiceWithSameData.id
-      ) {
-        throw Error('Nota Fiscal já existe')
+      if (invoiceWithSameData.divergence === 'RESCHEDULED') {
+        return
       }
+
+      if (invoiceWithSameData.situation === InvoiceSituations.CANCELED) {
+        return
+      }
+
+      if (id === invoiceWithSameData.id) {
+        return
+      }
+
+      throw Error('Nota Fiscal já existe')
     })
 
     const invoice = await this.invoicesRepository.findById(id)

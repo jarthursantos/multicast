@@ -29,12 +29,15 @@ export class CreateInvoicesUseCase {
     )
 
     invoicesWithSameData.forEach(invoiceWithSameData => {
-      if (
-        invoiceWithSameData.divergence !== 'RESCHEDULED' ||
-        invoiceWithSameData.situation !== InvoiceSituations.CANCELED
-      ) {
-        throw Error('Nota Fiscal já existe')
+      if (invoiceWithSameData.divergence === 'RESCHEDULED') {
+        return
       }
+
+      if (invoiceWithSameData.situation === InvoiceSituations.CANCELED) {
+        return
+      }
+
+      throw Error('Nota Fiscal já existe')
     })
 
     const situation = await this.invoiceSituationRepository.find(
