@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import { Accompaniment } from 'entities/Accompaniment'
 import { PurchaseOrder } from 'entities/PurchaseOrder'
+import { User } from 'entities/User'
 import { omit } from 'lodash'
-import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
+import { IAccompanimentDelayProvider } from 'providers/IAccompanimentDelayProvider'
+import {
+  IAccompanimentsRepository,
+  Data
+} from 'repositories/IAccompanimentsRepository'
 import { IAnnotationsRepository } from 'repositories/IAnnotationsRepository'
 import { IInvoicesRepository } from 'repositories/IInvoicesRepository'
 import { IInvoicesWithoutAccompanimentsRepository } from 'repositories/IInvoicesWithoutAccompanimentsRepository'
@@ -16,8 +21,25 @@ export class PrismaAccompanimentsRepository
     private purchaseOrderRepository: IPurchaseOrderRepository,
     private annotationsRepository: IAnnotationsRepository,
     private invoiceRepository: IInvoicesRepository,
-    private invoicesWithoutAccompanimentsRepository: IInvoicesWithoutAccompanimentsRepository
+    private invoicesWithoutAccompanimentsRepository: IInvoicesWithoutAccompanimentsRepository,
+    private accompanimentDelayProvider: IAccompanimentDelayProvider
   ) {}
+
+  async cancel(
+    accompaniment: Accompaniment,
+    data: Data,
+    user: User
+  ): Promise<void> {
+    const { motive } = data
+
+    await this.prisma.cancelations.create({
+      data: {
+        motive,
+        accompaniment: { connect: { id: accompaniment.id } },
+        user: { connect: { id: user.id } }
+      }
+    })
+  }
 
   async save(accompaniment: Accompaniment): Promise<void> {
     await this.prisma.accompaniments.create({
@@ -31,7 +53,10 @@ export class PrismaAccompanimentsRepository
           'transactionNumber',
           'number',
           'value',
-          'emittedAt'
+          'emittedAt',
+          'isOutstanding',
+          'delay',
+          'isCritical'
         ),
         number: accompaniment.purchaseOrder.number
       }
@@ -45,7 +70,10 @@ export class PrismaAccompanimentsRepository
       const accompaniment = new Accompaniment({
         ...purchaseOrder,
         purchaseOrder,
-        annotations: []
+        annotations: [],
+        isOutstanding: false,
+        isCritical: false,
+        delay: 0
       })
 
       await this.save(accompaniment)
@@ -54,7 +82,8 @@ export class PrismaAccompanimentsRepository
 
   async findById(id: string): Promise<Accompaniment> {
     const accompaniment = await this.prisma.accompaniments.findOne({
-      where: { id }
+      where: { id },
+      include: { renewedFrom: true }
     })
 
     if (!accompaniment) {
@@ -88,13 +117,21 @@ export class PrismaAccompanimentsRepository
       ? await this.invoiceRepository.findById(accompaniment.invoiceId)
       : undefined
 
+    const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+      ...accompaniment,
+      purchaseOrder
+    })
+
     return new Accompaniment(
       {
         ...accompaniment,
+        delay: count,
+        isCritical,
         purchaseOrder,
         annotations,
         invoice,
-        transactionNumber
+        transactionNumber,
+        isOutstanding: !!accompaniment.renewedFrom
       },
       accompaniment.id
     )
@@ -104,7 +141,8 @@ export class PrismaAccompanimentsRepository
     const result: Accompaniment[] = []
 
     const accompaniments = await this.prisma.accompaniments.findMany({
-      where: { cancelation: undefined },
+      where: { cancelation: null },
+      include: { renewedFrom: true },
       orderBy: { number: 'asc' }
     })
 
@@ -114,6 +152,10 @@ export class PrismaAccompanimentsRepository
       const purchaseOrder = await this.purchaseOrderRepository.findByNumber(
         accompaniment.number
       )
+
+      if (!purchaseOrder) {
+        continue
+      }
 
       const annotations = await this.annotationsRepository.findFromAccompaniment(
         accompaniment.id
@@ -138,14 +180,22 @@ export class PrismaAccompanimentsRepository
         ? await this.invoiceRepository.findById(accompaniment.invoiceId)
         : undefined
 
+      const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+        ...accompaniment,
+        purchaseOrder
+      })
+
       result.push(
         new Accompaniment(
           {
             ...accompaniment,
+            delay: count,
+            isCritical,
             purchaseOrder,
             annotations,
             invoice,
-            transactionNumber
+            transactionNumber,
+            isOutstanding: !!accompaniment.renewedFrom
           },
           accompaniment.id
         )
@@ -158,6 +208,7 @@ export class PrismaAccompanimentsRepository
   async update(accompaniment: Accompaniment): Promise<Accompaniment> {
     const updatedData = await this.prisma.accompaniments.update({
       where: { id: accompaniment.id },
+      include: { renewedFrom: true },
       data: {
         ...omit(
           accompaniment,
@@ -168,7 +219,12 @@ export class PrismaAccompanimentsRepository
           'transactionNumber',
           'number',
           'value',
-          'emittedAt'
+          'emittedAt',
+          'isOutstanding',
+          'delay',
+          'isCritical',
+          'updatedAt',
+          'createdAt'
         ),
         invoice: accompaniment.invoice
           ? { connect: { id: accompaniment.invoice.id } }
@@ -203,13 +259,21 @@ export class PrismaAccompanimentsRepository
       ? await this.invoiceRepository.findById(updatedData.invoiceId)
       : undefined
 
+    const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+      ...updatedData,
+      purchaseOrder
+    })
+
     return new Accompaniment(
       {
         ...updatedData,
+        delay: count || 0,
+        isCritical,
         purchaseOrder,
         annotations,
         invoice,
-        transactionNumber
+        transactionNumber,
+        isOutstanding: !!updatedData.renewedFrom
       },
       accompaniment.id
     )

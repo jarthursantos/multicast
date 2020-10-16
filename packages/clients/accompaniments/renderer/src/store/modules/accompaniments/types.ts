@@ -15,6 +15,10 @@ export enum Types {
   RENEW_ACCOMPANIMENT_SUCCESS = '@accompaniments/RENEW_ACCOMPANIMENT_SUCCESS',
   RENEW_ACCOMPANIMENT_FAILURE = '@accompaniments/RENEW_ACCOMPANIMENT_FAILURE',
 
+  CANCEL_ACCOMPANIMENT_REQUEST = '@accompaniments/CANCEL_ACCOMPANIMENT_REQUEST',
+  CANCEL_ACCOMPANIMENT_SUCCESS = '@accompaniments/CANCEL_ACCOMPANIMENT_SUCCESS',
+  CANCEL_ACCOMPANIMENT_FAILURE = '@accompaniments/CANCEL_ACCOMPANIMENT_FAILURE',
+
   ADD_ANNOTATION_REQUEST = '@accompaniments/ADD_ANNOTATION_REQUEST',
   ADD_ANNOTATION_SUCCESS = '@accompaniments/ADD_ANNOTATION_SUCCESS',
   ADD_ANNOTATION_FAILURE = '@accompaniments/ADD_ANNOTATION_FAILURE',
@@ -89,6 +93,28 @@ export interface RenewAccompanimentSuccessAction extends BaseAction {
 
 export interface RenewAccompanimentFailureAction extends BaseAction {
   type: typeof Types.RENEW_ACCOMPANIMENT_FAILURE
+  payload: {
+    message: string
+  }
+}
+
+export interface CancelAccompanimentRequestAction extends BaseAction {
+  type: typeof Types.CANCEL_ACCOMPANIMENT_REQUEST
+  payload: {
+    id: string
+    motive: string
+  }
+}
+
+export interface CancelAccompanimentSuccessAction extends BaseAction {
+  type: typeof Types.CANCEL_ACCOMPANIMENT_SUCCESS
+  payload: {
+    id: string
+  }
+}
+
+export interface CancelAccompanimentFailureAction extends BaseAction {
+  type: typeof Types.CANCEL_ACCOMPANIMENT_FAILURE
   payload: {
     message: string
   }
@@ -190,6 +216,9 @@ export type AccompanimentsActionTypes =
   | RenewAccompanimentRequestAction
   | RenewAccompanimentFailureAction
   | RenewAccompanimentSuccessAction
+  | CancelAccompanimentRequestAction
+  | CancelAccompanimentFailureAction
+  | CancelAccompanimentSuccessAction
   | AddAnnotationRequestAction
   | AddAnnotationSuccessAction
   | AddAnnotationFailureAction
@@ -210,6 +239,7 @@ export interface AccompanimentsState {
   updatingAccompaniment: boolean
   additingAnnotation: boolean
   renewingAccompaniment: boolean
+  cancelingAccompaniment: boolean
 
   markingAsSended: boolean
   markingAsReviewed: boolean
@@ -222,18 +252,21 @@ export interface Accompaniment {
   reviewedAt?: Date
   releasedAt?: Date
   expectedBillingAt?: Date
+  billingAt?: Date
   freeOnBoardAt?: Date
   schedulingAt?: Date
   renewedAt?: Date
   valueDelivered: number
-  isOutstandingBalance: boolean
+  isOutstanding: boolean
 
   invoiceId: string
   invoice?: Invoice
+  invoiceNumber?: number
 
   transactionNumber?: number
 
   delay: number
+  isCritical: boolean
 
   createdAt: Date
   updatedAt: Date

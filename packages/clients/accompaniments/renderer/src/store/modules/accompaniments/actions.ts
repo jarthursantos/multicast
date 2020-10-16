@@ -23,7 +23,10 @@ import {
   Annotation,
   RenewAccompanimentFailureAction,
   RenewAccompanimentSuccessAction,
-  RenewAccompanimentRequestAction
+  RenewAccompanimentRequestAction,
+  CancelAccompanimentFailureAction,
+  CancelAccompanimentRequestAction,
+  CancelAccompanimentSuccessAction
 } from './types'
 
 export function loadAccompanimentsRequestAction(): LoadAccompanimentsRequestAction {
@@ -106,6 +109,35 @@ export function renewAccompanimentFailureAction(
 ): RenewAccompanimentFailureAction {
   return {
     type: Types.RENEW_ACCOMPANIMENT_FAILURE,
+    payload: { message }
+  }
+}
+
+export function cancelAccompanimentRequestAction(
+  id: string,
+  motive: string
+): CancelAccompanimentRequestAction {
+  return {
+    type: Types.CANCEL_ACCOMPANIMENT_REQUEST,
+    payload: { id, motive }
+  }
+}
+
+export function cancelAccompanimentSuccessAction(
+  id: string
+): CancelAccompanimentSuccessAction {
+  return {
+    propagate: true,
+    type: Types.CANCEL_ACCOMPANIMENT_SUCCESS,
+    payload: { id }
+  }
+}
+
+export function cancelAccompanimentFailureAction(
+  message: string
+): CancelAccompanimentFailureAction {
+  return {
+    type: Types.CANCEL_ACCOMPANIMENT_FAILURE,
     payload: { message }
   }
 }

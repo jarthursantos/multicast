@@ -19,7 +19,6 @@ import {
 
 const Home: React.FC = () => {
   const [api] = useAxios()
-  console.log({ extractErrorMessage, api })
 
   return (
     <Page title="Informações de Cadastro Externo">

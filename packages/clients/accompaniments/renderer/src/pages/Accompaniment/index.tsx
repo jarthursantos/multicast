@@ -15,6 +15,7 @@ import AccompanimentData from '~/components/Forms/AccompanimentData'
 import Observations from '~/components/Forms/Observations'
 import RequestData from '~/components/Forms/RequestData'
 import { useAccompaniment } from '~/hooks/use-accompaniments'
+import { useOpenWindow } from '~/hooks/use-open-window'
 import { useWindowParams } from '~/hooks/use-window-params'
 import { useTypedSelector } from '~/store'
 import {
@@ -27,6 +28,7 @@ import {
 import { Types, Accompaniment } from '~/store/modules/accompaniments/types'
 import { closeWindow } from '~/util/close-window'
 
+import CancelDialog from './CancelDialog'
 import { schema } from './schema'
 import { Wrapper, Container } from './styles'
 import {
@@ -41,6 +43,7 @@ const AccompanimentPage: React.FC = () => {
   const formRef = useRef<FormHandles>(null)
   const validateForm = useFormValidator(formRef, schema)
 
+  const [cancelIsOpen, setCancelOpened] = useState(false)
   const [accompaniment, setAccompaniment] = useState<Accompaniment>()
   const [remoteAccompaniment, invoices] = useAccompaniment(
     params?.id,
@@ -56,6 +59,14 @@ const AccompanimentPage: React.FC = () => {
     markingAsReviewed,
     markingAsReleased
   } = useTypedSelector(state => state.accompaniments)
+
+  const handleOpenPDFWindow = useOpenWindow('PDFWindow')
+
+  const handleGeneratePDF = useCallback(() => {
+    handleOpenPDFWindow(accompaniment.id)
+  }, [handleOpenPDFWindow, accompaniment])
+
+  const handleCancel = useCallback(() => setCancelOpened(true), [])
 
   const sended = useMemo(() => !!accompaniment?.sendedAt, [accompaniment])
   const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
@@ -119,86 +130,100 @@ const AccompanimentPage: React.FC = () => {
     [Types.ADD_ANNOTATION_SUCCESS]
   )
 
-  useWatchAction(closeWindow, Types.UPDATE_ACCOMPANIMENT_SUCCESS)
+  useWatchAction(closeWindow, [
+    Types.UPDATE_ACCOMPANIMENT_SUCCESS,
+    Types.RENEW_ACCOMPANIMENT_SUCCESS,
+    Types.CANCEL_ACCOMPANIMENT_SUCCESS
+  ])
 
   return (
-    <Wrapper>
-      <Container>
-        <Form onSubmit={handleSubmit} initialData={accompaniment} ref={formRef}>
-          <RequestData
-            amountValue={accompaniment?.purchaseOrder.amountValue || 0}
-            deliveredValue={accompaniment?.purchaseOrder.deliveredValue || 0}
+    <>
+      <Wrapper>
+        <Container>
+          <Form
+            onSubmit={handleSubmit}
+            initialData={accompaniment}
+            ref={formRef}
+          >
+            <RequestData
+              amountValue={accompaniment?.purchaseOrder.amountValue || 0}
+              deliveredValue={accompaniment?.purchaseOrder.deliveredValue || 0}
+            />
+
+            <AccompanimentData
+              options={invoices}
+              disabled={!sended || !reviewed || !released}
+              isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
+            />
+          </Form>
+
+          <Observations
+            accompanimentId={params?.id}
+            observations={accompaniment?.annotations || []}
           />
+        </Container>
 
-          <AccompanimentData
-            options={invoices}
-            disabled={!sended || !reviewed || !released}
-            isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
-          />
-        </Form>
+        <ActionsContainer>
+          {accompaniment && (
+            <>
+              <Button secondary label="Gerar PDF" onClick={handleGeneratePDF} />
 
-        <Observations
-          accompanimentId={params?.id}
-          observations={accompaniment?.annotations || []}
-        />
-      </Container>
+              <Button secondary label="Cancelar" onClick={handleCancel} />
 
-      <ActionsContainer>
-        {accompaniment && (
-          <>
-            <Button secondary label="Anexar ao E-Mail" />
-
-            <Button secondary label="Exportar" />
-
-            <Button secondary label="Imprimir" />
-
-            <Button secondary label="Cancelar" />
-
-            {!sended && (
-              <Button
-                label="Confirmar Envio do Pedido"
-                onClick={handleMarkAsSended}
-                loading={markingAsSended}
-              />
-            )}
-            {!reviewed && sended && (
-              <Button
-                label="Confirmar Revisão do Pedido"
-                onClick={handleMarkAsReviewed}
-                loading={markingAsReviewed}
-              />
-            )}
-            {!released && reviewed && sended && (
-              <Button
-                label="Confirmar Liberação p/ Faturar"
-                onClick={handleMarkAsReleased}
-                loading={markingAsReleased}
-              />
-            )}
-
-            {released && reviewed && sended && (
-              <>
-                {accompaniment.transactionNumber &&
-                  !accompaniment.renewedAt && (
-                    <Button
-                      secondary
-                      label="Renovar Saldo"
-                      loading={renewingAccompaniment}
-                      onClick={handleRenew}
-                    />
-                  )}
-
+              {!sended && (
                 <Button
-                  label="Salvar"
-                  loading={updatingAccompaniment}
-                  onClick={handleSubmitForm}
+                  label="Confirmar Envio do Pedido"
+                  onClick={handleMarkAsSended}
+                  loading={markingAsSended}
                 />
-              </>
-            )}
-          </>
-        )}
-      </ActionsContainer>
-    </Wrapper>
+              )}
+
+              {!reviewed && sended && (
+                <Button
+                  label="Confirmar Revisão do Pedido"
+                  onClick={handleMarkAsReviewed}
+                  loading={markingAsReviewed}
+                />
+              )}
+
+              {!released && reviewed && sended && (
+                <Button
+                  label="Confirmar Liberação p/ Faturar"
+                  onClick={handleMarkAsReleased}
+                  loading={markingAsReleased}
+                />
+              )}
+
+              {released && reviewed && sended && (
+                <>
+                  {accompaniment.transactionNumber &&
+                    !accompaniment.renewedAt && (
+                      <Button
+                        secondary
+                        label="Renovar Saldo"
+                        loading={renewingAccompaniment}
+                        onClick={handleRenew}
+                      />
+                    )}
+
+                  <Button
+                    label="Salvar"
+                    loading={updatingAccompaniment}
+                    onClick={handleSubmitForm}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </ActionsContainer>
+      </Wrapper>
+
+      <CancelDialog
+        accompanimentId={accompaniment?.id || ''}
+        isOpen={cancelIsOpen}
+        onClose={() => setCancelOpened(false)}
+      />
+    </>
   )
 }
 

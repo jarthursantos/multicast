@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+
+import { format, parseISO } from 'date-fns'
 
 import { useOpenWindow } from '~/hooks/use-open-window'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 
 import {
   Wrapper,
@@ -10,9 +13,50 @@ import {
   Item,
   ItemLabel
 } from './styles'
+import { TimelineProps } from './types'
 
-const Timeline: React.FC = () => {
-  const handleOpenAccompaniment = useOpenWindow('Accompaniment')
+const Timeline: React.VFC<TimelineProps> = ({ accompaniments }) => {
+  const openAccompaniment = useOpenWindow('Accompaniment')
+
+  const handleOpenAccompaniment = useCallback(
+    (item: Accompaniment) => openAccompaniment(item.id),
+    [openAccompaniment]
+  )
+
+  const resolveSituation = (accompaniment: Accompaniment) => {
+    if (!accompaniment.sendedAt) {
+      return 'Sem Envio'
+    }
+
+    if (!accompaniment.reviewedAt) {
+      return 'Sem Revisão'
+    }
+
+    if (!accompaniment.releasedAt) {
+      return 'Sem Liberação'
+    }
+
+    if (!accompaniment.expectedBillingAt) {
+      return 'Sem Prev. Faturamento'
+    }
+
+    if (!accompaniment.transactionNumber) {
+      return 'Sem Faturamento'
+    }
+
+    if (
+      !accompaniment.freeOnBoardAt &&
+      accompaniment.purchaseOrder.freight === 'FOB'
+    ) {
+      return 'Sem Agendamento FOB'
+    }
+
+    if (!accompaniment.schedulingAt) {
+      return 'Sem Prev. Agendamento'
+    }
+
+    return '-'
+  }
 
   return (
     <Wrapper>
@@ -24,36 +68,46 @@ const Timeline: React.FC = () => {
         <HeaderLabel id="invoice">Nota Fiscal</HeaderLabel>
         <HeaderLabel id="emittedAt">Emissão</HeaderLabel>
         <HeaderLabel id="situation">Situação</HeaderLabel>
+        <HeaderLabel id="observation">Obs.</HeaderLabel>
       </HeaderContainer>
 
       <BodyContainer>
-        <Item onClick={() => handleOpenAccompaniment(15000)}>
-          <ItemLabel id="number">15000</ItemLabel>
-          <ItemLabel id="providerCode">83</ItemLabel>
-          <ItemLabel id="providerName">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="fantasy">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="invoice">-</ItemLabel>
-          <ItemLabel id="emittedAt">01/10/2020</ItemLabel>
-          <ItemLabel id="situation">Sem Revisão</ItemLabel>
-        </Item>
-        <Item>
-          <ItemLabel id="number">15000</ItemLabel>
-          <ItemLabel id="providerCode">83</ItemLabel>
-          <ItemLabel id="providerName">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="fantasy">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="invoice">687146</ItemLabel>
-          <ItemLabel id="emittedAt">01/10/2020</ItemLabel>
-          <ItemLabel id="situation">Sem Liberação</ItemLabel>
-        </Item>
-        <Item>
-          <ItemLabel id="number">15000</ItemLabel>
-          <ItemLabel id="providerCode">83</ItemLabel>
-          <ItemLabel id="providerName">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="fantasy">Tintas Lux LTDA</ItemLabel>
-          <ItemLabel id="invoice">687146</ItemLabel>
-          <ItemLabel id="emittedAt">01/10/2020</ItemLabel>
-          <ItemLabel id="situation">Sem Prev. de Faturamento</ItemLabel>
-        </Item>
+        {accompaniments.map(accompaniment => (
+          <Item
+            key={accompaniment.id}
+            onClick={() => handleOpenAccompaniment(accompaniment)}
+          >
+            <ItemLabel id="number">
+              {accompaniment.purchaseOrder.number}
+            </ItemLabel>
+            <ItemLabel id="providerCode">
+              {accompaniment.purchaseOrder.provider.code}
+            </ItemLabel>
+            <ItemLabel id="providerName">
+              {accompaniment.purchaseOrder.provider.name}
+            </ItemLabel>
+            <ItemLabel id="fantasy">
+              {accompaniment.purchaseOrder.provider.fantasy}
+            </ItemLabel>
+            <ItemLabel id="invoice">
+              {accompaniment.invoiceNumber || '-'}
+            </ItemLabel>
+            <ItemLabel id="emittedAt">
+              {format(
+                typeof accompaniment.purchaseOrder.emittedAt === 'string'
+                  ? parseISO(accompaniment.purchaseOrder.emittedAt)
+                  : accompaniment.purchaseOrder.emittedAt,
+                'dd/MM/yyyy'
+              )}
+            </ItemLabel>
+            <ItemLabel id="situation">
+              {resolveSituation(accompaniment)}
+            </ItemLabel>
+            <ItemLabel id="observation">
+              {accompaniment.annotations.length || '-'}
+            </ItemLabel>
+          </Item>
+        ))}
       </BodyContainer>
     </Wrapper>
   )

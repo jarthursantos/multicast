@@ -28,8 +28,13 @@ export class Accompaniment {
 
   public annotations: Annotation[]
 
+  public delay: number
+  public isCritical: boolean
+
   public createdAt?: Date
   public updatedAt?: Date
+
+  public isOutstanding: boolean
 
   constructor(data: Omit<Accompaniment, 'id'>, id?: string) {
     Object.assign(
@@ -52,7 +57,10 @@ export class Accompaniment {
         'invoice',
         'createdAt',
         'updatedAt',
-        'annotations'
+        'annotations',
+        'isOutstanding',
+        'delay',
+        'isCritical'
       )
     )
 

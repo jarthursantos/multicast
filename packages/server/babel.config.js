@@ -10,15 +10,5 @@ module.exports = {
     ],
     "@babel/preset-typescript"
   ],
-  plugins: [
-    [
-      "module-resolver",
-      {
-        alias: {
-          "@controllers": "./src/app/controllers",
-        },
-      },
-    ],
-  ],
   ignore: ["**/*.spec.ts"],
 };

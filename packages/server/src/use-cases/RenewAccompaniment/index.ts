@@ -1,3 +1,4 @@
+import { ManualAccompanimentDelayProvider } from 'providers/implementations/ManualAccompanimentDelayProvider'
 import { PrismaLastPurchaseOrderProvider } from 'providers/implementations/PrismaLastPurchaseOrderProvider'
 import { PrismaAccompanimentsRepository } from 'repositories/implementations/PrismaAccompanimentsRepository'
 import { PrismaAnnotationsRepository } from 'repositories/implementations/PrismaAnnotationsRepository'
@@ -35,11 +36,14 @@ const prismaInvoicesRepository = new PrismaInvoicesRepository(
 
 const winThorInvoicesWithoutAccompanimentsRepository = new WinThorInvoicesWithoutAccompanimentsRepository()
 
+const manualAccompanimentDelayProvider = new ManualAccompanimentDelayProvider()
+
 const prismaAccompanimentsRepository = new PrismaAccompanimentsRepository(
   winThorPurchaseOrderRepository,
   prismaAnnotationsRepository,
   prismaInvoicesRepository,
-  winThorInvoicesWithoutAccompanimentsRepository
+  winThorInvoicesWithoutAccompanimentsRepository,
+  manualAccompanimentDelayProvider
 )
 
 const prismaRenewAccompanimentRepository = new PrismaRenewAccompanimentRepository(

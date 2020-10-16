@@ -1,7 +1,12 @@
 import { Router, Request, Response } from 'express'
 import { validateBody } from 'middlewares/validate-body'
+import {
+  cancelAccompanimentSchema,
+  cancelAccompanimentsController
+} from 'use-cases/CancelAccompaniments'
 import { createAnnotationsController } from 'use-cases/CreateAnnotations'
 import { findAccompanimentByIdController } from 'use-cases/FindAccompanimentById'
+import { findAccompanimentProductsController } from 'use-cases/FindAccompanimentProducts'
 import { findAccompanimentsController } from 'use-cases/FindAccompaniments'
 import { findInvoicesWithoutAccompanimentsController } from 'use-cases/FindInvoicesWithoutAccompaniments'
 import { markAccompanimentAsReleasedController } from 'use-cases/MarkAccompanimentAsReleased'
@@ -28,6 +33,29 @@ router.put(
   validateBody(updateAccompanimentsSchema),
   (req: Request, res: Response) => {
     updateAccompanimentsController.handle(req, res)
+  }
+)
+
+router.put(
+  '/accompaniments/:id/cancel',
+  validateBody(cancelAccompanimentSchema),
+  (req: Request, res: Response) => {
+    cancelAccompanimentsController.handle(req, res)
+  }
+)
+
+router.get(
+  '/accompaniments/:id/products',
+  (
+    req: Request<
+      { id: string },
+      {},
+      {},
+      { only: 'invoice' | 'pending' | 'delivered' }
+    >,
+    res: Response
+  ) => {
+    findAccompanimentProductsController.handle(req, res)
   }
 )
 

@@ -10,6 +10,7 @@ const INITIAL_STATE: AccompanimentsState = {
   updatingAccompaniment: false,
   additingAnnotation: false,
   renewingAccompaniment: false,
+  cancelingAccompaniment: false,
 
   markingAsSended: false,
   markingAsReviewed: false,
@@ -89,6 +90,32 @@ export default function accompaniments(
       }
       case Types.RENEW_ACCOMPANIMENT_REQUEST: {
         draft.updatingAccompaniment = true
+
+        break
+      }
+
+      case Types.CANCEL_ACCOMPANIMENT_SUCCESS: {
+        const { id } = action.payload
+
+        const accompanimentIndex = draft.accompaniments.findIndex(
+          current => current.id === id
+        )
+
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments.splice(accompanimentIndex, 1)
+        }
+
+        draft.cancelingAccompaniment = false
+
+        break
+      }
+      case Types.CANCEL_ACCOMPANIMENT_FAILURE: {
+        draft.cancelingAccompaniment = false
+
+        break
+      }
+      case Types.CANCEL_ACCOMPANIMENT_REQUEST: {
+        draft.cancelingAccompaniment = true
 
         break
       }

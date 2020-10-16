@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { CellType } from '@shared/web-components/DataGrid/Body/Row/Cell/types'
 import { ColumnProps } from '@shared/web-components/DataGrid/types'
 
-import { allAccompanimentsColumns } from '~/pages/InProgress/columns'
+import { getAllAccompanimentColumns } from '~/pages/InProgress/columns'
 import {
   useDownloadedAccompaniments,
   useNonScheduledAccompaniments,
@@ -13,58 +13,65 @@ import {
 } from '~/store/context'
 import { Accompaniment } from '~/store/modules/accompaniments/types'
 
-const columns: ColumnProps[] = [
-  ...allAccompanimentsColumns,
-  {
-    header: {
-      title: 'Agendamento',
-      width: 120,
-      align: 'center'
+function getColumns(count: number, amount: number): ColumnProps[] {
+  return [
+    ...getAllAccompanimentColumns(count, amount),
+    {
+      header: {
+        title: 'Agendamento',
+        width: 120,
+        align: 'center'
+      },
+      cell: {
+        type: CellType.DATE,
+        path: 'schedule.scheduledAt'
+      }
     },
-    cell: {
-      type: CellType.DATE,
-      path: 'schedule.scheduledAt'
-    }
-  },
-  {
-    header: {
-      title: 'Recebimento',
-      width: 120,
-      align: 'center'
+    {
+      header: {
+        title: 'Recebimento',
+        width: 120,
+        align: 'center'
+      },
+      cell: {
+        type: CellType.DATE,
+        path: 'schedule.receivedAt'
+      }
     },
-    cell: {
-      type: CellType.DATE,
-      path: 'schedule.receivedAt'
-    }
-  },
-  {
-    header: {
-      title: 'Descarregamento',
-      width: 140,
-      align: 'center'
+    {
+      header: {
+        title: 'Descarregamento',
+        width: 140,
+        align: 'center'
+      },
+      cell: {
+        type: CellType.DATE,
+        path: 'schedule.downloadedAt'
+      }
     },
-    cell: {
-      type: CellType.DATE,
-      path: 'schedule.downloadedAt'
+    {
+      header: {
+        title: 'Desbloqueio',
+        width: 120,
+        align: 'center'
+      },
+      cell: {
+        type: CellType.DATE,
+        path: 'schedule.unlockedAt'
+      }
     }
-  },
-  {
-    header: {
-      title: 'Desbloqueio',
-      width: 120,
-      align: 'center'
-    },
-    cell: {
-      type: CellType.DATE,
-      path: 'schedule.unlockedAt'
-    }
-  }
-]
+  ]
+}
 
 export function useNonScheduledData(): ResumeData {
   const accompaniments = useNonScheduledAccompaniments()
 
   const columns = excludeColumns(
+    accompaniments.length,
+    accompaniments.reduce(
+      (curr, { purchaseOrder: { amountValue } }) => curr + amountValue,
+      0
+    ),
     'schedule.scheduledAt',
     'schedule.receivedAt',
     'schedule.downloadedAt',
@@ -82,6 +89,11 @@ export function useScheduledData(): ResumeData {
   const accompaniments = useScheduledAccompaniments()
 
   const columns = excludeColumns(
+    accompaniments.length,
+    accompaniments.reduce(
+      (curr, { purchaseOrder: { amountValue } }) => curr + amountValue,
+      0
+    ),
     'schedule.receivedAt',
     'schedule.downloadedAt',
     'schedule.unlockedAt'
@@ -97,7 +109,15 @@ export function useScheduledData(): ResumeData {
 export function useReceivingData(): ResumeData {
   const accompaniments = useReceivingAccompaniments()
 
-  const columns = excludeColumns('schedule.downloadedAt', 'schedule.unlockedAt')
+  const columns = excludeColumns(
+    accompaniments.length,
+    accompaniments.reduce(
+      (curr, { purchaseOrder: { amountValue } }) => curr + amountValue,
+      0
+    ),
+    'schedule.downloadedAt',
+    'schedule.unlockedAt'
+  )
 
   return useMemo(() => {
     const { inDay, delayed } = calcCounts(accompaniments)
@@ -109,7 +129,14 @@ export function useReceivingData(): ResumeData {
 export function useDownloadedData(): ResumeData {
   const accompaniments = useDownloadedAccompaniments()
 
-  const columns = excludeColumns('schedule.unlockedAt')
+  const columns = excludeColumns(
+    accompaniments.length,
+    accompaniments.reduce(
+      (curr, { purchaseOrder: { amountValue } }) => curr + amountValue,
+      0
+    ),
+    'schedule.unlockedAt'
+  )
 
   return useMemo(() => {
     const { inDay, delayed } = calcCounts(accompaniments)
@@ -121,7 +148,13 @@ export function useDownloadedData(): ResumeData {
 export function useUnlockedData(): ResumeData {
   const accompaniments = useUnlockedAccompaniments()
 
-  const columns = excludeColumns()
+  const columns = excludeColumns(
+    accompaniments.length,
+    accompaniments.reduce(
+      (curr, { purchaseOrder: { amountValue } }) => curr + amountValue,
+      0
+    )
+  )
 
   return useMemo(() => {
     const { inDay, delayed } = calcCounts(accompaniments)
@@ -143,8 +176,12 @@ function calcCounts(accompaniments: Accompaniment[]) {
   )
 }
 
-function excludeColumns(...paths: string[]): ColumnProps[] {
-  return columns.filter(column => {
+function excludeColumns(
+  count: number,
+  amount: number,
+  ...paths: string[]
+): ColumnProps[] {
+  return getColumns(count, amount).filter(column => {
     const exclude = Boolean(paths.find(path => path === column.cell.path))
 
     return !exclude

@@ -1,6 +1,6 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: br.com.dantasdistribuidora.accompaniments
+productName: FollowUP Compras
+copyright: Copyright © 2020 Dantas Distribuidora
 electronVersion: 10.1.1
 directories:
   output: dist

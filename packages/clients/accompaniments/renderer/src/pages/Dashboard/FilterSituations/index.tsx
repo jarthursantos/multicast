@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 import { Checkbox, Button } from '@shared/web-components'
 
 import { Container } from './styles'
+import { FilterSituationsProps } from './types'
 
-const FilterSituations: React.FC = () => {
+const FilterSituations: React.VFC<FilterSituationsProps> = ({ onChange }) => {
+  const [nonSended, setNonSended] = useState(true)
   const [nonRevised, setNonRevised] = useState(true)
   const [nonReleased, setNonReleased] = useState(true)
   const [nonExpectedBilling, setNonExpectedBilling] = useState(true)
@@ -14,6 +16,7 @@ const FilterSituations: React.FC = () => {
   const [nonScheduled, setNonScheduled] = useState(true)
 
   const handleSelectAll = useCallback(() => {
+    setNonSended(true)
     setNonRevised(true)
     setNonReleased(true)
     setNonExpectedBilling(true)
@@ -24,6 +27,7 @@ const FilterSituations: React.FC = () => {
   }, [])
 
   const handleInvert = useCallback(() => {
+    setNonSended(old => !old)
     setNonRevised(old => !old)
     setNonReleased(old => !old)
     setNonExpectedBilling(old => !old)
@@ -33,9 +37,38 @@ const FilterSituations: React.FC = () => {
     setNonScheduled(old => !old)
   }, [])
 
+  useEffect(() => {
+    onChange({
+      nonSended,
+      nonRevised,
+      nonReleased,
+      nonExpectedBilling,
+      nonBilled,
+      nonFreeOnBoard,
+      nonScheduling,
+      nonScheduled
+    })
+  }, [
+    onChange,
+    nonSended,
+    nonRevised,
+    nonReleased,
+    nonExpectedBilling,
+    nonBilled,
+    nonFreeOnBoard,
+    nonScheduling,
+    nonScheduled
+  ])
+
   return (
     <Container>
       <h2>Filtrar Timeline</h2>
+
+      <Checkbox
+        label="Sem Envio"
+        value={nonSended}
+        onValueChange={setNonSended}
+      />
 
       <Checkbox
         label="Sem Revisão"

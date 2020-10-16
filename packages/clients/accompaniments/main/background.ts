@@ -49,7 +49,7 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
     })
 
     accompanimentWindow.removeMenu()
-    accompanimentWindow.webContents.openDevTools()
+    // accompanimentWindow.webContents.openDevTools()
 
     accompanimentWindows[id] = accompanimentWindow
 
@@ -57,9 +57,7 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
       accompanimentWindow.webContents.send('params-sended', { id, token })
     })
 
-    accompanimentWindow.on('close', () => {
-      delete accompanimentWindows[id]
-    })
+    accompanimentWindow.on('close', () => delete accompanimentWindows[id])
 
     if (isProd) {
       await accompanimentWindow.loadURL('app://./accompaniments.html')
@@ -68,6 +66,41 @@ ipcMain.on('openAccompaniment', async (_, id: string, token: string) => {
       await accompanimentWindow.loadURL(
         `http://localhost:${port}/accompaniments`
       )
+    }
+  }
+})
+
+const pdfWindows: { [key: string]: BrowserWindow } = {}
+
+ipcMain.on('openPDFWindow', async (_, id: string, token: string) => {
+  if (pdfWindows[id]) {
+    pdfWindows[id].focus()
+  } else {
+    const pdfWindow = createWindow('pdfWindow', {
+      width: 900,
+      height: 600,
+      webPreferences: {
+        enableRemoteModule: true
+      }
+    })
+
+    pdfWindow.maximize()
+    pdfWindow.removeMenu()
+    // pdfWindow.webContents.openDevTools()
+
+    pdfWindows[id] = pdfWindow
+
+    pdfWindow.webContents.once('did-finish-load', () => {
+      pdfWindow.webContents.send('params-sended', { id, token })
+    })
+
+    pdfWindow.on('close', () => delete pdfWindows[id])
+
+    if (isProd) {
+      await pdfWindow.loadURL('app://./pdfWindow.html')
+    } else {
+      const port = process.argv[2]
+      await pdfWindow.loadURL(`http://localhost:${port}/pdfWindow`)
     }
   }
 })

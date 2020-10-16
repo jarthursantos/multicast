@@ -12,8 +12,6 @@ export class MarkAccompanimentAsSendedUseCase {
 
     accompaniment.sendedAt = new Date()
 
-    await this.accompanimentsRepository.update(accompaniment)
-
-    return accompaniment
+    return await this.accompanimentsRepository.update(accompaniment)
   }
 }

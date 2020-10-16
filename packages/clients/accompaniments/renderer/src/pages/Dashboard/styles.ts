@@ -57,8 +57,8 @@ export const ChartsContainer = styled.div`
 
 export const ChartWrapper = styled.div`
   flex: 1;
-  width: 250px;
-  height: 250px;
+  width: 330px;
+  height: 330px;
 `
 
 export const ChartsLegendContainer = styled.div`
@@ -91,18 +91,27 @@ export const TimelineLegendContainer = styled.div`
   flex-direction: column;
 `
 
-export const TimelineLabelContainer = styled.div`
+export const TimelineLabelWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `
 
-export const TimelineLabel = styled.div`
+export const TimelineLegend = styled.div`
+  background: rgb(222, 33, 33);
+  background: linear-gradient(
+    90deg,
+    rgba(222, 33, 33, 1) 0%,
+    rgba(237, 206, 26, 1) 50%,
+    rgba(28, 218, 120, 1) 100%
+  );
+  height: 8px;
+  border-radius: 4px;
+`
+
+export const TimelineLabelContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  color: ${({ theme }) => theme.colors.text.secondary.dark};
-  font-size: 14px;
 
   &.danger {
     align-items: flex-start;
@@ -143,14 +152,24 @@ export const TimelineLabel = styled.div`
   }
 `
 
-export const TimelineLegend = styled.div`
-  background: rgb(222, 33, 33);
-  background: linear-gradient(
-    90deg,
-    rgba(222, 33, 33, 1) 0%,
-    rgba(237, 206, 26, 1) 50%,
-    rgba(28, 218, 120, 1) 100%
-  );
-  height: 8px;
+export const TimelineLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  color: ${({ theme }) => theme.colors.text.secondary.dark};
+  font-size: 14px;
+`
+
+export const TimelineCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid ${({ theme }) => theme.colors.border.secondary};
   border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 4px;
+  padding: 1px 4px;
 `

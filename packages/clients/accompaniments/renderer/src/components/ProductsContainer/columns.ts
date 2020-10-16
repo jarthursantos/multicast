@@ -10,32 +10,28 @@ export const columns: ColumnProps[] = [
     },
     cell: {
       path: 'code',
-      type: CellType.TEXT,
-      align: 'right'
+      type: CellType.NUMBER
     }
   },
   {
     header: {
       title: 'Descrição',
-      width: 111,
-      align: 'center'
+      width: 111
     },
     cell: {
       path: 'description',
-      type: CellType.TEXT,
-      align: 'right'
+      type: CellType.TEXT
     }
   },
   {
     header: {
-      title: 'Quantidate',
-      width: 100,
+      title: 'Qtd.',
+      width: 60,
       align: 'center'
     },
     cell: {
-      path: 'quantity',
-      type: CellType.TEXT,
-      align: 'right'
+      path: 'requestedQuantity',
+      type: CellType.NUMBER
     }
   }
 ]

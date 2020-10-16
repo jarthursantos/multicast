@@ -17,7 +17,10 @@ export class PrismaRenewAccompanimentRepository
     const renewedData = new Accompaniment({
       ...purchaseOrder,
       purchaseOrder,
-      annotations: []
+      annotations: [],
+      isOutstanding: true,
+      isCritical: false,
+      delay: accompaniment.delay
     })
 
     await this.accompanimentsRepository.save(renewedData)
@@ -31,6 +34,8 @@ export class PrismaRenewAccompanimentRepository
     const renewedAccompaniment = await this.accompanimentsRepository.update(
       updateRenewedData
     )
+
+    renewedAccompaniment.isOutstanding = true
 
     accompaniment.renewedAt = new Date()
 

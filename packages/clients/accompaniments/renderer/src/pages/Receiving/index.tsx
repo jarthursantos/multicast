@@ -63,7 +63,7 @@ const Receiving: React.FC = () => {
   const handleResolveRowStyle = useCallback(
     (accompaniment: Accompaniment): React.CSSProperties => {
       const { isBonification } = accompaniment.purchaseOrder
-      const { isOutstandingBalance } = accompaniment
+      const { isOutstanding: isOutstandingBalance } = accompaniment
 
       return {
         ...(isBonification ? { color: 'blue' } : {}),

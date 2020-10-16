@@ -1,4 +1,5 @@
 import { Invoice } from 'entities/Invoice'
+import { InvoiceSituations } from 'entities/InvoiceSituations'
 import { User } from 'entities/User'
 import { IInvoiceHistoryRepository } from 'repositories/IInvoiceHistoryRepository'
 import { IInvoiceSituationsRepository } from 'repositories/IInvoiceSituationsRepository'
@@ -29,8 +30,8 @@ export class CreateInvoicesUseCase {
 
     invoicesWithSameData.forEach(invoiceWithSameData => {
       if (
-        !invoiceWithSameData.canceledAt ||
-        invoiceWithSameData.divergence !== 'RESCHEDULED'
+        invoiceWithSameData.divergence !== 'RESCHEDULED' ||
+        invoiceWithSameData.situation !== InvoiceSituations.CANCELED
       ) {
         throw Error('Nota Fiscal já existe')
       }

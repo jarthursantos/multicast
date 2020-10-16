@@ -9,6 +9,8 @@ export interface ContextHandles {
   keyExtractor(data: any): string
   columns: ColumnProps[]
   data: any[]
+  selectedRow: string | undefined
+  onSelectionChange?(item: any): void
 }
 
 export interface GridProps {

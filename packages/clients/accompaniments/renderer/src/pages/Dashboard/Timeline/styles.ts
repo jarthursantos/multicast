@@ -2,19 +2,25 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   #number {
-    width: 70px;
+    width: 60px;
   }
 
   #providerCode {
-    width: 80px;
+    width: 50px;
   }
 
   #providerName {
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #fantasy {
-    width: 150px;
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #invoice {
@@ -22,11 +28,19 @@ export const Wrapper = styled.div`
   }
 
   #emittedAt {
-    width: 90px;
+    width: 80px;
   }
 
   #situation {
     width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #observation {
+    width: 25px;
+    text-align: center;
   }
 `
 
@@ -37,6 +51,10 @@ export const HeaderContainer = styled.div`
 
   padding: 8px 16px;
   margin-left: 6px;
+
+  & > * + * {
+    margin-left: 8px;
+  }
 `
 
 export const HeaderLabel = styled.small`
@@ -73,6 +91,10 @@ export const Item = styled.li`
 
   &.warning {
     border-left: 6px solid #edce1a;
+  }
+
+  & > * + * {
+    margin-left: 8px;
   }
 `
 

@@ -54,9 +54,7 @@ export class WinThorInvoiceProductsRepository
         'PCMOV.NUMTRANSENT': NUMTRANSENT
       })
 
-    products.forEach(product =>
-      result.push(new InvoiceProduct({ ...product, provider }))
-    )
+    products.forEach(product => result.push({ ...product, provider }))
 
     return result
   }
@@ -93,9 +91,7 @@ export class WinThorInvoiceProductsRepository
         'PCMOVPREENT.CODFORNEC': providerCode
       })
 
-    products.forEach(product =>
-      result.push(new InvoiceProduct({ ...product, provider }))
-    )
+    products.forEach(product => result.push({ ...product, provider }))
 
     return result
   }

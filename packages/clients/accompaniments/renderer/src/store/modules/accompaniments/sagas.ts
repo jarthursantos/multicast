@@ -7,6 +7,8 @@ import { api, extractErrorMessage } from '@shared/axios'
 import {
   addAnnotationFailureAction,
   addAnnotationSuccessAction,
+  cancelAccompanimentFailureAction,
+  cancelAccompanimentSuccessAction,
   loadAccompanimentsFailureAction,
   loadAccompanimentsSuccessAction,
   markAccompanimentAsReleasedFailureAction,
@@ -24,6 +26,7 @@ import {
   Accompaniment,
   AddAnnotationRequestAction,
   Annotation,
+  CancelAccompanimentRequestAction,
   MarkAccompanimentAsReleadedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendRequestAction,
@@ -99,6 +102,26 @@ export function* renewAccompaniment({
     toast.error(message)
 
     yield put(renewAccompanimentFailureAction(message))
+  }
+}
+
+export function* cancelAccompaniment({
+  payload
+}: CancelAccompanimentRequestAction) {
+  try {
+    const { id, motive } = payload
+
+    yield call(api.put, `/accompaniments/${id}/cancel`, { motive })
+
+    toast.success('Acompanhamento Cancelado')
+
+    yield put(cancelAccompanimentSuccessAction(id))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    toast.error(message)
+
+    yield put(cancelAccompanimentFailureAction(message))
   }
 }
 
@@ -204,6 +227,8 @@ export default all([
   takeLatest(Types.UPDATE_ACCOMPANIMENT_REQUEST, updateAccompaniment),
 
   takeLatest(Types.RENEW_ACCOMPANIMENT_REQUEST, renewAccompaniment),
+
+  takeLatest(Types.CANCEL_ACCOMPANIMENT_REQUEST, cancelAccompaniment),
 
   takeLatest(Types.ADD_ANNOTATION_REQUEST, addAnnotation),
 

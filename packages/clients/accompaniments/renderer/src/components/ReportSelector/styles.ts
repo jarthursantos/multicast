@@ -12,6 +12,6 @@ export const Container = styled.ul`
   padding: 16px;
 
   & > li + li {
-    margin-top: 12px;
+    margin-top: 8px;
   }
 `

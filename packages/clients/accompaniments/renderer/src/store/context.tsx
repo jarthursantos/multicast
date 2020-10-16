@@ -63,7 +63,7 @@ export function useBilledAccompaniments() {
   return accompaniments.filter(
     accompaniment =>
       accompaniment.expectedBillingAt !== null &&
-      accompaniment.transactionNumber === null
+      (accompaniment.billingAt === null || !accompaniment.transactionNumber)
   )
 }
 

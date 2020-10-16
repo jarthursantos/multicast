@@ -7,7 +7,6 @@ const Settings: React.FC = () => {
 
   const handleSaveSettings = useCallback((updatedSettings: SettingsData) => {
     setSettings(updatedSettings)
-    console.log({ settings })
   }, [])
 
   return (

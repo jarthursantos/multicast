@@ -31,7 +31,7 @@ function Grid({ style }: GridProps) {
   )
 
   return (
-    <Wrapper style={style} columns={columns}>
+    <Wrapper {...style} style={style} columns={columns}>
       <HeaderWrapper containerRef={setHeaderRef} onScrollX={scrollX}>
         <Header />
       </HeaderWrapper>

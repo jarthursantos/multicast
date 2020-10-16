@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   MdApps,
   MdLocalShipping,
@@ -39,12 +39,18 @@ const InProgress: React.FC = () => {
     allAccompanimentsDelayed
   ] = useAllAccompanimentsData()
 
+  const [allSelection, setAllSelection] = useState<Accompaniment>()
+
   const [
     nonRevisedAccompaniments,
     nonRevisedColumns,
     nonRevisedCount,
     nonRevisedDelayed
   ] = useNonRevisedData()
+
+  const [nonRevisedSelection, setNonRevisedSelection] = useState<
+    Accompaniment
+  >()
 
   const [
     revisedAccompaniments,
@@ -53,12 +59,16 @@ const InProgress: React.FC = () => {
     revisedDelayed
   ] = useRevisedData()
 
+  const [revisedSelection, setRevisedSelection] = useState<Accompaniment>()
+
   const [
     releasedAccompaniments,
     releasedColumns,
     releasedCount,
     releasedDelayed
   ] = useReleasedData()
+
+  const [releasedSelection, setReleasedSelection] = useState<Accompaniment>()
 
   const [
     expectedBillingAccompaniments,
@@ -67,12 +77,18 @@ const InProgress: React.FC = () => {
     expectedBillingDelayed
   ] = useExpectedBillingData()
 
+  const [expectedBillingSelection, setExpectedBillingSelection] = useState<
+    Accompaniment
+  >()
+
   const [
     billedAccompaniments,
     billedColumns,
     billedCount,
     billedDelayed
   ] = useBilledData()
+
+  const [billedSelection, setBilledSelection] = useState<Accompaniment>()
 
   const [
     freeOnBoardAccompaniments,
@@ -81,12 +97,20 @@ const InProgress: React.FC = () => {
     freeOnBoardDelayed
   ] = useFreeOnBoardData()
 
+  const [freeOnBoardSelection, setFreeOnBoardSelection] = useState<
+    Accompaniment
+  >()
+
   const [
     schedulingAccompaniments,
     schedulingColumns,
     schedulingCount,
     schedulingDelayed
   ] = useSchedulingData()
+
+  const [schedulingSelection, setSchedulingSelection] = useState<
+    Accompaniment
+  >()
 
   const handleOpenAccompaniment = useOpenWindow('Accompaniment')
 
@@ -98,15 +122,74 @@ const InProgress: React.FC = () => {
   const handleResolveRowStyle = useCallback(
     (accompaniment: Accompaniment): React.CSSProperties => {
       const { isBonification } = accompaniment.purchaseOrder
-      const { isOutstandingBalance } = accompaniment
+      const { isOutstanding: isOutstandingBalance } = accompaniment
 
       return {
         ...(isBonification ? { color: 'blue' } : {}),
-        ...(isOutstandingBalance ? { fontWeight: 500 } : {})
+        ...(isOutstandingBalance ? { fontWeight: 'bold' } : {})
       }
     },
     []
   )
+
+  const accompanimentId = useMemo(() => {
+    let accompanimentId: string
+
+    switch (currentSituation) {
+      case 'allAccompaniments':
+        if (!allSelection) return
+
+        accompanimentId = allSelection.id
+        break
+      case 'nonRevised':
+        if (!nonRevisedSelection) return
+
+        accompanimentId = nonRevisedSelection.id
+        break
+      case 'revised':
+        if (!revisedSelection) return
+
+        accompanimentId = revisedSelection.id
+        break
+      case 'released':
+        if (!releasedSelection) return
+
+        accompanimentId = releasedSelection.id
+        break
+      case 'expectedBilling':
+        if (!expectedBillingSelection) return
+
+        accompanimentId = expectedBillingSelection.id
+        break
+      case 'billed':
+        if (!billedSelection) return
+
+        accompanimentId = billedSelection.id
+        break
+      case 'freeOnBoard':
+        if (!freeOnBoardSelection) return
+
+        accompanimentId = freeOnBoardSelection.id
+        break
+      case 'scheduling':
+        if (!schedulingSelection) return
+
+        accompanimentId = schedulingSelection.id
+        break
+    }
+
+    return accompanimentId
+  }, [
+    currentSituation,
+    allSelection,
+    nonRevisedSelection,
+    revisedSelection,
+    releasedSelection,
+    expectedBillingSelection,
+    billedSelection,
+    freeOnBoardSelection,
+    schedulingSelection
+  ]) // filter selection
 
   return (
     <Wrapper>
@@ -183,6 +266,7 @@ const InProgress: React.FC = () => {
               columns={allAccompanimentsColumns}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setAllSelection}
             />
           </Pager.Page>
 
@@ -193,6 +277,7 @@ const InProgress: React.FC = () => {
               data={nonRevisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setNonRevisedSelection}
             />
           </Pager.Page>
 
@@ -203,6 +288,7 @@ const InProgress: React.FC = () => {
               data={revisedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setRevisedSelection}
             />
           </Pager.Page>
 
@@ -213,6 +299,7 @@ const InProgress: React.FC = () => {
               data={releasedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setReleasedSelection}
             />
           </Pager.Page>
 
@@ -223,6 +310,7 @@ const InProgress: React.FC = () => {
               data={expectedBillingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setExpectedBillingSelection}
             />
           </Pager.Page>
 
@@ -233,6 +321,7 @@ const InProgress: React.FC = () => {
               data={billedAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setBilledSelection}
             />
           </Pager.Page>
 
@@ -243,6 +332,7 @@ const InProgress: React.FC = () => {
               data={freeOnBoardAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setFreeOnBoardSelection}
             />
           </Pager.Page>
 
@@ -253,13 +343,14 @@ const InProgress: React.FC = () => {
               data={schedulingAccompaniments}
               onRowDoubleClick={handleDoubleClickRow}
               resolveRowStyle={handleResolveRowStyle}
+              onSelectionChange={setSchedulingSelection}
             />
           </Pager.Page>
         </Pager>
       </Container>
 
       <ProductsWrapper>
-        <ProductsContainer />
+        <ProductsContainer accompanimentId={accompanimentId} />
       </ProductsWrapper>
     </Wrapper>
   )

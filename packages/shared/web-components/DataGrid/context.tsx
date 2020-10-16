@@ -3,7 +3,9 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
-  useMemo
+  useEffect,
+  useMemo,
+  useState
 } from 'react'
 
 import { FooterCellProps } from './Footer/Cell/types'
@@ -20,8 +22,31 @@ export function GridContextProvider<Data>({
   data,
   onRowClick,
   onRowDoubleClick,
+  onSelectionChange,
   resolveRowStyle
 }: Props<Data> & { children: ReactNode }) {
+  const [selectedRow, setSelectedRow] = useState<Data>()
+
+  const selectedRowId = useMemo(
+    () => keyExtractor && selectedRow && keyExtractor(selectedRow),
+    [selectedRow, keyExtractor]
+  )
+
+  const handleRowClick = useCallback(
+    (data: any) => {
+      setSelectedRow(data)
+
+      onRowClick && onRowClick(data)
+    },
+    [onRowClick, keyExtractor]
+  )
+
+  useEffect(() => {
+    if (!onSelectionChange) return
+
+    onSelectionChange(selectedRow)
+  }, [onSelectionChange, selectedRow])
+
   return (
     <GridContext.Provider
       value={{
@@ -29,8 +54,9 @@ export function GridContextProvider<Data>({
         columns,
         keyExtractor,
         data,
-        onRowClick,
-        onRowDoubleClick
+        onRowClick: handleRowClick,
+        onRowDoubleClick,
+        selectedRow: selectedRowId
       }}
     >
       {children}
@@ -54,6 +80,12 @@ export function useColumnsCell() {
   const { columns } = useContext(GridContext)
 
   return columns.map(column => column.cell)
+}
+
+export function useSelectedRow() {
+  const { selectedRow } = useContext(GridContext)
+
+  return selectedRow
 }
 
 export function useRowStyle<Data>(item: Data) {
