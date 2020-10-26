@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Accompaniment } from 'entities/Accompaniment'
+import { CriticalLevel } from 'entities/CriticalLevel'
 import { RenewAccompanimentResult } from 'entities/RenewAccompanimentResult'
 import { assign } from 'lodash'
 import { IAccompanimentsRepository } from 'repositories/IAccompanimentsRepository'
@@ -19,7 +20,7 @@ export class PrismaRenewAccompanimentRepository
       purchaseOrder,
       annotations: [],
       isOutstanding: true,
-      isCritical: false,
+      criticalLevel: CriticalLevel.NORMAL,
       delay: accompaniment.delay
     })
 

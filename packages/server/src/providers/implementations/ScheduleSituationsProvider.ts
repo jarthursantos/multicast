@@ -41,7 +41,8 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
         invoice =>
           invoice.situation !== InvoiceSituations.INVOICE_NON_LAUNCHED &&
           invoice.situation !== InvoiceSituations.INVOICE_PRE_LAUNCHED &&
-          invoice.situation !== InvoiceSituations.INVOICE_LAUNCHED
+          invoice.situation !== InvoiceSituations.INVOICE_LAUNCHED &&
+          invoice.canceledAt
       )
 
       if (receivingInvoices.length >= 0) {

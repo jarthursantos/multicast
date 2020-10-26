@@ -1,8 +1,9 @@
 import { Accompaniment } from 'entities/Accompaniment'
+import { CriticalLevel } from 'entities/CriticalLevel'
 
 export interface AccompanimentDelay {
   count: number
-  isCritical: boolean
+  criticalLevel: CriticalLevel
 }
 
 export type AccompanimentCalcData = Pick<

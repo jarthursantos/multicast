@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Accompaniment } from 'entities/Accompaniment'
+import { CriticalLevel } from 'entities/CriticalLevel'
 import { PurchaseOrder } from 'entities/PurchaseOrder'
 import { User } from 'entities/User'
 import { omit } from 'lodash'
@@ -56,7 +57,7 @@ export class PrismaAccompanimentsRepository
           'emittedAt',
           'isOutstanding',
           'delay',
-          'isCritical'
+          'criticalLevel'
         ),
         number: accompaniment.purchaseOrder.number
       }
@@ -72,7 +73,7 @@ export class PrismaAccompanimentsRepository
         purchaseOrder,
         annotations: [],
         isOutstanding: false,
-        isCritical: false,
+        criticalLevel: CriticalLevel.NORMAL,
         delay: 0
       })
 
@@ -117,7 +118,7 @@ export class PrismaAccompanimentsRepository
       ? await this.invoiceRepository.findById(accompaniment.invoiceId)
       : undefined
 
-    const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+    const { count, criticalLevel } = this.accompanimentDelayProvider.calculate({
       ...accompaniment,
       purchaseOrder
     })
@@ -126,7 +127,7 @@ export class PrismaAccompanimentsRepository
       {
         ...accompaniment,
         delay: count,
-        isCritical,
+        criticalLevel,
         purchaseOrder,
         annotations,
         invoice,
@@ -180,7 +181,10 @@ export class PrismaAccompanimentsRepository
         ? await this.invoiceRepository.findById(accompaniment.invoiceId)
         : undefined
 
-      const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+      const {
+        count,
+        criticalLevel
+      } = this.accompanimentDelayProvider.calculate({
         ...accompaniment,
         purchaseOrder
       })
@@ -190,7 +194,7 @@ export class PrismaAccompanimentsRepository
           {
             ...accompaniment,
             delay: count,
-            isCritical,
+            criticalLevel,
             purchaseOrder,
             annotations,
             invoice,
@@ -222,7 +226,7 @@ export class PrismaAccompanimentsRepository
           'emittedAt',
           'isOutstanding',
           'delay',
-          'isCritical',
+          'criticalLevel',
           'updatedAt',
           'createdAt'
         ),
@@ -259,7 +263,7 @@ export class PrismaAccompanimentsRepository
       ? await this.invoiceRepository.findById(updatedData.invoiceId)
       : undefined
 
-    const { count, isCritical } = this.accompanimentDelayProvider.calculate({
+    const { count, criticalLevel } = this.accompanimentDelayProvider.calculate({
       ...updatedData,
       purchaseOrder
     })
@@ -268,7 +272,7 @@ export class PrismaAccompanimentsRepository
       {
         ...updatedData,
         delay: count || 0,
-        isCritical,
+        criticalLevel,
         purchaseOrder,
         annotations,
         invoice,

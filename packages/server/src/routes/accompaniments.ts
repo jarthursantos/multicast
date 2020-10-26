@@ -9,6 +9,7 @@ import { findAccompanimentByIdController } from 'use-cases/FindAccompanimentById
 import { findAccompanimentProductsController } from 'use-cases/FindAccompanimentProducts'
 import { findAccompanimentsController } from 'use-cases/FindAccompaniments'
 import { findInvoicesWithoutAccompanimentsController } from 'use-cases/FindInvoicesWithoutAccompaniments'
+import { generateAccompanimentPDFController } from 'use-cases/GenerateAccompanimentPDF'
 import { markAccompanimentAsReleasedController } from 'use-cases/MarkAccompanimentAsReleased'
 import { markAccompanimentAsReviewedController } from 'use-cases/MarkAccompanimentAsReviewed'
 import { markAccompanimentAsSendedController } from 'use-cases/MarkAccompanimentAsSender'
@@ -26,6 +27,10 @@ router.get('/accompaniments', (req: Request, res: Response) => {
 
 router.get('/accompaniments/:id', (req: Request, res: Response) => {
   findAccompanimentByIdController.handle(req, res)
+})
+
+router.get('/accompaniments/:id/generatePDF', (req: Request, res: Response) => {
+  generateAccompanimentPDFController.handle(req, res)
 })
 
 router.put(

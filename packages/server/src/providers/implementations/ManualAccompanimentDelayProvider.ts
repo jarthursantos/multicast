@@ -1,4 +1,5 @@
 import { differenceInBusinessDays } from 'date-fns'
+import { CriticalLevel } from 'entities/CriticalLevel'
 import {
   AccompanimentDelay,
   AccompanimentCalcData,
@@ -25,7 +26,12 @@ export class ManualAccompanimentDelayProvider
 
       return {
         count,
-        isCritical: count > 2
+        criticalLevel:
+          count > 2
+            ? CriticalLevel.DANGER
+            : count === 2
+            ? CriticalLevel.ALERT
+            : CriticalLevel.NORMAL
       }
     }
 
@@ -34,7 +40,12 @@ export class ManualAccompanimentDelayProvider
 
       return {
         count,
-        isCritical: count > 3
+        criticalLevel:
+          count > 3
+            ? CriticalLevel.DANGER
+            : count === 3
+            ? CriticalLevel.ALERT
+            : CriticalLevel.NORMAL
       }
     }
 
@@ -43,7 +54,12 @@ export class ManualAccompanimentDelayProvider
 
       return {
         count,
-        isCritical: count > 3
+        criticalLevel:
+          count > 3
+            ? CriticalLevel.DANGER
+            : count === 3
+            ? CriticalLevel.ALERT
+            : CriticalLevel.NORMAL
       }
     }
 
@@ -52,7 +68,12 @@ export class ManualAccompanimentDelayProvider
 
       return {
         count,
-        isCritical: count > 3
+        criticalLevel:
+          count > 3
+            ? CriticalLevel.DANGER
+            : count === 3
+            ? CriticalLevel.ALERT
+            : CriticalLevel.NORMAL
       }
     }
 
@@ -61,7 +82,12 @@ export class ManualAccompanimentDelayProvider
 
       return {
         count,
-        isCritical: count > 1
+        criticalLevel:
+          count > 1
+            ? CriticalLevel.DANGER
+            : count === 1
+            ? CriticalLevel.ALERT
+            : CriticalLevel.NORMAL
       }
     }
 
@@ -71,7 +97,12 @@ export class ManualAccompanimentDelayProvider
 
         return {
           count,
-          isCritical: count > 3
+          criticalLevel:
+            count > 3
+              ? CriticalLevel.DANGER
+              : count === 3
+              ? CriticalLevel.ALERT
+              : CriticalLevel.NORMAL
         }
       }
     } else {
@@ -80,7 +111,12 @@ export class ManualAccompanimentDelayProvider
 
         return {
           count,
-          isCritical: count > 3
+          criticalLevel:
+            count > 3
+              ? CriticalLevel.DANGER
+              : count === 3
+              ? CriticalLevel.ALERT
+              : CriticalLevel.NORMAL
         }
       }
     }
@@ -89,7 +125,12 @@ export class ManualAccompanimentDelayProvider
 
     return {
       count,
-      isCritical: count > 2
+      criticalLevel:
+        count > 2
+          ? CriticalLevel.DANGER
+          : count === 2
+          ? CriticalLevel.ALERT
+          : CriticalLevel.NORMAL
     }
   }
 }

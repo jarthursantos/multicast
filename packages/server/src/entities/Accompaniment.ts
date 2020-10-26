@@ -2,6 +2,7 @@ import { pick } from 'lodash'
 import { v4 as uuid } from 'uuid'
 
 import { Annotation } from './Annotation'
+import { CriticalLevel } from './CriticalLevel'
 import { Invoice } from './Invoice'
 import { PurchaseOrder } from './PurchaseOrder'
 
@@ -29,7 +30,7 @@ export class Accompaniment {
   public annotations: Annotation[]
 
   public delay: number
-  public isCritical: boolean
+  public criticalLevel: CriticalLevel
 
   public createdAt?: Date
   public updatedAt?: Date
@@ -60,7 +61,7 @@ export class Accompaniment {
         'annotations',
         'isOutstanding',
         'delay',
-        'isCritical'
+        'criticalLevel'
       )
     )
 
