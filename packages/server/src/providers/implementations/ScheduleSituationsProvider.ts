@@ -22,7 +22,9 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
 
     if (schedule.receivedAt) {
       const finishedInvoices = invoices.filter(
-        invoice => invoice.situation === InvoiceSituations.OS_FINISHED
+        invoice =>
+          invoice.situation === InvoiceSituations.OS_FINISHED &&
+          invoice.canceledAt
       )
 
       if (finishedInvoices.length === invoices.length) {
@@ -30,7 +32,9 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
       }
 
       const receivedInvoices = invoices.filter(
-        invoice => invoice.situation === InvoiceSituations.BONUS_FINISHED
+        invoice =>
+          invoice.situation === InvoiceSituations.BONUS_FINISHED &&
+          invoice.canceledAt
       )
 
       if (receivedInvoices.length === invoices.length) {
