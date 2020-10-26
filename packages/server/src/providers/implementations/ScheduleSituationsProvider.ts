@@ -24,7 +24,7 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
       const finishedInvoices = invoices.filter(
         invoice =>
           invoice.situation === InvoiceSituations.OS_FINISHED &&
-          invoice.canceledAt
+          !invoice.canceledAt
       )
 
       if (finishedInvoices.length === invoices.length) {
@@ -34,7 +34,7 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
       const receivedInvoices = invoices.filter(
         invoice =>
           invoice.situation === InvoiceSituations.BONUS_FINISHED &&
-          invoice.canceledAt
+          !invoice.canceledAt
       )
 
       if (receivedInvoices.length === invoices.length) {
@@ -46,7 +46,7 @@ export class ScheduleSituationsProvider implements IScheduleSituationsProvider {
           invoice.situation !== InvoiceSituations.INVOICE_NON_LAUNCHED &&
           invoice.situation !== InvoiceSituations.INVOICE_PRE_LAUNCHED &&
           invoice.situation !== InvoiceSituations.INVOICE_LAUNCHED &&
-          invoice.canceledAt
+          !invoice.canceledAt
       )
 
       if (receivingInvoices.length >= 0) {
