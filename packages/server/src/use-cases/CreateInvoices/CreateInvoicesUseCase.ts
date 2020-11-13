@@ -45,8 +45,6 @@ export class CreateInvoicesUseCase {
       data.number
     )
 
-    // TODO: check if files exists
-
     const invoice = new Invoice({ ...data, provider, situation })
 
     await this.invoicesRepository.save(invoice)

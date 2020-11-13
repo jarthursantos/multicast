@@ -14,14 +14,39 @@ import {
 } from 'use-cases/CreateSession'
 
 import { accompanimentsRouter } from './accompaniments'
+import { acitivtyBranchesRouter } from './activity-branches'
+import { branchesRouter } from './branches'
+import { brandsRouter } from './brands'
+import { buyersRouter } from './buyers'
+import { categoriesRouter } from './categories'
+import { classesRouter } from './classes'
+import { clientsRouter } from './clients'
+import { clientsWebsRouter } from './clients-webs'
+import { departmentsRouter } from './departments'
 import { dischargeTablesRouter } from './discharge-tables'
+import { distribuitionsRouter } from './distribuitions'
 import { employeesRouter } from './employees'
 import { invoicesRouter } from './invoices'
 import { permissionsRouter } from './permissions'
+import { principalClientRouter } from './principal-clients'
+import { principalProviderRouter } from './principal-provider'
+import { productLinesRouter } from './product-lines'
+import { productsRouter } from './products'
 import { providersRouter } from './providers'
+import { purchaseResumesRouter } from './purchase-resumes'
+import { rcasRouter } from './rcas'
+import { regionsRouter } from './regions'
 import { reportsRouter } from './reports'
 import { representativesRouter } from './representatives'
+import { revenuesRouter } from './revenues'
+import { salesClassesRouter } from './sales-classes'
 import { schedulesRouter } from './schedules'
+import { sectionsRouter } from './sections'
+import { squaresRouter } from './squares'
+import { stockNotificationsRouter } from './stock-notifications'
+import { subcategoriesRouter } from './subcategories'
+import { supervisorsRouter } from './supervisors'
+import { tributationsRouter } from './tribuitations'
 import { usersRouter } from './users'
 
 const router = Router()
@@ -64,13 +89,39 @@ router.use(invoicesRouter)
 router.use(dischargeTablesRouter)
 router.use(accompanimentsRouter)
 router.use(representativesRouter)
+router.use(stockNotificationsRouter)
 
 router.use(reportsRouter)
 
+router.use(acitivtyBranchesRouter)
+router.use(branchesRouter)
+router.use(brandsRouter)
+router.use(buyersRouter)
+router.use(categoriesRouter)
+router.use(classesRouter)
+router.use(clientsRouter)
+router.use(clientsWebsRouter)
+router.use(departmentsRouter)
+router.use(distribuitionsRouter)
+router.use(principalClientRouter)
+router.use(principalProviderRouter)
+router.use(productLinesRouter)
+router.use(productsRouter)
+router.use(purchaseResumesRouter)
+router.use(rcasRouter)
+router.use(regionsRouter)
+router.use(revenuesRouter)
+router.use(salesClassesRouter)
+router.use(sectionsRouter)
+router.use(squaresRouter)
+router.use(subcategoriesRouter)
+router.use(supervisorsRouter)
+router.use(tributationsRouter)
+
 router.use((_, res, next) => {
-  res
-    .status(400)
-    .json({ message: 'Você não tem permissão para executar esta ação' })
+  const message = 'Você não tem permissão para executar esta ação'
+
+  res.status(400).json({ message })
 
   next()
 })

@@ -1,0 +1,19 @@
+import { WinThorSalesByProviderRepository } from 'repositories/implementations/WinThorSalesByProviderRepository'
+
+import { FindSalesByProviderPerProviderLitigationController } from './FindSalesByProviderPerProviderLitigationController'
+import { FindSalesByProviderPerProviderLitigationUseCase } from './FindSalesByProviderPerProviderLitigationUseCase'
+
+const winThorSalesByProviderRepository = new WinThorSalesByProviderRepository()
+
+const findSalesByProviderPerProviderLitigationUseCase = new FindSalesByProviderPerProviderLitigationUseCase(
+  winThorSalesByProviderRepository
+)
+
+const findSalesByProviderPerProviderLitigationController = new FindSalesByProviderPerProviderLitigationController(
+  findSalesByProviderPerProviderLitigationUseCase
+)
+
+export {
+  findSalesByProviderPerProviderLitigationController,
+  findSalesByProviderPerProviderLitigationUseCase
+}

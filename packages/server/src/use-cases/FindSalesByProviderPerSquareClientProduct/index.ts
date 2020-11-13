@@ -1,0 +1,19 @@
+import { WinThorSalesByProviderRepository } from 'repositories/implementations/WinThorSalesByProviderRepository'
+
+import { FindSalesByProviderPerSquareClientProductController } from './FindSalesByProviderPerSquareClientProductController'
+import { FindSalesByProviderPerSquareClientProductUseCase } from './FindSalesByProviderPerSquareClientProductUseCase'
+
+const winThorSalesByProviderRepository = new WinThorSalesByProviderRepository()
+
+const findSalesByProviderPerSquareClientProductUseCase = new FindSalesByProviderPerSquareClientProductUseCase(
+  winThorSalesByProviderRepository
+)
+
+const findSalesByProviderPerSquareClientProductController = new FindSalesByProviderPerSquareClientProductController(
+  findSalesByProviderPerSquareClientProductUseCase
+)
+
+export {
+  findSalesByProviderPerSquareClientProductController,
+  findSalesByProviderPerSquareClientProductUseCase
+}

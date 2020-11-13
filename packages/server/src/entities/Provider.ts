@@ -1,12 +1,15 @@
 import { Buyer } from './Buyer'
 import { Representative } from './Representative'
 
-export interface Provider {
+export interface PrincipalProvider {
   code: number
   name: string
   fantasy: string
-  principalCode: number
   cnpj: string
+}
+
+export interface Provider extends PrincipalProvider {
+  principalCode: number
 }
 
 export interface DetailedProvider extends Provider {

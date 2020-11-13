@@ -28,8 +28,6 @@ export class UpdateSchedulesUseCase {
       throw Error('Esse agendamento foi fechado')
     }
 
-    // TODO: reschedule
-
     const updateData = assign(new Schedule(schedule, schedule.id), data)
 
     if (isBefore(updateData.scheduledAt, subDays(new Date(), 1))) {

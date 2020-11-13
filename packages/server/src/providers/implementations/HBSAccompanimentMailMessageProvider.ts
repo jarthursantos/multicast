@@ -1,24 +1,34 @@
 import { format } from 'date-fns'
 import { Accompaniment } from 'entities/Accompaniment'
-import { MailData } from 'entities/MailData'
+import { File } from 'entities/File'
+import { AccompanimentMailData } from 'entities/MailData'
 import exphbs from 'express-handlebars'
 import { resolve, join } from 'path'
 import { IAccompanimentMailMessageProvider } from 'providers/IAccompanimentMailMessageProvider'
+import { IAccompanimentReportProvider } from 'providers/IAccompanimentReportProvider'
 
 export class HBSAccompanimentMailMessageProvider
   implements IAccompanimentMailMessageProvider {
-  async generate(accompaniment: Accompaniment): Promise<MailData> {
+  constructor(
+    private accompanimentReportProvider: IAccompanimentReportProvider
+  ) {}
+
+  async generate(accompaniment: Accompaniment): Promise<AccompanimentMailData> {
     const { purchaseOrder, releasedAt } = accompaniment
     const { provider } = purchaseOrder
 
-    const mail: MailData = {
+    const mail: AccompanimentMailData = {
       to: provider.representative.email,
-      subject: `Pedido [${purchaseOrder.number}] - ${provider.name} (${provider.fantasy})`,
+      subject: `PEDIDO [${purchaseOrder.number}] - ${provider.name} (${provider.fantasy})`,
       body: ''
     }
 
+    let file: File
+
     if (accompaniment.expectedBillingAt) {
-      return mail
+      file = await this.accompanimentReportProvider.generate(accompaniment)
+
+      return { ...mail, file }
     }
 
     let reportName: string
@@ -27,14 +37,24 @@ export class HBSAccompanimentMailMessageProvider
       reportName = 'non-sended'
 
       mail.subject = `ENVIO - ${mail.subject}`
+
+      file = await this.accompanimentReportProvider.generate(accompaniment)
     } else if (!accompaniment.reviewedAt || !accompaniment.releasedAt) {
       reportName = 'non-revised'
 
       mail.subject = `REVISÃO/LIBERAÇÃO - ${mail.subject}`
+
+      file = await this.accompanimentReportProvider.generate(accompaniment, {
+        only: 'pending'
+      })
     } else if (!accompaniment.expectedBillingAt) {
       reportName = 'non-released'
 
       mail.subject = `A FATURAR - ${mail.subject}`
+
+      file = await this.accompanimentReportProvider.generate(accompaniment, {
+        only: 'pending'
+      })
     }
 
     const viewsPath = resolve(__dirname, '..', '..', 'views', 'emails')
@@ -70,6 +90,7 @@ export class HBSAccompanimentMailMessageProvider
 
     return {
       ...mail,
+      file,
       body
     }
   }

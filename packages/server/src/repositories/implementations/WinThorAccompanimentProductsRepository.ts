@@ -42,6 +42,10 @@ export class WinThorAccompanimentProductsRepository
             'PCPRODUT.EMBALAGEM as packing',
             'PCPRODUT.UNIDADE as unity',
             'PCPRODUT.CODFAB as factoryCode',
+            'PCITEM.VLIPI as ipi',
+            'PCITEM.BASEICMS as icmsBase',
+            'PCITEM.VLICMS as icmsValue',
+            'PCPRODUT.VOLUME as volume',
             // 'DIRFOTOPROD as imagePath',
             'PCITEM.QTPEDIDA as requestedQuantity',
             'PCFORNEC.CODFORNEC as providerCode',
@@ -81,12 +85,25 @@ export class WinThorAccompanimentProductsRepository
       .select<RawProduct[]>('products.*', 'quantity.requestsCount')
       .from('products')
       .leftJoin('quantity', 'products.code', 'quantity.CODPROD')
+      .orderBy('products.description', 'asc')
 
     const result: Product[] = []
 
     products.forEach(product => {
       result.push({
-        ...product,
+        code: product.code,
+        description: product.description,
+        factoryCode: product.factoryCode,
+        packing: product.packing,
+        unity: product.unity,
+        price: product.price,
+        deliveredQuantity: product.deliveredQuantity,
+        requestedQuantity: product.requestedQuantity,
+        requestsCount: product.requestsCount,
+        icmsBase: product.icmsBase,
+        icmsValue: product.icmsValue,
+        volume: product.volume,
+        ipi: product.ipi,
 
         provider: {
           code: product.providerCode,
