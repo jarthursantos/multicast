@@ -1,0 +1,25 @@
+<style>
+  main {
+    display: flex;
+    flex-direction: column;
+    margin: 60px 0 40px;
+  }
+
+  main span {
+    text-align: justify;
+    font-size: 14px;
+  }
+
+  main strong {
+    text-transform: uppercase;
+  }
+</style>
+
+<main>
+  <span>
+    Declaro que recebi a importância de
+    <strong>R$ {{ receiptValue }} ({{ receiptValueExtense }})</strong> referente a nota fiscal
+    <strong>{{ number }}</strong> do fornecedor <strong>{{ providerName }}</strong> pela
+    transportadora <strong>{{ shippingName }}</strong>
+  </span>
+</main>

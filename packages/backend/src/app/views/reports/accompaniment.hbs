@@ -1,0 +1,15 @@
+{{#each products}}
+{{#with this}}
+<div id="tableRow">
+  <div id="factoryCode">{{ factoryCode }}</div>
+  <div id="code">{{ code }}</div>
+  <div id="description">{{ description }}</div>
+  <div id="packing">{{ packing }}</div>
+  <div id="unity">{{ unity }}</div>
+  <div id="requestedCount">{{ requestedQuantity }}</div>
+  <div id="ipi">{{ ipi }}</div>
+  <div id="liquidValue">{{ price }}</div>
+  <div id="amountValue">{{ amountValue }}</div>
+</div>
+{{/with}}
+{{/each}}
