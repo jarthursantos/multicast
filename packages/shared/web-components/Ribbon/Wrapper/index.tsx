@@ -6,9 +6,8 @@ import { TabContentContainer } from '../TabContentContainer'
 import { TabOptions } from '../TabOptions'
 import { RibbonContextProvider } from './context'
 import { Container } from './styles'
-import { RibbonProps } from './types'
 
-const Ribbon: React.VFC<RibbonProps> & {
+const Ribbon: React.FC & {
   Bar: typeof TabBar
   Container: typeof TabContentContainer
   Options: typeof TabOptions

@@ -1,3 +1,4 @@
+import { lighten } from 'polished'
 import styled, { css } from 'styled-components'
 
 export interface ButtonProps {
@@ -64,7 +65,7 @@ export const Container = styled.button<ButtonProps>`
     :disabled {
       cursor: default;
       background: ${({ theme }) =>
-        theme.colors.button.primary.disabled.dark.background};
+        lighten(0.2, theme.colors.button.primary.disabled.dark.background)};
       color: ${({ theme }) =>
         theme.colors.button.primary.disabled.dark.foreground};
     }
@@ -109,6 +110,12 @@ interface LabelProps {
 }
 
 export const Label = styled.span<LabelProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
   ${({ invisible: hidden }) =>
     hidden &&
     css`

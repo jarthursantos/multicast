@@ -1,0 +1,14 @@
+{
+  "name": "@shared/outlook-mail",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "create-outlook-mail": "^1.0.6",
+    "electron": "10.1.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.7"
+  }
+}

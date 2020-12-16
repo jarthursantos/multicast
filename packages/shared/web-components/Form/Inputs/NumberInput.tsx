@@ -44,7 +44,7 @@ const NumberInput: React.FC<Props> = ({
         return NaN
       },
       setValue: (input: HTMLInputElement, value: string | number) => {
-        const normalizedValue = String(value)
+        const normalizedValue = String(value || '')
 
         input.value = normalizedValue
       },

@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import ReactSelect, { OptionTypeBase, Props as SelectProps } from 'react-select'
 
 import { useField } from '@unform/core'
@@ -8,12 +14,14 @@ import { InputProps } from '../types'
 
 type Props = Pick<InputProps, 'label' | 'name'> & {
   inputProps: SelectProps<OptionTypeBase>
+  onSelectionChange?: Dispatch<SetStateAction<string>>
 } & React.HTMLAttributes<HTMLDivElement>
 
 const SelectInput: React.FC<Props> = ({
   name,
   label,
   inputProps = {},
+  onSelectionChange,
   ...rest
 }) => {
   const { options } = inputProps
@@ -26,11 +34,19 @@ const SelectInput: React.FC<Props> = ({
     clearError
   } = useField(name)
 
-  const [opened, setOpened] = useState(false)
+  const alreadySet = useRef(false)
   const [selection, setSelection] = useState<OptionTypeBase>()
 
   useEffect(() => {
-    setSelection(options?.find(option => option.value === defaultValue))
+    if (alreadySet.current) return
+
+    const defaultOption = options?.find(option => option.value === defaultValue)
+
+    if (defaultOption) {
+      alreadySet.current = true
+    }
+
+    setSelection(defaultOption)
   }, [defaultValue, options])
 
   useEffect(() => {
@@ -46,16 +62,19 @@ const SelectInput: React.FC<Props> = ({
   }, [fieldName, registerField, selection, options])
 
   return (
-    <InputContainer {...rest} hasError={!!error}>
+    <InputContainer isSelect {...rest} hasError={!!error}>
       {label && <InputLabel htmlFor={fieldName}>{label}</InputLabel>}
 
       <ReactSelect
         id={fieldName}
         placeholder=""
         value={selection}
-        onChange={setSelection}
+        onChange={(value: OptionTypeBase) => {
+          onSelectionChange && onSelectionChange(value.value)
+
+          setSelection(value)
+        }}
         onFocus={clearError}
-        onMenuOpen={() => setOpened(true)}
         loadingMessage={() => 'Carregando'}
         theme={theme => ({
           ...theme,
@@ -68,35 +87,24 @@ const SelectInput: React.FC<Props> = ({
           }
         })}
         styles={{
-          menu: provided => ({ ...provided, marginTop: 0 }),
+          menu: provided => ({ ...provided, marginTop: 0, marginBottom: 0 }),
           loadingIndicator: provided => ({ ...provided, color: '#333' }),
           singleValue: provided => ({
             ...provided,
             fontSize: 14,
             color: '#666',
-            paddingTop: opened ? 8 : 0,
             textTransform: 'uppercase'
-          }),
-          valueContainer: provided => ({
-            ...provided,
-            height: 36,
-            padding: 0,
-            paddingLeft: 8
           }),
           input: provided => ({
             ...provided,
             borderWidth: '2px !important',
             fontSize: 14,
-            marginLeft: -50,
             ...(error
               ? { borderColor: '#de3b3b', ':hover': { borderColor: '#de3b3b' } }
               : {})
           }),
           control: provided => ({
             ...provided,
-            height: 40,
-            minHeight: 40,
-            maxHeight: 40,
             borderWidth: '2px !important',
             boxShadow: '0',
             ...(error
@@ -110,10 +118,12 @@ const SelectInput: React.FC<Props> = ({
           })
         }}
         {...inputProps}
+        isSearchable={true}
       />
 
       {error && <InputError>{error}</InputError>}
     </InputContainer>
   )
 }
+
 export { SelectInput }

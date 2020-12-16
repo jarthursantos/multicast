@@ -3,4 +3,5 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   flex?: boolean
   secondary?: boolean
   label: string
+  icon?: React.ReactNode
 }

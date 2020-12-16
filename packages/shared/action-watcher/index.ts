@@ -13,6 +13,8 @@ class Watcher {
   constructor() {
     this.pendingActions = []
     this.emitter = new EventEmitter()
+
+    this.emitter.setMaxListeners(100)
   }
 
   registerAction(action: Action) {

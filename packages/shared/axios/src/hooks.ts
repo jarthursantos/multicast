@@ -8,31 +8,21 @@ import { AxiosContextProps } from './types'
 export const api = axios.create()
 
 export function useAxios(): [AxiosInstance, boolean] {
-  const { baseURL, token } = useContext<AxiosContextProps>(AxiosContext)
+  const { token } = useContext<AxiosContextProps>(AxiosContext)
 
   return useMemo(() => {
-    if (baseURL) {
-      api.defaults.baseURL = baseURL
-    }
-
-    if (token) {
-      api.interceptors.request.use(config => {
-        config.params = config.params || {}
-
-        config.headers.Authorization = `Bearer ${token}`
-
-        return config
-      })
-    }
-
     return [api, !!token]
-  }, [baseURL, token, api])
+  }, [token, api])
 }
 
 export function useSetToken() {
   const { setToken } = useContext(AxiosContext)
 
-  return useCallback((token: string) => {
-    setToken(token)
-  }, [])
+  return useCallback((token: string) => setToken(token), [setToken])
+}
+
+export function useSetBaseURL() {
+  const { setBaseURL } = useContext(AxiosContext)
+
+  return useCallback((url: string) => setBaseURL(url), [setBaseURL])
 }

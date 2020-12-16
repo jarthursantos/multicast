@@ -1,4 +1,4 @@
-import { darken } from 'polished'
+import { darken, lighten } from 'polished'
 import styled from 'styled-components'
 
 export const Container = styled.button<{ width: number }>`
@@ -33,6 +33,20 @@ export const Container = styled.button<{ width: number }>`
     border-color: rgba(219, 68, 55, 0.2);
     color: #db4437;
     fill: #db4437;
+  }
+
+  &:disabled {
+    cursor: default;
+
+    background: rgba(144, 145, 145, 0.1);
+    border-color: rgba(144, 145, 145, 0.2);
+    color: ${lighten(0.2, '#909191')};
+    fill: ${lighten(0.2, '#909191')};
+
+    &:hover {
+      color: ${lighten(0.2, '#909191')};
+      fill: ${lighten(0.2, '#909191')};
+    }
   }
 `
 

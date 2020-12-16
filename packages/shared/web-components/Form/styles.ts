@@ -1,7 +1,9 @@
+import { memo } from 'react'
+
 import { Form as Unform } from '@unform/web'
 import styled, { css } from 'styled-components'
 
-export const Form = styled(Unform)`
+const FormComponent = styled(Unform)`
   & > * + * {
     margin-top: 16px;
   }
@@ -19,9 +21,12 @@ export const Form = styled(Unform)`
   }
 `
 
+export const Form = memo(FormComponent)
+
 export interface InputContainerStyleProps {
   disabled?: boolean
   hasError?: boolean
+  isSelect?: boolean
 }
 
 export const InputContainer = styled.div<InputContainerStyleProps>`
@@ -43,11 +48,8 @@ export const InputContainer = styled.div<InputContainerStyleProps>`
       text-transform: lowercase;
     }
 
-    border-radius: 4px;
     color: #666;
     font-size: 14px;
-    padding: 6px 8px;
-    min-height: 40px;
     transition: border 0.2s;
 
     ::placeholder {
@@ -57,6 +59,15 @@ export const InputContainer = styled.div<InputContainerStyleProps>`
     :disabled {
       border-color: #eee;
     }
+
+    ${({ isSelect }) =>
+      isSelect
+        ? css``
+        : css`
+            padding: 6px 8px;
+            min-height: 40px;
+            border-radius: 4px;
+          `}
 
     ${({ hasError }) =>
       hasError

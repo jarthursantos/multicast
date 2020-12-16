@@ -14,4 +14,3 @@ export * from './TabBar/TabBarButton'
 export * from './TabBar/TabBarButton/types'
 
 export * from './Wrapper'
-export * from './Wrapper/types'

@@ -49,6 +49,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-prototype-builtins': 'off',
     'indent': 'off',
+    'no-new': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off'
   },
   settings: {

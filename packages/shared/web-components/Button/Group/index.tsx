@@ -7,10 +7,10 @@ import { ButtonGroupProps } from './types'
 
 const ButtonGroup: React.VFC<ButtonGroupProps> & {
   Button: typeof GroupButton
-} = ({ children, initialButton, onSelectionChange }) => {
+} = ({ children, currentButton, onSelectionChange }) => {
   return (
     <ButtonGroupContextProvider
-      initialButton={initialButton}
+      currentButton={currentButton}
       onChange={onSelectionChange}
     >
       <Container>{children}</Container>
