@@ -15,6 +15,7 @@ import {
 
 import { accompanimentsRouter } from './accompaniments'
 import { acitivtyBranchesRouter } from './activity-branches'
+import { billsToPayRouter } from './billts-to-pay'
 import { branchesRouter } from './branches'
 import { brandsRouter } from './brands'
 import { buyersRouter } from './buyers'
@@ -39,6 +40,7 @@ import { regionsRouter } from './regions'
 import { reportsRouter } from './reports'
 import { representativesRouter } from './representatives'
 import { revenuesRouter } from './revenues'
+import { salesByProvidersRouter } from './sales-by-providers'
 import { salesClassesRouter } from './sales-classes'
 import { schedulesRouter } from './schedules'
 import { sectionsRouter } from './sections'
@@ -94,6 +96,7 @@ router.use(stockNotificationsRouter)
 router.use(reportsRouter)
 
 router.use(acitivtyBranchesRouter)
+router.use(billsToPayRouter)
 router.use(branchesRouter)
 router.use(brandsRouter)
 router.use(buyersRouter)
@@ -111,6 +114,7 @@ router.use(purchaseResumesRouter)
 router.use(rcasRouter)
 router.use(regionsRouter)
 router.use(revenuesRouter)
+router.use(salesByProvidersRouter)
 router.use(salesClassesRouter)
 router.use(sectionsRouter)
 router.use(squaresRouter)

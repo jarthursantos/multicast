@@ -8,20 +8,19 @@ export type FindSalesByProviderRequest = Request<
 >
 
 export interface FindSalesByProviderQueryOptions {
-  buyers?: string | string[]
-  providers?: string | string[]
-  departments?: string | string[]
-  regions?: string | string[]
-  clients?: string | string[]
-  principalClients?: string | string[]
-  supervisors?: string | string[]
-  rcas?: string | string[]
-  distribuitions?: string | string[]
-  sections?: string | string[]
-  squares?: string | string[]
-  activityBranchs?: string | string[]
-  clientWebs?: string | string[]
-  situation: 'all' | 'normal' | 'bonification' | 'importation'
+  buyers?: string
+  providers?: string
+  departments?: string
+  regions?: string
+  clients?: string
+  principalClients?: string
+  supervisors?: string
+  rcas?: string
+  distribuitions?: string
+  sections?: string
+  squares?: string
+  activityBranchs?: string
+  clientWebs?: string
   periodFrom: string
   periodTo: string
 }
@@ -29,7 +28,6 @@ export interface FindSalesByProviderQueryOptions {
 export interface IFindSalesByProviderDTO {
   buyers?: number[]
   providers?: number[]
-  situation: 'all' | 'normal' | 'bonification' | 'importation'
   periodFrom: Date | string
   periodTo: Date | string
   departments?: number[]
@@ -48,22 +46,7 @@ export interface IFindSalesByProviderDTO {
 export function parseSalesByProviderOptions(
   query: FindSalesByProviderQueryOptions
 ): IFindSalesByProviderDTO {
-  const { situation, periodFrom, periodTo } = query
-
-  if (!situation) {
-    throw new Error('Situação é obrigatória')
-  }
-
-  const situationIsValid = [
-    'all',
-    'normal',
-    'bonification',
-    'importation'
-  ].find(curr => situation === curr)
-
-  if (!situationIsValid) {
-    throw new Error('Situação é inválida')
-  }
+  const { periodFrom, periodTo } = query
 
   if (!periodFrom) {
     throw new Error('Inicio do período é obrigatório')
@@ -76,135 +59,82 @@ export function parseSalesByProviderOptions(
   let buyers: string[] = []
 
   if (query.buyers) {
-    if (typeof query.buyers === 'string') {
-      buyers = [query.buyers]
-    } else {
-      buyers = query.buyers
-    }
+    buyers = query.buyers.split(',')
   }
 
   let providers: string[] = []
 
   if (query.providers) {
-    if (typeof query.providers === 'string') {
-      providers = [query.providers]
-    } else {
-      providers = query.providers
-    }
+    providers = query.providers.split(',')
   }
 
   let regions: string[] = []
 
   if (query.regions) {
-    if (typeof query.regions === 'string') {
-      regions = [query.regions]
-    } else {
-      regions = query.regions
-    }
+    regions = query.regions.split(',')
   }
 
   let clients: string[] = []
 
   if (query.clients) {
-    if (typeof query.clients === 'string') {
-      clients = [query.clients]
-    } else {
-      clients = query.clients
-    }
+    clients = query.clients.split(',')
   }
 
   let departments: string[] = []
 
   if (query.departments) {
-    if (typeof query.departments === 'string') {
-      departments = [query.departments]
-    } else {
-      departments = query.departments
-    }
+    departments = query.departments.split(',')
   }
 
   let principalClients: string[] = []
 
   if (query.principalClients) {
-    if (typeof query.principalClients === 'string') {
-      principalClients = [query.principalClients]
-    } else {
-      principalClients = query.principalClients
-    }
+    principalClients = query.principalClients.split(',')
   }
 
   let supervisors: string[] = []
 
   if (query.supervisors) {
-    if (typeof query.supervisors === 'string') {
-      supervisors = [query.supervisors]
-    } else {
-      supervisors = query.supervisors
-    }
+    supervisors = query.supervisors.split(',')
   }
 
   let rcas: string[] = []
 
   if (query.rcas) {
-    if (typeof query.rcas === 'string') {
-      rcas = [query.rcas]
-    } else {
-      rcas = query.rcas
-    }
+    rcas = query.rcas.split(',')
   }
 
   let distribuitions: string[] = []
 
   if (query.distribuitions) {
-    if (typeof query.distribuitions === 'string') {
-      distribuitions = [query.distribuitions]
-    } else {
-      distribuitions = query.distribuitions
-    }
+    distribuitions = query.distribuitions.split(',')
   }
 
   let sections: string[] = []
 
   if (query.sections) {
-    if (typeof query.sections === 'string') {
-      sections = [query.sections]
-    } else {
-      sections = query.sections
-    }
+    sections = query.sections.split(',')
   }
 
   let squares: string[] = []
 
   if (query.squares) {
-    if (typeof query.squares === 'string') {
-      squares = [query.squares]
-    } else {
-      squares = query.squares
-    }
+    squares = query.squares.split(',')
   }
 
   let activityBranchs: string[] = []
 
   if (query.activityBranchs) {
-    if (typeof query.activityBranchs === 'string') {
-      activityBranchs = [query.activityBranchs]
-    } else {
-      activityBranchs = query.activityBranchs
-    }
+    activityBranchs = query.activityBranchs.split(',')
   }
 
   let clientWebs: string[] = []
 
   if (query.clientWebs) {
-    if (typeof query.clientWebs === 'string') {
-      clientWebs = [query.clientWebs]
-    } else {
-      clientWebs = query.clientWebs
-    }
+    clientWebs = query.clientWebs.split(',')
   }
 
   return {
-    situation,
     buyers: buyers.map(curr => parseInt(curr)).filter(Boolean),
     providers: providers.map(curr => parseInt(curr)).filter(Boolean),
     regions: regions.map(curr => parseInt(curr)).filter(Boolean),

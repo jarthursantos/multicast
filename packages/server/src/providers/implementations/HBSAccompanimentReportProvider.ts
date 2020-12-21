@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import { Accompaniment } from 'entities/Accompaniment'
 import { File } from 'entities/File'
 import { generateReport } from 'libs/generate-report'
@@ -7,12 +7,9 @@ import { Options } from 'repositories/IAccompanimentProductsRepository'
 import { IAccompanimentReportDeadlineRepository } from 'repositories/IAccompanimentReportDeadlineRepository'
 import { IAccompanimentReportHeaderRepository } from 'repositories/IAccompanimentReportHeaderRepository'
 import { IFilesRepository } from 'repositories/IFilesRepository'
+import { normalizeDate } from 'utils/date-intervals'
 
 import { IAccompanimentReportProvider } from '../IAccompanimentReportProvider'
-
-function normalizeDate(date: string | Date): Date {
-  return typeof date === 'string' ? parseISO(date) : date
-}
 
 export class HBSAccompanimentReportProvider
   implements IAccompanimentReportProvider {

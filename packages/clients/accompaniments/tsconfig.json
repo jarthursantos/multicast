@@ -17,7 +17,16 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": false,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["*"]
+    },
+    "typeRoots": [
+      "./node_modules/@types/**",
+      "../../../node_modules/@types/**",
+      "./@types/**"
+    ],
   },
   "include": [
     "renderer/next-env.d.ts",

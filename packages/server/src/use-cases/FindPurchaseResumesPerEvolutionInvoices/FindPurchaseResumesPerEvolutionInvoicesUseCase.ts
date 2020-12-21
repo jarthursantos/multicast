@@ -1,10 +1,6 @@
-import { parseISO } from 'date-fns'
 import { IPurchaseResumeRepository } from 'repositories/IPurchaseResumeRepository'
+import { normalizeDate } from 'utils/date-intervals'
 import { IFindPurchaseResumesDTO } from 'utils/parse-purchase-resume-options'
-
-function normalizeDate(date: string | Date): Date {
-  return typeof date === 'string' ? parseISO(date) : date
-}
 
 export class FindPurchaseResumesPerEvolutionInvoicesUseCase {
   constructor(private purchaseResumeRepository: IPurchaseResumeRepository) {}

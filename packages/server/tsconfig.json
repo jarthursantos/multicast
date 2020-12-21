@@ -7,9 +7,9 @@
     "rootDir": "./src",
     "removeComments": true,
     "typeRoots": [
-      "./node_modules/@types/**",
-      "../../node_modules/@types/**",
-      "./src/@types/**"
+      "./node_modules/@types",
+      "../../node_modules/@types",
+      "./src/@types"
     ],
     "moduleResolution": "node",
     "esModuleInterop": true,

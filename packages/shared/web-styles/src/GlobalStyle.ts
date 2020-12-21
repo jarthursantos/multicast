@@ -53,7 +53,40 @@ export const GlobalStyle = createGlobalStyle`
     height: 2px;
   }
 
-    /* cyrillic-ext */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  ::-webkit-scrollbar-track:vertical {
+    border-left: 1px solid #bbb;
+  }
+
+  ::-webkit-scrollbar-track:horizontal {
+    border-top: 1px solid #bbb;
+  }
+
+  ::-webkit-scrollbar-thumb:vertical {
+    border-left: 1px solid #bbb;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #ddd;
+  }
+
+  ::-webkit-scrollbar-thumb:horizontal {
+    border-top: 1px solid #bbb;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+  }
+
+  /* cyrillic-ext */
   @font-face {
     font-family: 'Roboto';
     font-style: italic;

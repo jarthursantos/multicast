@@ -1,19 +1,42 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
     "lib": [
       "dom",
-      "es2015",
-      "es2016",
-      "es2017"
+      "dom.iterable",
+      "esnext"
     ],
     "allowJs": true,
-    "jsx": "react",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "strict": true ,
+    "skipLibCheck": true,
+    "strict": false,
+    "downlevelIteration": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
     "esModuleInterop": true,
-  }
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "jsx": "preserve",
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["*"]
+    },
+    "typeRoots": [
+      "./node_modules/@types/**",
+      "../../../node_modules/@types/**",
+      "./@types/**"
+    ],
+  },
+  "include": [
+    "renderer/next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "renderer/next.config.js",
+    "app",
+    "dist"
+  ]
 }

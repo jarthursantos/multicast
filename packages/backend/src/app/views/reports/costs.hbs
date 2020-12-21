@@ -1,0 +1,137 @@
+<style>
+  main {
+    margin-top: 8px;
+  }
+
+  main div.table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  main div.table div.header,
+  main div.table div.row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  main div.table div.header div.column {
+    font-weight: bold;
+    border: 1px solid black;
+  }
+
+  main div.table div.row div.column {
+    border: 1px solid black;
+    border-top: none;
+  }
+
+  main div.table div.column+div.column {
+    border-left: none;
+  }
+
+  main div.table div.column {
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 2px 4px;
+  }
+
+  main div.table div#C1.column {
+    flex: 1;
+  }
+
+  main div.table div#C2.column,
+  main div.table div#C3.column,
+  main div.table div#C4.column {
+    width: 120px;
+  }
+
+  main div.table div.row div#C2.column,
+  main div.table div.header div#C2.column,
+  main div.table div.header div#C3.column,
+  main div.table div.header div#C4.column {
+    text-align: center;
+  }
+
+  main div.table div.row div.column.contabil {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 12px;
+  }
+
+  footer strong {
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  footer>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 2px 4px;
+    width: 121px;
+    border: 1px solid black;
+    border-top: none;
+  }
+
+  footer>div+div {
+    width: 120px;
+    border-left: none;
+  }
+</style>
+
+<main>
+  <div class="table">
+    <div class="header">
+      <div id="C1" class="column">Transportadora</div>
+      <div id="C2" class="column">Pagamento</div>
+      <div id="C3" class="column">Vl. Descarga</div>
+      <div id="C4" class="column">Vl. Recibo</div>
+    </div>
+
+    {{#each schedules}}
+    {{#with this}}
+    <div class="row">
+      <div id="C1" class="column">{{ shippingName }}</div>
+      <div id="C2" class="column">
+        {{#if paymentMethod}}
+        {{ paymentMethod }}
+        {{else}}
+        -
+        {{/if}}
+      </div>
+      <div id="C3" class="column contabil">
+        <span>R$</span>
+        <span>{{ dischargeValue }}</span>
+      </div>
+      <div id="C4" class="column contabil">
+        <span>R$</span>
+        <span>{{ receiptValue }}</span>
+      </div>
+    </div>
+    {{/with}}
+    {{/each}}
+  </div>
+</main>
+
+<footer>
+  <strong>Totais</strong>
+
+  <div>
+    <div>R$</div>
+    <div>{{ dischargeAmount }}</div>
+  </div>
+
+  <div>
+    <div>R$</div>
+    <div>{{ receiptAmount }}</div>
+  </div>
+</footer>

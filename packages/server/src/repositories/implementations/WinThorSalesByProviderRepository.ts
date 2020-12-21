@@ -1,14 +1,184 @@
-import { getYear, parseISO } from 'date-fns'
+import { getYear } from 'date-fns'
+import {
+  ActivityBranchSales,
+  CategoryProductSales,
+  CategorySales,
+  ClientLitigationSales,
+  ClientSales,
+  ClientSalesValueSales,
+  ProductProviderSales,
+  ProductSalesCountSales,
+  ProductSalesValueSales,
+  ProviderGoalSales,
+  ProviderLitigationSales,
+  RCASales,
+  RCASalesValueSales,
+  RegionSales,
+  RouteSales,
+  SquareClientProductSales,
+  SquareSales,
+  SupervisorRCASales,
+  SupervisorSales
+} from 'entities/SalesByProvider'
 import { winthor } from 'libs/knex-winthor'
 import {
   ISalesByProviderRepository,
   Options
 } from 'repositories/ISalesByProviderRepository'
-import { generateDateIntervals } from 'utils/date-intervals'
+import { generateDateIntervals, normalizeDate } from 'utils/date-intervals'
 
-function normalizeDate(date: string | Date): Date {
-  return typeof date === 'string' ? parseISO(date) : date
+interface ProviderData {
+  providerCode: number
+  providerName: string
+  providerFantasy: string
+  providerCNPJ: string
+  providerPrincipalCode: number
 }
+
+type RawClientSales = Omit<ClientSales, 'client' | 'provider'> &
+  ProviderData & {
+    clientCode: number
+    clientName: string
+  }
+
+type RawActivityBranchSales = Omit<ActivityBranchSales, 'branch' | 'provider'> &
+  ProviderData & {
+    branchCode: number
+    branchName: string
+  }
+
+type RawRegionSales = Omit<RegionSales, 'region' | 'provider'> &
+  ProviderData & {
+    regionCode: number
+    regionName: string
+  }
+
+type RawSquareSales = Omit<SquareSales, 'square' | 'provider'> &
+  ProviderData & {
+    squareCode: number
+    squareName: string
+  }
+
+type RawRouteSales = Omit<RouteSales, 'route' | 'provider'> &
+  ProviderData & {
+    routeCode: number
+    routeName: string
+  }
+
+type RawSupervisorSales = Omit<SupervisorSales, 'supervisor' | 'provider'> &
+  ProviderData & {
+    supervisorCode: number
+    supervisorName: string
+  }
+
+type RawSupervisorRCASales = Omit<
+  SupervisorRCASales,
+  'supervisor' | 'rca' | 'provider'
+> &
+  ProviderData & {
+    supervisorCode: number
+    supervisorName: string
+    rcaCode: number
+    rcaName: string
+  }
+
+type RawRCASales = Omit<RCASales, 'rca' | 'provider'> &
+  ProviderData & {
+    rcaCode: number
+    rcaName: string
+  }
+
+type RawProductProviderSales = Omit<
+  ProductProviderSales,
+  'product' | 'provider'
+> &
+  ProviderData & {
+    productCode: number
+    productDescription: string
+    productPacking: string
+    productUnity: string
+    productFactoryCode: string
+  }
+
+type RawCategorySales = Omit<CategorySales, 'category' | 'provider'> &
+  ProviderData & {
+    categoryCode: number
+    categoryName: string
+  }
+
+type RawCategoryProductSales = Omit<
+  CategoryProductSales,
+  'category' | 'product' | 'provider'
+> &
+  ProviderData & {
+    categoryCode: number
+    categoryName: string
+    productCode: number
+    productDescription: string
+  }
+
+type RawClientSalesValueSales = Omit<
+  ClientSalesValueSales,
+  'client' | 'provider'
+> &
+  ProviderData & {
+    clientCode: number
+    clientName: string
+  }
+
+type RawProductSalesCountSales = Omit<
+  ProductSalesCountSales,
+  'product' | 'provider'
+> &
+  ProviderData & {
+    productCode: number
+    productDescription: string
+  }
+
+type RawProductSalesValueSales = Omit<
+  ProductSalesValueSales,
+  'product' | 'provider'
+> &
+  ProviderData & {
+    productCode: number
+    productDescription: string
+  }
+
+type RawSquareClientProductSales = Omit<
+  SquareClientProductSales,
+  'product' | 'square' | 'client' | 'provider'
+> &
+  ProviderData & {
+    clientCode: number
+    clientName: string
+    squareCode: number
+    squareName: string
+    productCode: number
+    productDescription: string
+  }
+
+type RawClientLitigationSales = Omit<
+  ClientLitigationSales,
+  'client' | 'provider'
+> &
+  ProviderData & {
+    clientCode: number
+    clientName: string
+  }
+
+type RawProviderGoalSales = Omit<ProviderGoalSales, 'buyer' | 'provider'> &
+  ProviderData & {
+    buyerCode: number
+    buyerName: string
+  }
+
+type RawProviderLitigationSales = ProviderLitigationSales & ProviderData
+
+type RawRCASalesValueSales = Omit<RCASalesValueSales, 'rca' | 'provider'> &
+  ProviderData & {
+    rcaCode: number
+    rcaName: string
+  }
 
 export class WinThorSalesByProviderRepository
   implements ISalesByProviderRepository {
@@ -29,8 +199,6 @@ export class WinThorSalesByProviderRepository
       clientWebs = []
     } = options
 
-    console.log({ options })
-
     let params = ''
 
     if (buyers.length > 0) {
@@ -38,7 +206,7 @@ export class WinThorSalesByProviderRepository
     }
 
     if (providers.length > 0) {
-      params += this.generateCodeFilter(providers, 'PCFORNEC.CODFORNEC')
+      params += this.generateCodeFilter(providers, 'PCPRODUT.CODFORNEC')
     }
 
     if (departments.length > 0) {
@@ -96,15 +264,13 @@ export class WinThorSalesByProviderRepository
       return ''
     }
 
-    return `AND (${codes
-      .map(
-        code => `${field} = ${typeof code === 'string' ? `'${code}'` : code}`
-      )
-      .join(' OR ')})`
+    return ` AND ${field} IN (${codes
+      .map(code => (typeof code === 'string' ? `'${code}'` : code))
+      .join(',')})`
   }
 
-  async findPerClient(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerClient(options: Options): Promise<ClientSales[]> {
+    let result: ClientSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -117,7 +283,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawClientSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(PTABELA)   AS "tableValue",
@@ -163,14 +329,35 @@ export class WinThorSalesByProviderRepository
         ORDER BY CLIENTE, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map<ClientSales>(curr => ({
+          client: {
+            code: curr.clientCode,
+            name: curr.clientName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          salesValue: curr.salesValue,
+          tableValue: curr.tableValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerActivityBranch(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerActivityBranch(
+    options: Options
+  ): Promise<ActivityBranchSales[]> {
+    let result: ActivityBranchSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -183,7 +370,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawActivityBranchSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(TOTPESO)   AS "amountWeight",
@@ -230,14 +417,33 @@ export class WinThorSalesByProviderRepository
         ORDER BY RAMO, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          branch: {
+            code: curr.branchCode,
+            name: curr.branchName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerRegion(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerRegion(options: Options): Promise<RegionSales[]> {
+    let result: RegionSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -250,7 +456,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawRegionSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(TOTPESO)   AS "amountWeight",
@@ -297,14 +503,33 @@ export class WinThorSalesByProviderRepository
         ORDER BY REGIAO, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          region: {
+            code: curr.regionCode,
+            name: curr.regionName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerSquare(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerSquare(options: Options): Promise<SquareSales[]> {
+    let result: SquareSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -317,7 +542,101 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawSquareSales[]>(`
+        SELECT SUM(QT)   AS "count",
+          SUM(PVENDA)    AS "salesValue",
+          SUM(TOTPESO)   AS "amountWeight",
+          SUM(QTMIX)     AS "mixCount",
+          SUM(QTCLIPOS)  AS "positivedClientCount",
+          CODPRACA       AS "squareCode",
+          PRACA          AS "squareName",
+          CODFORNEC      AS "providerCode",
+          FORNECEDOR     AS "providerName",
+          FANTASIA       AS "providerFantasy",
+          CGC            AS "providerCNPJ",
+          CODFORNECPRINC AS "providerPrincipalCode"
+        FROM (SELECT PCPRODUT.CODFORNEC,
+                PCFORNEC.FORNECEDOR,
+                PCFORNEC.FANTASIA,
+                PCFORNEC.CGC,
+                PCFORNEC.CODFORNECPRINC,
+                PCPRACA.CODPRACA,
+                PCPRACA.PRACA,
+                SUM(NVL(PCPEDI.QT, 0))                              QT,
+                SUM(ROUND(NVL(PCPEDI.QT, 0) *
+                          (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0)),
+                          2))                                       PVENDA,
+                SUM(NVL(PCPRODUT.PESOBRUTO, 0) * NVL(PCPEDI.QT, 0)) TOTPESO,
+                COUNT(DISTINCT (PCPEDI.CODPROD))                    QTMIX,
+                COUNT(DISTINCT (PCPEDC.CODCLI))                     QTCLIPOS
+              FROM PCPEDC,
+                    PCPEDI,
+                    PCCLIENT,
+                    PCPRACA,
+                    PCPRODUT,
+                    PCUSUARI,
+                    PCFORNEC,
+                    PCSUPERV,
+                    PCDEPTO
+              WHERE PCPEDC.DATA BETWEEN TO_DATE('${fromFormated}', 'DD/MM/YYYY') AND TO_DATE('${toFormated}', 'DD/MM/YYYY')
+                AND PCPEDC.NUMPED = PCPEDI.NUMPED
+                AND PCPEDC.CODCLI = PCCLIENT.CODCLI
+                AND PCPRODUT.CODEPTO = PCDEPTO.CODEPTO
+                AND PCCLIENT.CODPRACA = PCPRACA.CODPRACA
+                AND PCPEDI.CODPROD = PCPRODUT.CODPROD
+                AND PCPEDC.CODUSUR = PCUSUARI.CODUSUR
+                AND PCUSUARI.CODSUPERVISOR = PCSUPERV.CODSUPERVISOR
+                AND PCPRODUT.CODFORNEC = PCFORNEC.CODFORNEC
+                AND PCPEDC.DTCANCEL IS NULL
+                AND (PCPEDC.CODFILIAL IS NOT NULL)
+                AND (PCPEDC.CODFILIAL IN ('1'))
+                AND PCPEDC.CONDVENDA IN (1, 2, 3, 7, 9, 14, 15, 17, 18, 19, 98)
+                ${params}
+              GROUP BY PCPRODUT.CODFORNEC, PCFORNEC.FORNECEDOR, PCFORNEC.FANTASIA, PCFORNEC.CGC, PCFORNEC.CODFORNECPRINC, PCPRACA.CODPRACA, PCPRACA.PRACA, PCPEDC.DATA ORDER BY PCFORNEC.FORNECEDOR, PRACA)
+        GROUP BY CODPRACA, PRACA, CODFORNEC, FORNECEDOR, FANTASIA, CGC, CODFORNECPRINC
+        ORDER BY PRACA, FORNECEDOR
+      `)
+
+      result = result.concat(
+        response.map(curr => ({
+          square: {
+            code: curr.squareCode,
+            name: curr.squareName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
+    }
+
+    return result
+  }
+
+  async findPerRoute(options: Options): Promise<RouteSales[]> {
+    let result: RouteSales[] = []
+
+    const { periodFrom, periodTo } = options
+    const params = this.parseOptions(options)
+
+    const intervals = generateDateIntervals(
+      normalizeDate(periodFrom),
+      normalizeDate(periodTo)
+    )
+
+    for (let i = 0; i < intervals.length; i++) {
+      const { fromFormated, toFormated } = intervals[i]
+
+      const response = await winthor.raw<RawRouteSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(TOTPESO)   AS "amountWeight",
@@ -364,14 +683,33 @@ export class WinThorSalesByProviderRepository
         ORDER BY ROTA, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          route: {
+            code: curr.routeCode,
+            name: curr.routeName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerRoute(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerSupervisor(options: Options): Promise<SupervisorSales[]> {
+    let result: SupervisorSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -384,7 +722,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawSupervisorSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(PTABELA)   AS "tableValue",
@@ -435,14 +773,34 @@ export class WinThorSalesByProviderRepository
         ORDER BY NOME, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          supervisor: {
+            code: curr.supervisorCode,
+            name: curr.supervisorName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          tableValue: curr.tableValue,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerSupervisor(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerSupervisorRCA(options: Options): Promise<SupervisorRCASales[]> {
+    let result: SupervisorRCASales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -455,7 +813,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawSupervisorRCASales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(PTABELA)   AS "tableValue",
@@ -507,14 +865,38 @@ export class WinThorSalesByProviderRepository
         ORDER BY NOME, RCA, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          supervisor: {
+            code: curr.supervisorCode,
+            name: curr.supervisorName
+          },
+          rca: {
+            code: curr.rcaCode,
+            name: curr.rcaName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          tableValue: curr.tableValue,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerSupervisorRCA(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerRCA(options: Options): Promise<RCASales[]> {
+    let result: RCASales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -527,7 +909,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawRCASales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(PTABELA)   AS "tableValue",
@@ -575,14 +957,36 @@ export class WinThorSalesByProviderRepository
         ORDER BY NOME, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          rca: {
+            code: curr.rcaCode,
+            name: curr.rcaName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          tableValue: curr.tableValue,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerRCA(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerProductProvider(
+    options: Options
+  ): Promise<ProductProviderSales[]> {
+    let result: ProductProviderSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -595,7 +999,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawProductProviderSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(PTABELA)   AS "tableValue",
@@ -613,49 +1017,72 @@ export class WinThorSalesByProviderRepository
           CGC            AS "providerCNPJ",
           CODFORNECPRINC AS "providerPrincipalCode"
         FROM (SELECT PCPRODUT.CODFORNEC,
-                    PCFORNEC.FORNECEDOR,
-                    PCFORNEC.FANTASIA,
-                    PCFORNEC.CGC,
-                    PCFORNEC.CODFORNECPRINC,
-                    PCPEDI.CODPROD,
-                    PCPRODUT.DESCRICAO,
-                    PCPRODUT.EMBALAGEM,
-                    PCPRODUT.UNIDADE,
-                    PCPRODUT.CODFAB,
-                    SUM(PCPEDI.QT) AS  QT,
-                    SUM(ROUND(NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0)), 2)) PVENDA,
-                    SUM(PCPEDI.QT * PCPEDI.PTABELA) PTABELA,
-                    SUM(PCPRODUT.PESOBRUTO * PCPEDI.QT) TOTPESO,
-                    COUNT(DISTINCT (PCPEDI.CODPROD)) QTMIX,
-                    COUNT(DISTINCT (PCPEDC.CODCLI)) QTCLIPOS
-            FROM PCPEDC, PCPEDI, PCPRODUT, PCUSUARI, PCFORNEC, PCSUPERV, PCCLIENT, PCPRACA,PCDEPTO
-            WHERE PCPEDC.DATA BETWEEN TO_DATE('${fromFormated}', 'DD/MM/YYYY') AND TO_DATE('${toFormated}', 'DD/MM/YYYY')
-              AND PCPEDC.NUMPED = PCPEDI.NUMPED
-              AND PCPEDI.CODPROD = PCPRODUT.CODPROD
-              AND PCCLIENT.CODPRACA = PCPRACA.CODPRACA
-              AND PCPEDC.CODUSUR = PCUSUARI.CODUSUR
-              AND PCPRODUT.CODEPTO = PCDEPTO.CODEPTO
-              ${params}
-              AND PCUSUARI.CODSUPERVISOR = PCSUPERV.CODSUPERVISOR
-              AND PCPRODUT.CODFORNEC = PCFORNEC.CODFORNEC
-              AND PCPEDC.CODCLI = PCCLIENT.CODCLI
-              AND PCPEDC.DTCANCEL IS NULL
-              AND (PCPEDC.CODFILIAL IS NOT NULL)
-              AND (PCPEDC.CODFILIAL IN ('1'))
-              AND PCPEDC.CONDVENDA IN (1, 2, 3, 7, 9, 14, 15, 17, 18, 19, 98)
-            GROUP BY PCPRODUT.CODFORNEC, PCFORNEC.FORNECEDOR, PCFORNEC.FANTASIA, PCFORNEC.CGC, PCFORNEC.CODFORNECPRINC, PCPEDI.CODPROD, PCPRODUT.DESCRICAO, PCPRODUT.EMBALAGEM, PCPRODUT.UNIDADE, PCPRODUT.CODFAB, PCPEDC.DATA
-            ORDER BY PCFORNEC.FORNECEDOR, PCPRODUT.DESCRICAO)
-        GROUP BY CODPROD, DESCRICAO, EMBALAGEM, UNIDADE, CODFAB, CODFORNEC, FORNECEDOR, FANTASIA, CGC, CODFORNECPRINC
-      `)
+                  PCFORNEC.FORNECEDOR,
+                  PCFORNEC.FANTASIA,
+                  PCFORNEC.CGC,
+                  PCFORNEC.CODFORNECPRINC,
+                  PCPEDI.CODPROD,
+                  PCPRODUT.DESCRICAO,
+                  PCPRODUT.EMBALAGEM,
+                  PCPRODUT.UNIDADE,
+                  PCPRODUT.CODFAB,
+                  SUM(PCPEDI.QT) AS  QT,
+                  SUM(ROUND(NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0)), 2)) PVENDA,
+                  SUM(PCPEDI.QT * PCPEDI.PTABELA) PTABELA,
+                  SUM(PCPRODUT.PESOBRUTO * PCPEDI.QT) TOTPESO,
+                  COUNT(DISTINCT (PCPEDI.CODPROD)) QTMIX,
+                  COUNT(DISTINCT (PCPEDC.CODCLI)) QTCLIPOS
+          FROM PCPEDC, PCPEDI, PCPRODUT, PCUSUARI, PCFORNEC, PCSUPERV, PCCLIENT, PCPRACA,PCDEPTO
+          WHERE PCPEDC.DATA BETWEEN TO_DATE('${fromFormated}', 'DD/MM/YYYY') AND TO_DATE('${toFormated}', 'DD/MM/YYYY')
+            AND PCPEDC.NUMPED = PCPEDI.NUMPED
+            AND PCPEDI.CODPROD = PCPRODUT.CODPROD
+            AND PCCLIENT.CODPRACA = PCPRACA.CODPRACA
+            AND PCPEDC.CODUSUR = PCUSUARI.CODUSUR
+            AND PCPRODUT.CODEPTO = PCDEPTO.CODEPTO
+            ${params}
+            AND PCUSUARI.CODSUPERVISOR = PCSUPERV.CODSUPERVISOR
+            AND PCPRODUT.CODFORNEC = PCFORNEC.CODFORNEC
+            AND PCPEDC.CODCLI = PCCLIENT.CODCLI
+            AND PCPEDC.DTCANCEL IS NULL
+            AND (PCPEDC.CODFILIAL IS NOT NULL)
+            AND (PCPEDC.CODFILIAL IN ('1'))
+            AND PCPEDC.CONDVENDA IN (1, 2, 3, 7, 9, 14, 15, 17, 18, 19, 98)
+          GROUP BY PCPRODUT.CODFORNEC, PCFORNEC.FORNECEDOR, PCFORNEC.FANTASIA, PCFORNEC.CGC, PCFORNEC.CODFORNECPRINC, PCPEDI.CODPROD, PCPRODUT.DESCRICAO, PCPRODUT.EMBALAGEM, PCPRODUT.UNIDADE, PCPRODUT.CODFAB, PCPEDC.DATA
+          ORDER BY PCFORNEC.FORNECEDOR, PCPRODUT.DESCRICAO)
+      GROUP BY CODPROD, DESCRICAO, EMBALAGEM, UNIDADE, CODFAB, CODFORNEC, FORNECEDOR, FANTASIA, CGC, CODFORNECPRINC
+    `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          product: {
+            code: curr.productCode,
+            description: curr.productDescription,
+            factoryCode: curr.productFactoryCode,
+            packing: curr.productPacking,
+            unity: curr.productUnity
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          tableValue: curr.tableValue,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerProductProvider(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerCategory(options: Options): Promise<CategorySales[]> {
+    let result: CategorySales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -668,7 +1095,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawCategorySales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(TOTPESO)   AS "amountWeight",
@@ -714,14 +1141,35 @@ export class WinThorSalesByProviderRepository
         ORDER BY CATEGORIA, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          category: {
+            code: curr.categoryCode,
+            name: curr.categoryName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerCategory(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerCategoryProduct(
+    options: Options
+  ): Promise<CategoryProductSales[]> {
+    let result: CategoryProductSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -734,7 +1182,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawCategoryProductSales[]>(`
         SELECT SUM(QT)   AS "count",
           SUM(PVENDA)    AS "salesValue",
           SUM(TOTPESO)   AS "amountWeight",
@@ -742,7 +1190,7 @@ export class WinThorSalesByProviderRepository
           CODCATEGORIA   AS "categoryCode",
           CATEGORIA      AS "categoryName",
           CODPROD        AS "productCode",
-          DESCRICAO      AS "productName",
+          DESCRICAO      AS "productDescription",
           CODFORNEC      AS "providerCode",
           FORNECEDOR     AS "providerName",
           FANTASIA       AS "providerFantasy",
@@ -783,14 +1231,39 @@ export class WinThorSalesByProviderRepository
         ORDER BY CATEGORIA, DESCRICAO, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          category: {
+            code: curr.categoryCode,
+            name: curr.categoryName
+          },
+          product: {
+            code: curr.productCode,
+            description: curr.productDescription
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          amountWeight: curr.amountWeight,
+          count: curr.count,
+          mixCount: curr.mixCount,
+          positivedClientCount: curr.positivedClientCount,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerCategoryProduct(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerClientSalesValue(
+    options: Options
+  ): Promise<ClientSalesValueSales[]> {
+    let result: ClientSalesValueSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -803,7 +1276,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawClientSalesValueSales[]>(`
         SELECT SUM(VLVENDA01) AS "januaryValue",
           SUM(VLVENDA02)      AS "februaryValue",
           SUM(VLVENDA03)      AS "marchValue",
@@ -862,14 +1335,42 @@ export class WinThorSalesByProviderRepository
         ORDER BY CLIENTE, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          client: {
+            code: curr.clientCode,
+            name: curr.clientName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerClientSalesValue(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerProductSalesCount(
+    options: Options
+  ): Promise<ProductSalesCountSales[]> {
+    let result: ProductSalesCountSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -882,7 +1383,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawProductSalesCountSales[]>(`
         SELECT SUM(QTVENDAMES01) AS "januaryValue",
           SUM(QTVENDAMES02)      AS "februaryValue",
           SUM(QTVENDAMES03)      AS "marchValue",
@@ -895,8 +1396,8 @@ export class WinThorSalesByProviderRepository
           SUM(QTVENDAMES10)      AS "octoberValue",
           SUM(QTVENDAMES11)      AS "novemberValue",
           SUM(QTVENDAMES12)      AS "decemberValue",
-          CODPROD,
-          DESCRICAO,
+          CODPROD                AS "productCode",
+          DESCRICAO              AS "productDescription",
           CODFORNEC              AS "providerCode",
           FORNECEDOR             AS "providerName",
           FANTASIA               AS "providerFantasy",
@@ -941,14 +1442,42 @@ export class WinThorSalesByProviderRepository
         ORDER BY DESCRICAO, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          product: {
+            code: curr.productCode,
+            description: curr.productDescription
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerProductSalesCount(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerProductSalesValue(
+    options: Options
+  ): Promise<ProductSalesValueSales[]> {
+    let result: ProductSalesValueSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -961,7 +1490,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawProductSalesValueSales[]>(`
         SELECT SUM(VLVENDAMES01) AS "januaryValue",
           SUM(VLVENDAMES02) AS "februaryValue",
           SUM(VLVENDAMES03) AS "marchValue",
@@ -975,7 +1504,7 @@ export class WinThorSalesByProviderRepository
           SUM(VLVENDAMES11) AS "novemberValue",
           SUM(VLVENDAMES12) AS "decemberValue",
           CODPROD           AS "productCode",
-          DESCRICAO         AS "productName",
+          DESCRICAO         AS "productDescription",
           CODFORNEC         AS "providerCode",
           FORNECEDOR        AS "providerName",
           FANTASIA          AS "providerFantasy",
@@ -1021,14 +1550,42 @@ export class WinThorSalesByProviderRepository
         ORDER BY DESCRICAO, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          product: {
+            code: curr.productCode,
+            description: curr.productDescription
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerProductSalesValue(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerSquareClientProduct(
+    options: Options
+  ): Promise<SquareClientProductSales[]> {
+    let result: SquareClientProductSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -1041,7 +1598,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawSquareClientProductSales[]>(`
         SELECT PCPRODUT.CODFORNEC      AS "providerCode",
           PCFORNEC.FORNECEDOR     AS "providerName",
           PCFORNEC.FANTASIA       AS "providerFantasy",
@@ -1052,8 +1609,8 @@ export class WinThorSalesByProviderRepository
           PCCLIENT.CODCLI         AS "clientCode",
           PCCLIENT.CLIENTE        AS "clientName",
           PCPEDI.CODPROD          AS "productCode",
-          PCPRODUT.DESCRICAO      AS "productName",
-          PCPRODUT.EMBALAGEM      AS "productOacking",
+          PCPRODUT.DESCRICAO      AS "productDescription",
+          PCPRODUT.EMBALAGEM      AS "productPacking",
           SUM(PCPEDI.QT)          AS "count",
           SUM(ROUND(NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0)), 2)) AS "salesValue"
         FROM PCPEDI, PCPEDC, PCPRODUT, PCFORNEC, PCUSUARI, PCSUPERV, PCPRACA, PCCLIENT, PCDEPTO
@@ -1075,14 +1632,40 @@ export class WinThorSalesByProviderRepository
         ORDER BY PCPRODUT.CODFORNEC, PCPRACA.CODPRACA, PCCLIENT.CODCLI, "salesValue" DESC
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          client: {
+            code: curr.clientCode,
+            name: curr.clientName
+          },
+          product: {
+            code: curr.productCode,
+            description: curr.productDescription
+          },
+          square: {
+            code: curr.squareCode,
+            name: curr.squareName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          count: curr.count,
+          salesValue: curr.salesValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerSquareClientProduct(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerClientLitigation(
+    options: Options
+  ): Promise<ClientLitigationSales[]> {
+    let result: ClientLitigationSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -1095,7 +1678,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawClientLitigationSales[]>(`
         SELECT SUM(VLVENDA01) AS "januaryValue",
           SUM(VLVENDA02) AS "februaryValue",
           SUM(VLVENDA03) AS "marchValue",
@@ -1108,8 +1691,8 @@ export class WinThorSalesByProviderRepository
           SUM(VLVENDA10) AS "octoberValue",
           SUM(VLVENDA11) AS "novemberValue",
           SUM(VLVENDA12) AS "decemberValue",
-          CODCLI,
-          CLIENTE,
+          CODCLI         AS "clientCode",
+          CLIENTE        AS "clientName",
           CODFORNEC      AS "providerCode",
           FORNECEDOR     AS "providerName",
           FANTASIA       AS "providerFantasy",
@@ -1154,14 +1737,40 @@ export class WinThorSalesByProviderRepository
         ORDER BY CLIENTE, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          client: {
+            code: curr.clientCode,
+            name: curr.clientName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerClientLitigation(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerProviderGoal(options: Options): Promise<ProviderGoalSales[]> {
+    let result: ProviderGoalSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -1175,8 +1784,8 @@ export class WinThorSalesByProviderRepository
       const { from, fromFormated, toFormated } = intervals[i]
       const year = getYear(from)
 
-      const response = await winthor.raw<any[]>(`
-        SELECT PCFORNEC.CODFORNEC                                                                  AS "providerCode",
+      const response = await winthor.raw<RawProviderGoalSales[]>(`
+        SELECT PCFORNEC.CODFORNEC                                                             AS "providerCode",
           PCFORNEC.FORNECEDOR                                                                 AS "providerName",
           PCFORNEC.FANTASIA                                                                   AS "providerFantasy",
           PCFORNEC.CGC                                                                        AS "providerCNPJ",
@@ -1231,91 +1840,56 @@ export class WinThorSalesByProviderRepository
         ORDER BY PCFORNEC.FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          buyer: {
+            code: curr.buyerCode,
+            name: curr.buyerName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue,
+          amountValue: curr.amountValue,
+          januaryGoal: curr.januaryGoal,
+          februaryGoal: curr.februaryGoal,
+          marchGoal: curr.marchGoal,
+          aprilGoal: curr.aprilGoal,
+          mayGoal: curr.mayGoal,
+          juneGoal: curr.juneGoal,
+          julyGoal: curr.julyGoal,
+          augustGoal: curr.augustGoal,
+          septemberGoal: curr.septemberGoal,
+          octoberGoal: curr.octoberGoal,
+          novemberGoal: curr.novemberGoal,
+          decemberGoal: curr.decemberGoal,
+          amountGoal: curr.amountGoal
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerProviderGoal(options: Options): Promise<any[]> {
-    let result: any[] = []
-
-    const { periodFrom, periodTo } = options
-    const params = this.parseOptions(options)
-
-    const intervals = generateDateIntervals(
-      normalizeDate(periodFrom),
-      normalizeDate(periodTo)
-    )
-
-    for (let i = 0; i < intervals.length; i++) {
-      const { from, fromFormated, toFormated } = intervals[i]
-      const year = getYear(from)
-
-      const response = await winthor.raw<any[]>(`
-        SELECT PCFORNEC.CODFORNEC AS "providerCode",
-          PCFORNEC.FORNECEDOR AS "providerName",
-          PCFORNEC.FANTASIA AS "providerFantasy",
-          PCFORNEC.CGC AS "providerCNPJ",
-          PCFORNEC.CODFORNECPRINC AS "providerPrincipalCode",
-          PCEMPR.MATRICULA AS "buyerCode",
-          PCEMPR.NOME AS "buyerName",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '01', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "januaryValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES01) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "januaryGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '02', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "februaryValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES02) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "februaryGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '03', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "marchValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES03) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "marchGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '04', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "aprilValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES04) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "aprilGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '05', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "mayValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES05) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "mayGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '06', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "juneValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES06) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "juneGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '07', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "julyValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES07) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "julyGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '08', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "augustValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES08) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "augustGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '09', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "septemberValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES09) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "septemberGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '10', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "octoberValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES10) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "octoberGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '11', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "novemberValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES11) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "novemberGoal",
-          SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '12', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "decemberValue",
-          NVL((SELECT SUM(PCAUXFOR.VLMETAMES12) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "decemberGoal",
-          SUM(NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))) AS "amountValue",
-          NVL((SELECT SUM(NVL(A.VLMETAMES01, 0) + NVL(A.VLMETAMES02, 0) + NVL(A.VLMETAMES03, 0) + NVL(A.VLMETAMES04, 0) + NVL(A.VLMETAMES05, 0) + NVL(A.VLMETAMES06, 0) + NVL(A.VLMETAMES07, 0) + NVL(A.VLMETAMES08, 0) + NVL(A.VLMETAMES09, 0) + NVL(A.VLMETAMES10, 0) + NVL(A.VLMETAMES11, 0) + NVL(A.VLMETAMES12, 0)) FROM PCAUXFOR A WHERE PCAUXFOR.CODFORNEC = A.CODFORNEC AND A.ANO BETWEEN ${year} AND ${year}), 0) AS "amountGoal"
-        FROM PCEMPR, PCPEDC, PCPEDI, PCCLIENT, PCPRODUT, PCUSUARI, PCSUPERV, PCPRACA, PCFORNEC, PCAUXFOR, PCDEPTO
-        WHERE PCPEDC.DATA BETWEEN TO_DATE('${fromFormated}', 'DD/MM/YYYY') AND TO_DATE('${toFormated}', 'DD/MM/YYYY')
-          AND PCPEDC.NUMPED = PCPEDI.NUMPED
-          AND PCFORNEC.CODFORNEC = PCAUXFOR.CODFORNEC(+)
-          AND PCAUXFOR.ANO(+) BETWEEN ${year} AND ${year}
-          AND PCPEDC.CODCLI = PCCLIENT.CODCLI
-          AND PCPEDI.CODPROD = PCPRODUT.CODPROD
-          AND PCPEDC.CODUSUR = PCUSUARI.CODUSUR
-          AND PCUSUARI.CODSUPERVISOR = PCSUPERV.CODSUPERVISOR
-          AND PCPRODUT.CODFORNEC = PCFORNEC.CODFORNEC
-          AND PCPEDC.DTCANCEL IS NULL
-          AND PCCLIENT.CODPRACA = PCPRACA.CODPRACA
-          AND PCEMPR.MATRICULA = PCFORNEC.CODCOMPRADOR
-          AND PCPRODUT.CODEPTO = PCDEPTO.CODEPTO
-          ${params}
-          AND (PCPEDC.CODFILIAL IS NOT NULL)
-          AND (PCPEDC.CODFILIAL IN ('1'))
-          AND PCPEDC.CONDVENDA IN (1, 2, 3, 7, 9, 14, 15, 17, 18, 19, 98)
-        GROUP BY PCFORNEC.CODFORNEC, PCFORNEC.FORNECEDOR, PCFORNEC.FANTASIA, PCFORNEC.CGC, PCFORNEC.CODFORNECPRINC, PCEMPR.MATRICULA, PCEMPR.NOME, PCAUXFOR.VLMETAMES01, PCAUXFOR.CODFORNEC, PCAUXFOR.VLMETAMES02, PCAUXFOR.VLMETAMES03, PCAUXFOR.VLMETAMES04, PCAUXFOR.VLMETAMES05, PCAUXFOR.VLMETAMES06, PCAUXFOR.VLMETAMES07, PCAUXFOR.VLMETAMES08, PCAUXFOR.VLMETAMES09, PCAUXFOR.VLMETAMES10, PCAUXFOR.VLMETAMES11, PCAUXFOR.VLMETAMES12
-        ORDER BY PCFORNEC.FORNECEDOR
-      `)
-
-      result = result.concat(response)
-    }
-
-    return result
-  }
-
-  async findPerProviderLitigation(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerProviderLitigation(
+    options: Options
+  ): Promise<ProviderLitigationSales[]> {
+    let result: ProviderLitigationSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -1328,25 +1902,25 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
-      SELECT SUM(VLVENDA01) AS "januaryValue",
-        SUM(VLVENDA02) AS "februaryValue",
-        SUM(VLVENDA03) AS "marchValue",
-        SUM(VLVENDA04) AS "aprilValue",
-        SUM(VLVENDA05) AS "mayValue",
-        SUM(VLVENDA06) AS "juneValue",
-        SUM(VLVENDA07) AS "julyValue",
-        SUM(VLVENDA08) AS "augustValue",
-        SUM(VLVENDA09) AS "septemberValue",
-        SUM(VLVENDA10) AS "octoberValue",
-        SUM(VLVENDA11) AS "novemberValue",
-        SUM(VLVENDA12) AS "decemberValue",
-        CODFORNEC      AS "providerCode",
-        FORNECEDOR     AS "providerName",
-        FANTASIA       AS "providerFantasy",
-        CGC            AS "providerCNPJ",
-        CODFORNECPRINC AS "providerPrincipalCode"
-      FROM (SELECT PCPRODUT.CODFORNEC,
+      const response = await winthor.raw<RawProviderLitigationSales[]>(`
+        SELECT SUM(VLVENDA01) AS "januaryValue",
+          SUM(VLVENDA02) AS "februaryValue",
+          SUM(VLVENDA03) AS "marchValue",
+          SUM(VLVENDA04) AS "aprilValue",
+          SUM(VLVENDA05) AS "mayValue",
+          SUM(VLVENDA06) AS "juneValue",
+          SUM(VLVENDA07) AS "julyValue",
+          SUM(VLVENDA08) AS "augustValue",
+          SUM(VLVENDA09) AS "septemberValue",
+          SUM(VLVENDA10) AS "octoberValue",
+          SUM(VLVENDA11) AS "novemberValue",
+          SUM(VLVENDA12) AS "decemberValue",
+          CODFORNEC      AS "providerCode",
+          FORNECEDOR     AS "providerName",
+          FANTASIA       AS "providerFantasy",
+          CGC            AS "providerCNPJ",
+          CODFORNECPRINC AS "providerPrincipalCode"
+        FROM (SELECT PCPRODUT.CODFORNEC,
               PCFORNEC.FORNECEDOR,
               PCFORNEC.FANTASIA,
               PCFORNEC.CGC,
@@ -1384,14 +1958,36 @@ export class WinThorSalesByProviderRepository
         ORDER BY FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result
   }
 
-  async findPerRCASalesValue(options: Options): Promise<any[]> {
-    let result: any[] = []
+  async findPerRCASalesValue(options: Options): Promise<RCASalesValueSales[]> {
+    let result: RCASalesValueSales[] = []
 
     const { periodFrom, periodTo } = options
     const params = this.parseOptions(options)
@@ -1404,7 +2000,7 @@ export class WinThorSalesByProviderRepository
     for (let i = 0; i < intervals.length; i++) {
       const { fromFormated, toFormated } = intervals[i]
 
-      const response = await winthor.raw<any[]>(`
+      const response = await winthor.raw<RawRCASalesValueSales[]>(`
         SELECT SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '01',
           (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "januaryValue",
           SUM(DECODE(TO_CHAR(PCPEDI.DATA, 'MM'), '02', (NVL(PCPEDI.QT, 0) * (NVL(PCPEDI.PVENDA, 0) + NVL(PCPEDI.VLOUTRASDESP, 0) + NVL(PCPEDI.VLFRETE, 0))), 0)) AS "februaryValue",
@@ -1453,7 +2049,33 @@ export class WinThorSalesByProviderRepository
         ORDER BY PCUSUARI.NOME, FORNECEDOR
       `)
 
-      result = result.concat(response)
+      result = result.concat(
+        response.map(curr => ({
+          rca: {
+            code: curr.rcaCode,
+            name: curr.rcaName
+          },
+          provider: {
+            code: curr.providerCode,
+            name: curr.providerName,
+            fantasy: curr.providerFantasy,
+            cnpj: curr.providerCNPJ,
+            principalCode: curr.providerPrincipalCode
+          },
+          januaryValue: curr.januaryValue,
+          februaryValue: curr.februaryValue,
+          marchValue: curr.marchValue,
+          aprilValue: curr.aprilValue,
+          mayValue: curr.mayValue,
+          juneValue: curr.juneValue,
+          julyValue: curr.julyValue,
+          augustValue: curr.augustValue,
+          septemberValue: curr.septemberValue,
+          octoberValue: curr.octoberValue,
+          novemberValue: curr.novemberValue,
+          decemberValue: curr.decemberValue
+        }))
+      )
     }
 
     return result

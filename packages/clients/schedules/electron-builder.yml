@@ -1,0 +1,13 @@
+appId: br.com.dantasdistribuidora.schedules
+productName: Agendamentos
+copyright: Copyright © 2020 Dantas Distribuidora
+electronVersion: 10.1.1
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null

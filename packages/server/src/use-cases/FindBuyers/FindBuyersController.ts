@@ -5,9 +5,11 @@ import { FindBuyersUseCase } from './FindBuyersUseCase'
 export class FindBuyersController {
   constructor(private findBuyersCase: FindBuyersUseCase) {}
 
-  async handle(_req: Request, res: Response) {
+  async handle(req: Request<{}, {}, {}, { query?: string }>, res: Response) {
+    const { query } = req.query
+
     try {
-      const buyers = await this.findBuyersCase.execute()
+      const buyers = await this.findBuyersCase.execute(query)
 
       return res.json(buyers)
     } catch (error) {

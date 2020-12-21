@@ -1,0 +1,474 @@
+<style>
+  * {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+
+  body header section {
+    display: flex;
+  }
+
+  body header section aside {
+    width: calc(50% - 4px);
+  }
+
+  body header section aside+aside {
+    margin-left: 8px;
+  }
+
+  body header section#metadata {
+    justify-content: space-between;
+  }
+
+  body header section div {
+    display: flex;
+    flex-direction: row;
+  }
+
+  body header section div+div {
+    margin-top: 2px;
+  }
+
+  body header section div strong {
+    min-width: 70px;
+    margin-right: 8px;
+  }
+
+  body header section div span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body header section+section {
+    border-top: 1px solid black;
+    margin-top: 4px;
+    padding-top: 4px;
+  }
+
+  body header div#table {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid black;
+  }
+
+  body header div#table div#tableHeader,
+  header div#table div#tableBody {
+    display: flex;
+    flex-direction: row;
+  }
+
+  body header div#table div#tableHeader {
+    border-bottom: 1px solid black;
+  }
+
+  body header div#table div#tableHeader div {
+    font-weight: bold;
+  }
+
+  body header div#table div#tableHeader div,
+  body header div#table div#tableBody div {
+    text-align: center;
+    padding: 2px 4px;
+    width: 80px;
+  }
+
+  body header div#table div#tableHeader div+div,
+  body header div#table div#tableBody div+div {
+    border-left: 1px solid black;
+  }
+
+  div#content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+
+  div#content div#tableHeader {
+    font-weight: bold;
+    border: 1px solid black;
+  }
+
+  div#content div#tableBody div#tableRow {
+    border-bottom: 1px dotted black;
+    border-left: 1px dotted black;
+    border-right: 1px dotted black;
+  }
+
+  div#content div#tableHeader div {
+    text-align: center;
+  }
+
+  div#content div#tableHeader div,
+  div#content div#tableBody div#tableRow div {
+    padding: 2px 4px;
+  }
+
+  div#content div#tableHeader div+div {
+    border-left: 1px solid black;
+  }
+
+  div#content div#tableBody div#tableRow div+div {
+    border-left: 1px dotted black;
+  }
+
+  div#content div#tableHeader,
+  div#content div#tableBody div#tableRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  div#content div#factoryCode {
+    width: 45px;
+    text-align: center;
+  }
+
+  div#content div#code {
+    width: 40px;
+    text-align: right;
+  }
+
+  div#content div#description {
+    flex: 1;
+    text-align: left !important;
+  }
+
+  div#content div#packing {
+    width: 60px;
+    text-align: center;
+  }
+
+  div#content div#unity {
+    width: 25px;
+    text-align: center;
+  }
+
+  div#content div#requestedCount {
+    width: 60px;
+    text-align: right;
+  }
+
+  div#content div#ipi {
+    width: 30px;
+    text-align: right;
+  }
+
+  div#content div#liquidValue {
+    width: 50px;
+    text-align: right;
+  }
+
+  div#content div#amountValue {
+    width: 50px;
+    text-align: right;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  footer div#totals {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  footer div#totals aside div#table {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid black;
+  }
+
+  footer div#totals aside div#table div#row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  footer div#totals aside div#table div#row+div#row {
+    border-top: 1px solid black;
+  }
+
+  footer div#totals aside div#table div#row div#tuple+div#tuple {
+    border-left: 1px solid black;
+  }
+
+  footer div#totals aside div#table div#row div#tuple {
+    display: flex;
+  }
+
+  footer div#totals aside div#table div#row div#tuple strong {
+    border-right: 1px solid black;
+    display: block;
+  }
+
+  footer div#totals aside div#table div#row div#tuple span {
+    display: block;
+    width: 40px;
+    text-align: right;
+  }
+
+  footer div#totals aside div#table div#row div#tuple strong,
+  footer div#totals aside div#table div#row div#tuple span {
+    padding: 2px 4px;
+  }
+
+  footer div#annotations {
+    margin-top: 8px;
+  }
+
+  footer div#annotations ul {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 8px;
+  }
+
+  footer div#annotations ul li {
+    font-weight: bold;
+  }
+
+  footer div#informations {
+    line-height: 14px;
+  }
+</style>
+
+<body>
+  <header>
+    <section id="metadata">
+      <div>
+        <strong>Nº do Pedido</strong>
+        <span>{{ number }}</span>
+      </div>
+
+      <div>
+        <strong>Emissão</strong>
+        <span>{{ emittedAt }}</span>
+      </div>
+    </section>
+
+    <section id="fromData">
+      <aside>
+        <div>
+          <strong>Empresa</strong>
+          <span>{{ buyerName }}</span>
+        </div>
+
+        <div>
+          <strong>Endereço</strong>
+          <span>{{ buyerAddress }}, {{ buyerNumber }}</span>
+        </div>
+
+        <div>
+          <strong>Cidade, UF</strong>
+          <span>{{ buyerCity }}, {{ buyerUF }}</span>
+        </div>
+      </aside>
+
+      <aside>
+        <div>
+          <strong>CNPJ</strong>
+          <span>{{ buyerCNPJ }}</span>
+        </div>
+
+        <div>
+          <strong>IE</strong>
+          <span>{{ buyerIE }}</span>
+        </div>
+
+        <div>
+          <strong>CEP</strong>
+          <span>{{ buyerCEP }}</span>
+        </div>
+      </aside>
+    </section>
+
+    <section id="toData">
+      <aside>
+        <div>
+          <strong>Fornecedor</strong>
+          <span>{{ providerName }}</span>
+        </div>
+
+        <div>
+          <strong>CNPJ</strong>
+          <span>{{ providerCNPJ }}</span>
+        </div>
+
+        <div>
+          <strong>Endereço</strong>
+          <span>{{ providerAddress }}</span>
+        </div>
+
+        <div>
+          <strong>Cidade</strong>
+          <span>{{ providerCity }}, {{ providerState }}</span>
+        </div>
+
+        <div>
+          <strong>Telefone</strong>
+          <span>{{ providerPhone }}</span>
+        </div>
+
+        <div>
+          <strong>Condições de Pagamento</strong>
+          <span>{{ deadline }}</span>
+        </div>
+
+        <div>
+          <strong>Frete</strong>
+          <span>{{ freight }}</span>
+        </div>
+      </aside>
+
+      <aside>
+        <div>
+          <strong>Código</strong>
+          <span>{{ providerCode }}</span>
+        </div>
+
+        <div>
+          <strong>Bairro</strong>
+          <span>{{ providerNeighborhood }}</span>
+        </div>
+
+        <div>
+          <strong>CEP</strong>
+          <span>{{ providerCEP }}</span>
+        </div>
+      </aside>
+    </section>
+
+    <div id="table">
+      <div id="tableHeader">
+        <div>Faturamento</div>
+        <div>Embarque</div>
+        <div>Entrega</div>
+      </div>
+      <div id="tableBody">
+        <div>{{ billingAt }}</div>
+        <div>{{ boardingAt }}</div>
+        <div>{{ expectedDeliveryAt }}</div>
+      </div>
+      </table>
+  </header>
+
+  <div id="content">
+    <div id="tableHeader">
+      <div id="factoryCode">Cód Fáb.</div>
+      <div id="code">Código</div>
+      <div id="description">Descrição</div>
+      <div id="packing">Embalagem</div>
+      <div id="unity">Und</div>
+      <div id="requestedCount">Qtd. Pedida</div>
+      <div id="ipi">Vl. IPI</div>
+      <div id="liquidValue">P. Líquido</div>
+      <div id="amountValue">Vl. Total</div>
+    </div>
+
+    <div id="tableBody">
+      {{{ body }}}
+    </div>
+  </div>
+
+  <footer>
+    <div id="totals">
+      <aside>
+        <div id="table">
+          <div id="row">
+            <div id="tuple">
+              <strong style="width: 45px;">Itens</strong>
+              <span>{{ productCount }}</span>
+            </div>
+
+            <div id="tuple">
+              <strong style="width: 60px;">Base ICMS</strong>
+              <span>{{ amountICMSBase }}</span>
+            </div>
+          </div>
+
+          <div id="row">
+            <div id="tuple">
+              <strong style="width: 45px;">Volumes</strong>
+              <span>{{ amountVolume }}</span>
+            </div>
+
+            <div id="tuple">
+              <strong style="width: 60px;">Valor ICMS</strong>
+              <span>{{ amountICMSValue }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <aside>
+        <div id="table">
+          <div id="row">
+            <div id="tuple">
+              <strong style="width: 90px;">Total Líquido</strong>
+              <span style="width: 50px;">{{ totalAmountValue }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="annotations">
+      <strong>Observações</strong>
+
+      <ul>
+        {{#if observationNumber1}}
+        <li>{{ observationNumber1 }}</li>
+        {{/if}}
+        {{#if observationNumber2}}
+        <li>{{ observationNumber2 }}</li>
+        {{/if}}
+        {{#if observationNumber3}}
+        <li>{{ observationNumber3 }}</li>
+        {{/if}}
+        {{#if observationNumber4}}
+        <li>{{ observationNumber4 }}</li>
+        {{/if}}
+        {{#if observationNumber5}}
+        <li>{{ observationNumber5 }}</li>
+        {{/if}}
+        {{#if observationNumber6}}
+        <li>{{ observationNumber6 }}</li>
+        {{/if}}
+        {{#if observationNumber7}}
+        <li>{{ observationNumber7 }}</li>
+        {{/if}}
+      </ul>
+    </div>
+
+    <div id="informations">
+      <strong>AGENDAMENTO DE CARGA</strong><br />
+      Dias: de 2ª a 6ª feira<br />
+      Horário: das 07:30h até 17:00h<br />
+      Pausa p/ almoço: das 11:30h às 13:00h<br />
+      O setor de Logística da DANTAS recebe somente cargas devidamente pré-agendadas e confirmadas.<br />
+      • Contatos: <strong>KATIA VIRGÍNIO (83) 9.9135-0905</strong> e/ou <strong>ARTUR BISMARK (83)
+        9.9362-9201</strong><br />
+      • Agendamento via e-mail com arquivo anexo XML e PDF do DANFE para agendamento@dantasdistribuidora.com.br<br />
+      • Arquivo DANFE (PDF) e arquivo XML da Nota Fiscal para recebimento@dantasdistribuidora.com.br<br />
+    </div>
+  </footer>
+</body>

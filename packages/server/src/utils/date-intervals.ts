@@ -11,7 +11,8 @@ import {
   getDate,
   isEqual,
   startOfMonth,
-  getMonth
+  getMonth,
+  parseISO
 } from 'date-fns'
 
 export interface DateInterval {
@@ -20,6 +21,10 @@ export interface DateInterval {
   to: Date
   toFormated: string
   name: string
+}
+
+export function normalizeDate(date: string | Date): Date {
+  return typeof date === 'string' ? parseISO(date) : date
 }
 
 export function generateDateIntervals(from: Date, to: Date) {

@@ -6,7 +6,6 @@ import { useFormValidator } from 'hookable-unform'
 
 import { extractErrorMessage } from '@shared/axios'
 import {
-  Page,
   Form,
   FormHandles,
   SubmitButton,
@@ -57,25 +56,23 @@ const SettingsPage: React.FC<Props> = ({
   )
 
   return (
-    <Page title={`${title} - Configurações`}>
-      <Container>
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={settings}>
-          <InlineServerContainer>
-            <TextInput
-              name="network.ip"
-              label="IP do Servidor"
-              className="server"
-            />
+    <Container>
+      <Form ref={formRef} onSubmit={handleSubmit} initialData={settings}>
+        <InlineServerContainer>
+          <TextInput
+            name="network.ip"
+            label="IP do Servidor"
+            className="server"
+          />
 
-            <NumberInput name="network.port" label="Porta" width={90} />
-          </InlineServerContainer>
+          <NumberInput name="network.port" label="Porta" width={90} />
+        </InlineServerContainer>
 
-          <Actions>
-            <SubmitButton label="Salvar" loading={loading} />
-          </Actions>
-        </Form>
-      </Container>
-    </Page>
+        <Actions>
+          <SubmitButton label="Salvar" loading={loading} />
+        </Actions>
+      </Form>
+    </Container>
   )
 }
 

@@ -45,7 +45,7 @@ export class Permissions {
         'accessRepresentatives',
         'viewValues',
         'createdAt',
-        'updatedAt',
+        'updatedAt'
       )
     )
 

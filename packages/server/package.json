@@ -7,9 +7,10 @@
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
     "start": "node dist/server.js",
     "dev": "npm-run-all -p dev:*",
-    "dev:server": "ts-node-dev -r tsconfig-paths/register --T --respawn --clear --ignore-watch node_modules --no-notify src/server.ts",
-    "dev:queue": "ts-node-dev -r tsconfig-paths/register --T --respawn --clear --ignore-watch node_modules --no-notify src/queue.ts",
+    "dev:server": "ts-node-dev -r tsconfig-paths/register --T src/server.ts",
+    "dev:queue": "ts-node-dev -r tsconfig-paths/register src/queue.ts",
     "test": "jest",
+
     "prisma": "prisma",
     "prisma:generate": "prisma generate",
     "prisma:save": "prisma migrate save --experimental",

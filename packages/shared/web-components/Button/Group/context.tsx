@@ -4,7 +4,6 @@ import React, {
   SetStateAction,
   useContext,
   useCallback,
-  useState,
   useEffect
 } from 'react'
 
@@ -14,34 +13,30 @@ interface ContextHandles {
 }
 
 interface Props {
-  initialButton: string
+  currentButton: string
   onChange?(name: string): void
 }
 
 const ButtonGroupContext = createContext<ContextHandles>(null)
 
 export const ButtonGroupContextProvider: React.FC<Props> = ({
-  initialButton,
+  currentButton,
   onChange,
   children
 }) => {
-  const [currentActiveButton, setCurrentActiveButton] = useState<string>(
-    initialButton
-  )
-
   const isButtonActive = useCallback(
-    (name: string): boolean => currentActiveButton === name,
-    [currentActiveButton]
+    (name: string): boolean => currentButton === name,
+    [currentButton]
   )
 
-  useEffect(() => onChange && onChange(currentActiveButton), [
+  useEffect(() => onChange && onChange(currentButton), [
     onChange,
-    currentActiveButton
+    currentButton
   ])
 
   return (
     <ButtonGroupContext.Provider
-      value={{ isButtonActive, setCurrentActiveButton }}
+      value={{ isButtonActive, setCurrentActiveButton: onChange }}
     >
       {children}
     </ButtonGroupContext.Provider>

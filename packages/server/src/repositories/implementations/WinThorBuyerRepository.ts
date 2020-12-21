@@ -16,15 +16,23 @@ export class WinThorBuyerRepository implements IBuyerRepository {
     return response[0]
   }
 
-  async findMany(): Promise<Buyer[]> {
+  async findMany(query?: string): Promise<Buyer[]> {
     const response = await winthor.raw<Buyer[]>(`
       SELECT MATRICULA AS "code",
              NOME      AS "name"
       FROM PCEMPR
       WHERE CODSETOR IN (SELECT CODSETORCOMPRADOR FROM PCCONSUM)
+        AND ROWNUM <= 10
+        ${this.formatQuery(query)}
       ORDER BY NOME
     `)
 
     return response
+  }
+
+  private formatQuery(query?: string) {
+    if (!query) return ''
+
+    return `AND (TO_CHAR(MATRICULA) LIKE '${query.toUpperCase()}' OR NOME LIKE '%${query.toUpperCase()}%')`
   }
 }

@@ -10,6 +10,7 @@ const Button: React.FC<ButtonProps> = ({
   type = 'button',
   secondary,
   disabled,
+  icon,
   ...rest
 }) => {
   return (
@@ -19,11 +20,11 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       className={secondary ? 'secondary' : 'primary'}
     >
-      <Label invisible={loading}>{label}</Label>
+      <Label invisible={loading}>{icon || label}</Label>
 
       {loading && (
         <Loading
-          // color={secondary ? '#666' : '#fff'}
+          color={secondary ? '#666' : '#fff'}
           className="loader"
           type="spin"
           width={20}

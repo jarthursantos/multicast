@@ -1,7 +1,6 @@
 import { WinThorStockNotificationsRepository } from 'repositories/implementations/WinThorStockNotificationsRepository'
 
 import { FindStockNotificationsController } from './FindStockNotificationsController'
-import { findStockNotificationsSchema } from './findStockNotificationsSchema'
 import { FindStockNotificationsUseCase } from './FindStockNotificationsUseCase'
 
 const winThorStockNotificationsRepository = new WinThorStockNotificationsRepository()
@@ -14,8 +13,4 @@ const findStockNotificationsController = new FindStockNotificationsController(
   findStockNotificationsUseCase
 )
 
-export {
-  findStockNotificationsUseCase,
-  findStockNotificationsController,
-  findStockNotificationsSchema
-}
+export { findStockNotificationsUseCase, findStockNotificationsController }
