@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 
-import { useAxios, useSetToken } from '@shared/axios'
+import { useSetToken } from '@shared/axios'
 import { AuthPage, Credentials, LoginSuccessData } from '@shared/web-pages'
 
+import { useTypedSelector } from '~/store'
 import { logInSuccess } from '~/store/modules/auth/actions'
 import { keepConnectedRequest } from '~/store/modules/preferences/actions'
 
@@ -16,9 +17,10 @@ const Next = () => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const [, haveToken] = useAxios()
-
   const updateToken = useSetToken()
+
+  const { user } = useTypedSelector(state => state.auth)
+  const { keepConnected } = useTypedSelector(state => state.preferences)
 
   const handleLoginSuccess = useCallback(
     ({ keepConnected }: Credentials, { user, token }: LoginSuccessData) => {
@@ -32,29 +34,21 @@ const Next = () => {
     [dispatch, updateToken, router]
   )
 
-  useEffect(() => {
-    if (!haveToken) {
-      // return
-    }
-
-    // dispatch(loadAccompanimentsRequestAction())
-  }, [haveToken, dispatch])
-
   return (
     <React.Fragment>
       <Head>
-        <title>Agendamentos - Auth</title>
+        <title>Agendamentos - Entrar</title>
       </Head>
 
       <AuthPage
-        icon="/images/logo.png"
+        icon="/images/icon.ico"
         title="Agendamentos"
         version={version}
         onLogInSuccess={handleLoginSuccess}
         credentials={{
-          email: 'admin@dantasdistribuidora.com.br',
-          password: '571043',
-          keepConnected: true
+          email: user?.email,
+          password: user?.password,
+          keepConnected
         }}
       />
     </React.Fragment>

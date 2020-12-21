@@ -2,7 +2,11 @@ import React from 'react'
 
 import Head from 'next/head'
 
+import { useCloseWindow } from '~/hooks/use-close-window'
+
 const DischargeCostsTable = () => {
+  useCloseWindow()
+
   return (
     <React.Fragment>
       <Head>

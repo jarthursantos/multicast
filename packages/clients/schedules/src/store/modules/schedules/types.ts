@@ -31,6 +31,10 @@ export enum Types {
   CANCEL_SCHEDULES_SUCCESS = '@schedules/CANCEL_SCHEDULES_SUCCESS',
   CANCEL_SCHEDULES_FAILURE = '@schedules/CANCEL_SCHEDULES_FAILURE',
 
+  RECEIVE_SCHEDULES_REQUEST = '@schedules/RECEIVE_SCHEDULES_REQUEST',
+  RECEIVE_SCHEDULES_SUCCESS = '@schedules/RECEIVE_SCHEDULES_SUCCESS',
+  RECEIVE_SCHEDULES_FAILURE = '@schedules/RECEIVE_SCHEDULES_FAILURE',
+
   ADD_SCHEDULE_INVOICES_REQUEST = '@schedules/ADD_SCHEDULE_INVOICES_REQUEST',
   ADD_SCHEDULE_INVOICES_SUCCESS = '@schedules/ADD_SCHEDULE_INVOICES_SUCCESS',
   ADD_SCHEDULE_INVOICES_FAILURE = '@schedules/ADD_SCHEDULE_INVOICES_FAILURE',
@@ -194,6 +198,31 @@ export interface ICancelScheduleSuccessAction extends BaseAction {
 
 export interface ICancelScheduleFailureAction extends BaseAction {
   type: typeof Types.CANCEL_SCHEDULES_FAILURE
+  payload: { message: string }
+}
+
+// #endregion
+
+// #region Receive
+
+export interface IReceiveScheduleRequestAction extends BaseAction {
+  type: typeof Types.RECEIVE_SCHEDULES_REQUEST
+  payload: {
+    schedule: ISchedule
+    data: IReceiveScheduleData
+  }
+}
+
+export interface IReceiveScheduleSuccessAction extends BaseAction {
+  type: typeof Types.RECEIVE_SCHEDULES_SUCCESS
+  payload: {
+    schedule: ISchedule
+    receivedSchedule: ISchedule
+  }
+}
+
+export interface IReceiveScheduleFailureAction extends BaseAction {
+  type: typeof Types.RECEIVE_SCHEDULES_FAILURE
   payload: { message: string }
 }
 
@@ -436,6 +465,9 @@ export type SchedulesActionTypes =
   | ICloseScheduleRequestAction
   | ICloseScheduleSuccessAction
   | ICloseScheduleFailureAction
+  | IReceiveScheduleRequestAction
+  | IReceiveScheduleSuccessAction
+  | IReceiveScheduleFailureAction
   | IDeleteScheduleRequestAction
   | IDeleteScheduleSuccessAction
   | IDeleteScheduleFailureAction
@@ -456,6 +488,7 @@ export interface SchedulesState {
   closingSchedules: boolean
   deletingSchedules: boolean
   cancelingSchedules: boolean
+  receivingSchedules: boolean
   loadingSchedules: boolean
 
   additingScheduleInvoice: boolean
@@ -478,6 +511,33 @@ export interface IRescheduleResponse {
   schedule: ISchedule
   reschedule: ISchedule
 }
+
+interface IReceiveScheduleBaseData {
+  vehicleSize: Size
+  chargeType: Charge
+  paymentMethod: 'PENDING' | 'MONEY' | 'DEPOSIT'
+  assistant: boolean
+  palletized: boolean
+  pipeSize: Size
+  receiptPerInvoice: boolean
+}
+
+export interface IReceiveSchedulePerScheduleData
+  extends IReceiveScheduleBaseData {
+  receiptValue: number
+}
+
+export interface IReceiveSchedulePerInvoiceData
+  extends IReceiveScheduleBaseData {
+  invoices: {
+    id: string
+    receiptValue: number
+  }
+}
+
+export type IReceiveScheduleData =
+  | IReceiveSchedulePerScheduleData
+  | IReceiveSchedulePerInvoiceData
 
 export interface ICreateScheduleData {
   scheduledAt: Date | string

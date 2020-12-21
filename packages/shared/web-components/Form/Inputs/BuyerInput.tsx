@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MdClose } from 'react-icons/md'
+import { OptionTypeBase } from 'react-select'
 
 import { useField } from '@unform/core'
 import styled from 'styled-components'
@@ -17,6 +18,7 @@ export interface Buyer {
 const BuyerInput: React.FC<InputProps> = ({ name, label }) => {
   const { fieldName, defaultValue, registerField } = useField(name)
 
+  const [selection, setSelection] = useState<OptionTypeBase>()
   const [buyers, setBuyers] = useState<Buyer[]>(defaultValue || [])
   const [isExpanded, setExpanded] = useState(false)
 
@@ -36,16 +38,9 @@ const BuyerInput: React.FC<InputProps> = ({ name, label }) => {
       <AsyncSelectInput
         name={name}
         label={label}
+        selection={selection}
+        setSelection={setSelection}
         noOptionsMessage={() => 'Nenhum comprador encontrado'}
-        onSelect={({ value, name }) => {
-          setBuyers(curr => {
-            if (curr.find(item => item.code === value)) {
-              return curr
-            }
-
-            return [{ code: value, name }, ...curr]
-          })
-        }}
         loadOptions={inputValue =>
           new Promise(resolve => {
             api

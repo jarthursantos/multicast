@@ -1,5 +1,4 @@
 import React from 'react'
-import { ToastContainer, Slide } from 'react-toastify'
 
 import Head from 'next/head'
 
@@ -13,16 +12,6 @@ const Home = () => {
       </Head>
 
       <HomeScreen />
-
-      <ToastContainer
-        position="bottom-center"
-        pauseOnFocusLoss={false}
-        closeButton={false}
-        autoClose={3000}
-        transition={Slide}
-        style={{ marginBottom: -24 }}
-        newestOnTop
-      />
     </React.Fragment>
   )
 }

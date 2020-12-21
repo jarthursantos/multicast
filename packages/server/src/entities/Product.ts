@@ -10,7 +10,7 @@ export interface BaseProduct extends BasicProduct {
   packing: string
   unity: string
 
-  provider: Provider
+  provider?: Provider
 }
 
 export interface Product extends BaseProduct {

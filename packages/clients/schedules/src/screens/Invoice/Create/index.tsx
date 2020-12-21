@@ -103,7 +103,7 @@ const CreateInvoiceScreen: React.VFC<ICreateInvoiceScreenProps> = ({
     <Wrapper
       onSubmit={handleSubmit}
       ref={formRef}
-      initialData={{ importation: true }}
+      initialData={{ importation: false }}
     >
       <Container>
         <SingleProviderInput name="provider" label="Fornecedor" />

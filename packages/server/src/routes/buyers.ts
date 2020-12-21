@@ -4,9 +4,12 @@ import { findBuyersController } from 'use-cases/FindBuyers'
 
 const router = Router()
 
-router.get('/buyers', (req: Request, res: Response) => {
-  findBuyersController.handle(req, res)
-})
+router.get(
+  '/buyers',
+  (req: Request<{}, {}, {}, { query?: string }>, res: Response) => {
+    findBuyersController.handle(req, res)
+  }
+)
 
 router.get('/buyers/:id', (req: Request, res: Response) => {
   findBuyerByCodeController.handle(req, res)

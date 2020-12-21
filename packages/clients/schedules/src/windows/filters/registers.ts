@@ -39,6 +39,6 @@ export function registerOpenFiltersWindow() {
 
     _instance.removeMenu()
     _instance.loadURL(resolvePath('filters'))
-    _instance.webContents.openDevTools()
+    // _instance.webContents.openDevTools()
   })
 }

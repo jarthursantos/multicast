@@ -2,16 +2,13 @@ import { Charge, Size, Receipt } from '@prisma/client'
 
 import { IInvoice } from '~/domain/IInvoice'
 
-export type Assistant = 'YES' | 'NO'
-export type Palletized = 'YES' | 'NO'
-
 export interface IReceiveSchedulesDTO {
   lecturer: string
   driver: string
   vehicleSize: Size
   chargeType: Charge
-  assistant: Assistant
-  palletized: Palletized
+  assistant: boolean
+  palletized: boolean
   pipeSize: Size
   paymentMethod: Receipt
   receiptValue: number

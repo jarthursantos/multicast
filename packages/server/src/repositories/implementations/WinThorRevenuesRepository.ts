@@ -1,4 +1,3 @@
-import { parseISO } from 'date-fns'
 import {
   SupervisorRevenues,
   MonthRevenues,
@@ -19,12 +18,9 @@ import { IRevenuesRepository, Options } from 'repositories/IRevenuesRepository'
 import {
   DateInterval,
   formatDate,
-  generateMonthlyDateIntervals
+  generateMonthlyDateIntervals,
+  normalizeDate
 } from 'utils/date-intervals'
-
-function normalizeDate(date: string | Date): Date {
-  return typeof date === 'string' ? parseISO(date) : date
-}
 
 interface RawAnaliticRevenues
   extends Omit<

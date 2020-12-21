@@ -14,7 +14,12 @@ import {
   handleCancelScheduleInvoice,
   handleMoveScheduleInvoice,
   handleSearchSchedules,
-  handleReceiveSchedules
+  handleReceiveSchedules,
+  handleMarkScheduleInvoiceAsNonReceived,
+  handleMarkScheduleInvoiceAsReceived,
+  handleGenerateScheduleCostsReport,
+  handleGenerateScheduleInvoiceReceipt,
+  handleGenerateScheduleReceipt
 } from '~/app/controllers/schedules'
 import { createInvoicesSchema, updateInvoicesSchema } from '~/modules/invoices'
 import {
@@ -27,6 +32,8 @@ import {
 import { validateRequestBody } from '../middlewares/validate-request-body'
 
 const router = Router()
+
+// #region Schedules
 
 router.get('/search', handleSearchSchedules)
 
@@ -54,6 +61,11 @@ router.put(
 )
 router.put('/:id/cancel', handleCancelSchedule)
 router.delete('/:id', handleDeleteSchedule)
+router.get('/:id/receipt', handleGenerateScheduleReceipt)
+
+// #endregion
+
+// #region Invoices
 
 router.post(
   '/:id/invoices',
@@ -71,5 +83,25 @@ router.put(
   '/:scheduleId/invoices/:id/move/:destinationId',
   handleMoveScheduleInvoice
 )
+router.put(
+  '/:scheduleId/invoices/:id/nonReceive',
+  handleMarkScheduleInvoiceAsNonReceived
+)
+router.put(
+  '/:scheduleId/invoices/:id/receive',
+  handleMarkScheduleInvoiceAsReceived
+)
+router.get(
+  '/:scheduleId/invoices/:id/receipt',
+  handleGenerateScheduleInvoiceReceipt
+)
+
+// #endregion
+
+// #region Reports
+
+router.get('/reports/cost', handleGenerateScheduleCostsReport)
+
+// #endregion
 
 export { router as schedulesRoutes }

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { OptionsType, OptionTypeBase } from 'react-select'
 import ReactSelect from 'react-select/async'
 
@@ -11,7 +11,6 @@ import { InputProps } from '../types'
 type Props = Pick<InputProps, 'label' | 'name'> & {
   selection?: OptionTypeBase
   setSelection: Dispatch<SetStateAction<OptionTypeBase | undefined>>
-  onSelect(option: OptionTypeBase): void
   noOptionsMessage(obj: { inputValue: string }): string
   loadOptions(
     inputValue: string,
@@ -20,18 +19,15 @@ type Props = Pick<InputProps, 'label' | 'name'> & {
   error?: string
   clearError?: () => void
   inputProps?: { isDisabled: boolean }
-  single?: boolean
 }
 
 const AsyncSelectInput: React.FC<Props> = ({
   name,
   label,
-  onSelect,
   loadOptions,
   error,
   clearError,
   inputProps,
-  single,
   selection,
   setSelection,
   ...rest
@@ -39,14 +35,6 @@ const AsyncSelectInput: React.FC<Props> = ({
   const debouncedLoadOptions = useMemo(() => {
     return debounce(loadOptions, 500)
   }, [loadOptions])
-
-  useEffect(() => {
-    if (!single && selection) {
-      onSelect(selection)
-
-      setSelection(null)
-    }
-  }, [selection, onSelect, single])
 
   return (
     <InputContainer isSelect {...rest}>

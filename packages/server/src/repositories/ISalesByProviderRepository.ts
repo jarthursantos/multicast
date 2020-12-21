@@ -1,3 +1,25 @@
+import {
+  ActivityBranchSales,
+  CategoryProductSales,
+  CategorySales,
+  ClientLitigationSales,
+  ClientSales,
+  ClientSalesValueSales,
+  ProductProviderSales,
+  ProductSalesCountSales,
+  ProductSalesValueSales,
+  ProviderGoalSales,
+  ProviderLitigationSales,
+  RCASales,
+  RCASalesValueSales,
+  RegionSales,
+  RouteSales,
+  SquareClientProductSales,
+  SquareSales,
+  SupervisorRCASales,
+  SupervisorSales
+} from 'entities/SalesByProvider'
+
 export interface Options {
   periodFrom: Date | string
   periodTo: Date | string
@@ -17,23 +39,27 @@ export interface Options {
 }
 
 export interface ISalesByProviderRepository {
-  findPerClient(options: Options): Promise<any[]>
-  findPerActivityBranch(options: Options): Promise<any[]>
-  findPerRegion(options: Options): Promise<any[]>
-  findPerSquare(options: Options): Promise<any[]>
-  findPerRoute(options: Options): Promise<any[]>
-  findPerSupervisor(options: Options): Promise<any[]>
-  findPerSupervisorRCA(options: Options): Promise<any[]>
-  findPerRCA(options: Options): Promise<any[]>
-  findPerProductProvider(options: Options): Promise<any[]>
-  findPerCategory(options: Options): Promise<any[]>
-  findPerCategoryProduct(options: Options): Promise<any[]>
-  findPerClientSalesValue(options: Options): Promise<any[]>
-  findPerProductSalesCount(options: Options): Promise<any[]>
-  findPerProductSalesValue(options: Options): Promise<any[]>
-  findPerSquareClientProduct(options: Options): Promise<any[]>
-  findPerClientLitigation(options: Options): Promise<any[]>
-  findPerProviderGoal(options: Options): Promise<any[]>
-  findPerProviderLitigation(options: Options): Promise<any[]>
-  findPerRCASalesValue(options: Options): Promise<any[]>
+  findPerClient(options: Options): Promise<ClientSales[]>
+  findPerActivityBranch(options: Options): Promise<ActivityBranchSales[]>
+  findPerRegion(options: Options): Promise<RegionSales[]>
+  findPerSquare(options: Options): Promise<SquareSales[]>
+  findPerRoute(options: Options): Promise<RouteSales[]>
+  findPerSupervisor(options: Options): Promise<SupervisorSales[]>
+  findPerSupervisorRCA(options: Options): Promise<SupervisorRCASales[]>
+  findPerRCA(options: Options): Promise<RCASales[]>
+  findPerProductProvider(options: Options): Promise<ProductProviderSales[]>
+  findPerCategory(options: Options): Promise<CategorySales[]>
+  findPerCategoryProduct(options: Options): Promise<CategoryProductSales[]>
+  findPerClientSalesValue(options: Options): Promise<ClientSalesValueSales[]>
+  findPerProductSalesCount(options: Options): Promise<ProductSalesCountSales[]>
+  findPerProductSalesValue(options: Options): Promise<ProductSalesValueSales[]>
+  findPerSquareClientProduct(
+    options: Options
+  ): Promise<SquareClientProductSales[]>
+  findPerClientLitigation(options: Options): Promise<ClientLitigationSales[]>
+  findPerProviderGoal(options: Options): Promise<ProviderGoalSales[]>
+  findPerProviderLitigation(
+    options: Options
+  ): Promise<ProviderLitigationSales[]>
+  findPerRCASalesValue(options: Options): Promise<RCASalesValueSales[]>
 }

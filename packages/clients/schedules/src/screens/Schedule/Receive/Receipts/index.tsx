@@ -14,7 +14,7 @@ const Receipts: React.VFC<IReceiptsProps> = ({
         .filter(invoice => !invoice.canceledAt)
         .map((invoice, index) => (
           <ReceiptInvoiceItem
-            key={invoice.number}
+            key={invoice.id}
             index={index}
             invoice={invoice}
             schedule={schedule}

@@ -223,8 +223,10 @@ model Invoices {
 
   providerCode       Int
   number             Int
-  value              Float?
 
+  importation        Boolean   @default(false)
+
+  value              Float?
   emittedAt          DateTime?
 
   key                String?

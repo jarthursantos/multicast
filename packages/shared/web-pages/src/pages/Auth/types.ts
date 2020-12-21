@@ -2,7 +2,7 @@ export interface AuthProps {
   title: string
   version: string
   icon: string
-  credentials?: PartialCredentials
+  credentials?: Partial<Credentials>
   onLogInSuccess(credentials: Credentials, data: LoginSuccessData): void
 }
 
@@ -17,15 +17,10 @@ export interface Credentials {
   keepConnected: boolean
 }
 
-export interface PartialCredentials {
-  email?: string
-  password?: string
-  keepConnected?: boolean
-}
-
 export interface User {
   name: string
   email: string
+  password: string
   role: Roles
 }
 

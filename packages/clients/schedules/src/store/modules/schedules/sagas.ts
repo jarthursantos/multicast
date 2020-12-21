@@ -31,7 +31,9 @@ import {
   markScheduleInvoiceAsReceivedSuccess,
   markScheduleInvoiceAsReceivedFailure,
   markScheduleInvoiceAsNonReceivedSuccess,
-  markScheduleInvoiceAsNonReceivedFailure
+  markScheduleInvoiceAsNonReceivedFailure,
+  receiveScheduleFailure,
+  receiveScheduleSuccess
 } from './actions'
 import {
   ISchedule,
@@ -51,7 +53,8 @@ import {
   IMoveScheduleInvoiceRequestAction,
   IMoveInvoiceResult,
   IMarkScheduleInvoiceAsReceivedRequestAction,
-  IMarkScheduleInvoiceAsNonReceivedRequestAction
+  IMarkScheduleInvoiceAsNonReceivedRequestAction,
+  IReceiveScheduleRequestAction
 } from './types'
 
 function* addSchedule({ payload }: IAddScheduleRequestAction) {
@@ -162,12 +165,31 @@ function* closeSchedule({ payload }: ICloseScheduleRequestAction) {
   }
 }
 
+export function* receiveSchedule({ payload }: IReceiveScheduleRequestAction) {
+  try {
+    const { schedule, data } = payload
+
+    console.log({ schedule, data })
+
+    const response: AxiosResponse<ISchedule> = yield call(
+      api.put,
+      `/schedules/${schedule.id}/receive`,
+      data
+    )
+
+    yield put(receiveScheduleSuccess(schedule, response.data))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    yield put(receiveScheduleFailure(message))
+  }
+}
+
 function* loadSchedules() {
   try {
     const { data }: AxiosResponse<ISchedule[]> = yield call(
       api.get,
-      'schedules',
-      { params: { year: 2020, month: 12 } }
+      'schedules'
     )
 
     yield put(loadSchedulesSuccess(data))
@@ -272,32 +294,13 @@ function* moveScheduleInvoice({ payload }: IMoveScheduleInvoiceRequestAction) {
 
 function* markScheduleInvoiceAsReceived({
   payload
-}: IMarkScheduleInvoiceAsNonReceivedRequestAction) {
-  try {
-    const { schedule, invoice } = payload
-
-    const { data }: AxiosResponse<IInvoice> = yield call(
-      api.put,
-      `/schedules/${schedule.id}/invoices/${invoice.id}/receive`
-    )
-
-    yield put(markScheduleInvoiceAsNonReceivedSuccess(schedule, data))
-  } catch (err) {
-    const message = extractErrorMessage(err)
-
-    yield put(markScheduleInvoiceAsNonReceivedFailure(message))
-  }
-}
-
-function* markScheduleInvoiceAsNonReceived({
-  payload
 }: IMarkScheduleInvoiceAsReceivedRequestAction) {
   try {
     const { schedule, invoice } = payload
 
     const { data }: AxiosResponse<IInvoice> = yield call(
       api.put,
-      `/schedules/${schedule.id}/invoices/${invoice.id}/nonReceive`
+      `/schedules/${schedule.id}/invoices/${invoice.id}/receive`
     )
 
     yield put(markScheduleInvoiceAsReceivedSuccess(schedule, data))
@@ -308,6 +311,25 @@ function* markScheduleInvoiceAsNonReceived({
   }
 }
 
+function* markScheduleInvoiceAsNonReceived({
+  payload
+}: IMarkScheduleInvoiceAsNonReceivedRequestAction) {
+  try {
+    const { schedule, invoice } = payload
+
+    const { data }: AxiosResponse<IInvoice> = yield call(
+      api.put,
+      `/schedules/${schedule.id}/invoices/${invoice.id}/nonReceive`
+    )
+
+    yield put(markScheduleInvoiceAsNonReceivedSuccess(schedule, data))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    yield put(markScheduleInvoiceAsNonReceivedFailure(message))
+  }
+}
+
 export default all([
   takeLatest(Types.ADD_SCHEDULES_REQUEST, addSchedule),
   takeLatest(Types.UPDATE_SCHEDULES_REQUEST, updateSchedule),
@@ -315,6 +337,7 @@ export default all([
   takeLatest(Types.DELETE_SCHEDULES_REQUEST, deleteSchedule),
   takeLatest(Types.CANCEL_SCHEDULES_REQUEST, cancelSchedule),
   takeLatest(Types.CLOSE_SCHEDULES_REQUEST, closeSchedule),
+  takeLatest(Types.RECEIVE_SCHEDULES_REQUEST, receiveSchedule),
   takeLatest(Types.LOAD_SCHEDULES_REQUEST, loadSchedules),
   takeLatest(Types.ADD_SCHEDULE_INVOICES_REQUEST, addScheduleInvoice),
   takeLatest(Types.UPDATE_SCHEDULE_INVOICES_REQUEST, updateScheduleInvoice),

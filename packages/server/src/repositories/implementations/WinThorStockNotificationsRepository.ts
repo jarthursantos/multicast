@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { format, parseISO, startOfDay, endOfDay } from 'date-fns'
+import { format, startOfDay, endOfDay } from 'date-fns'
 import {
   ArrivalStockProduct,
   ReleaseStockProduct,
@@ -12,6 +12,7 @@ import {
   Options,
   StockNotificationsResult
 } from 'repositories/IStockNotificationsRepository'
+import { normalizeDate } from 'utils/date-intervals'
 
 interface InvoiceData {
   number: number
@@ -135,10 +136,6 @@ export class WinThorStockNotificationsRepository
     }))
   }
 
-  private normalizeDate(date: string | Date): Date {
-    return typeof date === 'string' ? parseISO(date) : date
-  }
-
   private async findArrived(options: Options): Promise<ArrivalStockProduct[]> {
     const { buyers = [], providers = [] } = options
 
@@ -147,8 +144,8 @@ export class WinThorStockNotificationsRepository
         canceledAt: null,
         schedule: {
           receivedAt: {
-            gte: startOfDay(this.normalizeDate(options.periodFrom)),
-            lte: endOfDay(this.normalizeDate(options.periodTo))
+            gte: startOfDay(normalizeDate(options.periodFrom)),
+            lte: endOfDay(normalizeDate(options.periodTo))
           },
           NOT: {
             receivedAt: null
@@ -179,10 +176,10 @@ export class WinThorStockNotificationsRepository
   private async findReleased(options: Options): Promise<ReleaseStockProduct[]> {
     const { buyers = [], providers = [] } = options
 
-    const normalizedFrom = this.normalizeDate(options.periodFrom)
+    const normalizedFrom = normalizeDate(options.periodFrom)
     const periodFrom = format(startOfDay(normalizedFrom), 'dd/MM/yyyy')
 
-    const normalizedTo = this.normalizeDate(options.periodTo)
+    const normalizedTo = normalizeDate(options.periodTo)
     const periodTo = format(endOfDay(normalizedTo), 'dd/MM/yyyy')
 
     const trackedInvoices = await winthor.raw<
@@ -224,10 +221,10 @@ export class WinThorStockNotificationsRepository
   ): Promise<TerminationStockProduct[]> {
     const { buyers = [], providers = [] } = options
 
-    const normalizedFrom = this.normalizeDate(options.periodFrom)
+    const normalizedFrom = normalizeDate(options.periodFrom)
     const periodFrom = format(startOfDay(normalizedFrom), 'dd/MM/yyyy')
 
-    const normalizedTo = this.normalizeDate(options.periodTo)
+    const normalizedTo = normalizeDate(options.periodTo)
     const periodTo = format(endOfDay(normalizedTo), 'dd/MM/yyyy')
 
     const response = await winthor.raw<RawTerminationStockProduct[]>(`

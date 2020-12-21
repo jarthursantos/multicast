@@ -168,8 +168,8 @@ export function createReceiveSchedulesModule(
             'paymentMethod',
             'receiptPerInvoice'
           ),
-          assistant: data.assistant === 'YES',
-          palletized: data.palletized === 'YES',
+          assistant: data.assistant,
+          palletized: data.palletized,
           dischargeValue: totalDischargeValue,
           receiptValue: totalReceiptValue,
           receivedAt: new Date()

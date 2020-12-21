@@ -7,20 +7,15 @@ import styled from 'styled-components'
 
 import { useAxios } from '@shared/axios'
 
-import { InputProps } from '../types'
+import { InputProps } from '../../types'
+import { IProvider } from '../SingleProviderInput'
 import { AsyncSelectInput } from './AsyncSelectInput'
 
-export interface IProvider {
-  code: number
-  name: string
-}
-
-const ProviderInput: React.FC<
+const MultipleProviderInput: React.FC<
   Omit<InputProps, 'inputProps'> & {
-    single?: boolean
     inputProps?: { isDisabled: boolean }
   }
-> = ({ name, label, single, inputProps }) => {
+> = ({ name, label, inputProps }) => {
   const {
     fieldName,
     defaultValue,
@@ -36,16 +31,10 @@ const ProviderInput: React.FC<
   const [api] = useAxios()
 
   useEffect(() => {
-    if (!single) return
-
-    if (!selection && providers.length > 0) {
-      const { code, name } = providers[0]
-
-      console.log({ code, name })
-
-      setSelection({ value: code, label: `${code} - ${name}` })
+    if (defaultValue) {
+      setProviders(defaultValue)
     }
-  }, [single, selection, providers])
+  }, [defaultValue])
 
   useEffect(() => {
     registerField({
@@ -68,7 +57,6 @@ const ProviderInput: React.FC<
         name={name}
         label={label}
         error={error}
-        single={single}
         selection={selection}
         setSelection={setSelection}
         inputProps={inputProps}
@@ -80,10 +68,6 @@ const ProviderInput: React.FC<
           setProviders(curr => {
             if (curr.find(item => item.code === value)) {
               return curr
-            }
-
-            if (single) {
-              return [{ code: value, name }]
             }
 
             return [{ code: value, name }, ...curr]
@@ -109,54 +93,52 @@ const ProviderInput: React.FC<
         }
       />
 
-      {single ||
-        (providers.length !== 0 ? (
-          <Container>
-            {(isExpanded ? providers : providers.slice(0, 3)).map(
-              ({ code, name }) => (
-                <li key={code}>
-                  <span>
-                    {code} - {name}
-                  </span>
+      {providers.length !== 0 ? (
+        <Container>
+          {(isExpanded ? providers : providers.slice(0, 3)).map(
+            ({ code, name }) => (
+              <li key={code}>
+                <span>
+                  {code} - {name}
+                </span>
 
-                  <button
-                    type="button"
-                    disabled={inputProps?.isDisabled}
-                    onClick={() => {
-                      setProviders(curr =>
-                        curr.filter(provider => provider.code !== code)
-                      )
-                    }}
-                  >
-                    <MdClose size={16} />
-                  </button>
-                </li>
-              )
-            )}
+                <button
+                  type="button"
+                  disabled={inputProps?.isDisabled}
+                  onClick={() => {
+                    setProviders(curr =>
+                      curr.filter(provider => provider.code !== code)
+                    )
+                  }}
+                >
+                  <MdClose size={16} />
+                </button>
+              </li>
+            )
+          )}
 
-            {providers.length > 3 && (
-              <ShowButton
-                type="button"
-                onClick={() => setExpanded(curr => !curr)}
-              >
-                {isExpanded
-                  ? 'Mostrar menos'
-                  : `Mostrar mais ${providers.length - 3} fornecedores`}
-              </ShowButton>
-            )}
-          </Container>
-        ) : (
-          <EmptySelection>Nenhum fornecedor selecionado</EmptySelection>
-        ))}
+          {providers.length > 3 && (
+            <ShowButton
+              type="button"
+              onClick={() => setExpanded(curr => !curr)}
+            >
+              {isExpanded
+                ? 'Mostrar menos'
+                : `Mostrar mais ${providers.length - 3} fornecedores`}
+            </ShowButton>
+          )}
+        </Container>
+      ) : (
+        <EmptySelection>Nenhum fornecedor selecionado</EmptySelection>
+      )}
     </div>
   )
 }
 
-export { ProviderInput }
+export { MultipleProviderInput }
 
 const Container = styled.ul`
   margin-top: 8px;
-
   li {
     display: flex;
     flex-direction: row;
@@ -165,11 +147,9 @@ const Container = styled.ul`
     font-size: 14px;
     text-transform: uppercase;
   }
-
   li span {
     flex: 1;
     padding: 4px 8px;
-
     border: 2px solid #ccc;
     border-right: 0;
     border-radius: 4px 0 0 4px;
@@ -177,30 +157,23 @@ const Container = styled.ul`
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   li button {
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: none;
     color: #999;
-
     border: 2px solid #ccc;
     border-radius: 0 4px 4px 0;
-
     height: 29px;
     width: 29px;
-
     transition: all 0.2s ease-in-out;
-
     &:hover,
     &:focus {
       background: #de3b3b;
       border-color: #de3b3b;
       color: #fff;
     }
-
     &:disabled {
       cursor: default;
       background: #f0f0f0;
@@ -208,7 +181,6 @@ const Container = styled.ul`
       color: #999;
     }
   }
-
   li + li,
   li + button {
     margin-top: 4px;
@@ -222,9 +194,7 @@ const ShowButton = styled.button`
   width: 100%;
   padding: 4px 0;
   border-radius: 4px;
-
   transition: all 0.2s ease-in-out;
-
   :hover,
   :focus {
     color: #154fd4;

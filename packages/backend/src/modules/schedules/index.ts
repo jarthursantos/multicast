@@ -1,4 +1,5 @@
 import { createPrismaDischargeTablesModel } from '~/models/dischage-tables/PrismaDischargeTablesModel'
+import { createPrismaFilesModel } from '~/models/files/PrismaFilesModel'
 import { createWinThorInvoiceSituationsModel } from '~/models/invoice-situations/WinThorInvoiceSituationsModel'
 import { createPrismaInvoicesModel } from '~/models/invoices/PrismaInvoicesModel'
 import { createWinThorProvidersModel } from '~/models/providers/WinThorProvidersModel'
@@ -6,6 +7,7 @@ import { createPrismaRescheduleInvocesModel } from '~/models/reschedule-invoices
 import { createPrismaRescheduleSchedulesModel } from '~/models/reschedule/PrismaRescheduleSchedulesModel'
 import { createPrismaScheduleInvoicesModel } from '~/models/schedule-invoices/PrismaScheduleInvoicesModel'
 import { createPrismaSchedulesModel } from '~/models/schedules/PrismaSchedulesModel'
+import { createHBSScheduleReceiptProvider } from '~/providers/schedule-receipt/HBSScheduleReceiptProvider'
 import { createManualScheduleSituationsProvider } from '~/providers/schedule-situations/ManualScheduleSituationsProvider'
 
 import { createCancelSchedulesModule } from './cancel'
@@ -14,6 +16,7 @@ import { createCreateSchedulesModule } from './create'
 import { createSchedulesSchema } from './create/schema'
 import { createDeleteSchedulesModule } from './delete'
 import { createFindAllSchedulesModule } from './find-all'
+import { createScheduleReceiptModule } from './receipt'
 import { createReceiveSchedulesModule } from './receive'
 import { receiveSchedulesSchema } from './receive/schema'
 import { createRescheduleSchedulesModule } from './reschedule'
@@ -48,6 +51,8 @@ const rescheduleSchedulesModel = createPrismaRescheduleSchedulesModel(
   scheduleSitationsProvider,
   rescheduleInvoicesModel
 )
+const filesModel = createPrismaFilesModel()
+const hbsScheduleReceiptProvider = createHBSScheduleReceiptProvider(filesModel)
 
 const createSchedulesModule = createCreateSchedulesModule(
   schedulesModel,
@@ -76,6 +81,10 @@ const deleteSchedulesModule = createDeleteSchedulesModule(
   scheduleInvoicesModel
 )
 const searchSchedulesModule = createSearchSchedulesModule(schedulesModel)
+const scheduleReceiptModule = createScheduleReceiptModule(
+  schedulesModel,
+  hbsScheduleReceiptProvider
+)
 
 export {
   createSchedulesModule,
@@ -90,7 +99,8 @@ export {
   deleteSchedulesModule,
   searchSchedulesModule,
   receiveSchedulesModule,
-  receiveSchedulesSchema
+  receiveSchedulesSchema,
+  scheduleReceiptModule
 }
 
 export * from './find-all/parser'

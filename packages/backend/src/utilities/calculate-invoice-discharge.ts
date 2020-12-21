@@ -3,16 +3,13 @@ import { Size, Charge } from '@prisma/client'
 import { IDischargeTable } from '~/domain/IDischargeTable'
 import { IInvoice } from '~/domain/IInvoice'
 
-export type Assistant = 'YES' | 'NO'
-export type Palletized = 'YES' | 'NO'
-
 export interface ICalculateData {
   invoice: IInvoice
   dischargeTable: IDischargeTable
   chargeType: Charge
   pipeSize: Size
-  assistant: Assistant
-  palletized: Palletized
+  assistant: boolean
+  palletized: boolean
 }
 
 export function calculateInvoiceDischarge(data: ICalculateData) {
@@ -42,14 +39,14 @@ export function calculateInvoiceDischarge(data: ICalculateData) {
       }
 
     case 'BEAT':
-      if (palletized === 'YES') {
-        if (assistant === 'YES') {
+      if (palletized) {
+        if (assistant) {
           return parsedWeight * dischargeTable.beatPalletizedWithAssistant
         } else {
           return parsedWeight * dischargeTable.beatPalletizedWithoutAssistant
         }
       } else {
-        if (assistant === 'YES') {
+        if (assistant) {
           return parsedWeight * dischargeTable.beatNonPalletizedWithAssistant
         } else {
           return parsedWeight * dischargeTable.beatNonPalletizedWithoutAssistant
@@ -57,14 +54,14 @@ export function calculateInvoiceDischarge(data: ICalculateData) {
       }
 
     case 'VOLUME':
-      if (palletized === 'YES') {
-        if (assistant === 'YES') {
+      if (palletized) {
+        if (assistant) {
           return (volume || 0) * dischargeTable.volumePalletizedWithAssistant
         } else {
           return (volume || 0) * dischargeTable.volumePalletizedWithoutAssistant
         }
       } else {
-        if (assistant === 'YES') {
+        if (assistant) {
           return (volume || 0) * dischargeTable.volumeNonPalletizedWithAssistant
         } else {
           return (

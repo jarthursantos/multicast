@@ -1,4 +1,8 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import {
+  FindStockNotificationsRequest,
+  parseStockNotificationsOptions
+} from 'utils/parse-stock-notifications-options'
 
 import { FindStockNotificationsUseCase } from './FindStockNotificationsUseCase'
 
@@ -7,9 +11,13 @@ export class FindStockNotificationsController {
     private findStockNotificationsCase: FindStockNotificationsUseCase
   ) {}
 
-  async handle(req: Request, res: Response) {
+  async handle(req: FindStockNotificationsRequest, res: Response) {
+    const { query } = req
+
     try {
-      const result = await this.findStockNotificationsCase.generate(req.body)
+      const result = await this.findStockNotificationsCase.generate(
+        parseStockNotificationsOptions(query)
+      )
 
       return res.json(result)
     } catch (error) {

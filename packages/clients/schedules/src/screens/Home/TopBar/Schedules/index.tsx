@@ -2,20 +2,20 @@ import React, { useCallback, useContext } from 'react'
 import {
   MdRefresh,
   MdAssignmentLate,
-  MdAssignmentTurnedIn,
-  MdAttachMoney
+  MdAssignmentTurnedIn
+  // MdAttachMoney
 } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 
 import { TabOptions, ActionIconButton } from '@shared/web-components'
-import { Roles } from '@shared/web-pages'
+// import { Roles } from '@shared/web-pages'
 
 import { MdFilter } from '~/components/Icons/Filter'
 import { HomeScreenTabs } from '~/screens/Home/types'
-import { useTypedSelector } from '~/store'
+// import { useTypedSelector } from '~/store'
 import { loadScheduleRequestRequest } from '~/store/modules/schedule-requests/actions'
 import { loadSchedulesRequest } from '~/store/modules/schedules/actions'
-import { openDischargeCostsTableWindow } from '~/windows/discharge-costs-table/actions'
+// import { openDischargeCostsTableWindow } from '~/windows/discharge-costs-table/actions'
 import { openFiltersWindow } from '~/windows/filters/actions'
 import { openCreateScheduleRequestWindow } from '~/windows/schedule-request/create/actions'
 import { openCreateScheduleWindow } from '~/windows/schedule/create/actions'
@@ -27,7 +27,7 @@ const HomeScreenTopBarSchedulesOptions: React.FC = () => {
 
   const { isLoadingData } = useContext(HomeScreenContext)
 
-  const { user } = useTypedSelector(state => state.auth)
+  // const { user } = useTypedSelector(state => state.auth)
 
   const handleRefresh = useCallback(() => {
     dispatch(loadSchedulesRequest())
@@ -67,7 +67,7 @@ const HomeScreenTopBarSchedulesOptions: React.FC = () => {
         label="Filtar Dados"
       />
 
-      {user?.role === Roles.ADMIN && (
+      {/* {user?.role === Roles.ADMIN && (
         <>
           <TabOptions.Content.Separator />
 
@@ -78,7 +78,7 @@ const HomeScreenTopBarSchedulesOptions: React.FC = () => {
             label="Tabela de Custos"
           />
         </>
-      )}
+      )} */}
     </TabOptions.Content>
   )
 }

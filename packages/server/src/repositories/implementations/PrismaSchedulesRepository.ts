@@ -81,11 +81,6 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
     periodStart: Date,
     periodEnd: Date
   ): Promise<Schedule[]> {
-    console.log({
-      startOfDay: startOfDay(periodStart),
-      endOfDay: endOfDay(periodEnd)
-    })
-
     const schedules = await this.prisma.schedules.findMany({
       where: {
         NOT: { receivedAt: null },

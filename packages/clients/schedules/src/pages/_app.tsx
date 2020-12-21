@@ -10,6 +10,7 @@ import '../public/styles/toastify.css'
 
 import React from 'react'
 import { Provider } from 'react-redux'
+import { ToastContainer, Slide } from 'react-toastify'
 
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -50,6 +51,16 @@ export default function (props: AppProps) {
             <AxiosContextProvider baseURL="http://192.168.1.16:3333">
               <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
                 <Component {...pageProps} />
+
+                <ToastContainer
+                  position="bottom-center"
+                  pauseOnFocusLoss={false}
+                  closeButton={false}
+                  autoClose={3000}
+                  transition={Slide}
+                  style={{ marginBottom: -24 }}
+                  newestOnTop
+                />
 
                 <ReduxActionFromMain />
                 <GlobalStyle />

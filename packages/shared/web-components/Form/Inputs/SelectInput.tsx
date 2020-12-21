@@ -14,7 +14,7 @@ import { InputProps } from '../types'
 
 type Props = Pick<InputProps, 'label' | 'name'> & {
   inputProps: SelectProps<OptionTypeBase>
-  onSelectionChange?: Dispatch<SetStateAction<string>>
+  onSelectionChange?: Dispatch<SetStateAction<any>>
 } & React.HTMLAttributes<HTMLDivElement>
 
 const SelectInput: React.FC<Props> = ({

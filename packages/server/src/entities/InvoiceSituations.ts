@@ -1,5 +1,3 @@
-// import { pick } from 'lodash'
-
 export enum InvoiceSituations {
   INVOICE_NON_LAUNCHED = 'INVOICE_NON_LAUNCHED',
   INVOICE_PRE_LAUNCHED = 'INVOICE_PRE_LAUNCHED',
@@ -10,13 +8,3 @@ export enum InvoiceSituations {
   OS_FINISHED = 'OS_FINISHED',
   CANCELED = 'CANCELED'
 }
-
-// export class InvoiceSituations {
-//   public launch: string
-//   public bonus: string
-//   public os: string
-
-//   constructor(props: InvoiceSituations) {
-//     Object.assign(this, pick(props, 'launch', 'bonus', 'os'))
-//   }
-// }

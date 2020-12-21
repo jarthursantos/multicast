@@ -15,6 +15,7 @@ const INITIAL_STATE: SchedulesState = {
   cancelingSchedules: false,
   closingSchedules: false,
   loadingSchedules: false,
+  receivingSchedules: false,
 
   additingScheduleInvoice: false,
   updatingScheduleInvoice: false,
@@ -188,6 +189,36 @@ export default function schedules(
 
         remote?.dialog.showErrorBox(
           'Error ao cancelar agendamento',
+          String(action.payload.message)
+        )
+
+        break
+      }
+      // #endregion
+
+      // #region Receive
+      case Types.RECEIVE_SCHEDULES_SUCCESS: {
+        const { schedule, receivedSchedule } = action.payload
+
+        draft.schedules = draft.schedules.filter(({ id }) => id !== schedule.id)
+
+        draft.schedules.push(receivedSchedule)
+        draft.receivingSchedules = false
+
+        toast.success('Agendamento recebido')
+
+        break
+      }
+      case Types.RECEIVE_SCHEDULES_REQUEST: {
+        draft.receivingSchedules = true
+
+        break
+      }
+      case Types.RECEIVE_SCHEDULES_FAILURE: {
+        draft.receivingSchedules = false
+
+        remote?.dialog.showErrorBox(
+          'Error ao receber agendamento',
           String(action.payload.message)
         )
 
@@ -430,7 +461,9 @@ export default function schedules(
             current => current.id === invoice.id
           )
 
-          schedule.invoices[invoiceIndex] = invoice
+          if (invoiceIndex !== -1) {
+            schedule.invoices[invoiceIndex] = invoice
+          }
         }
 
         draft.markingScheduleInvoiceAsReceived = false
@@ -469,7 +502,9 @@ export default function schedules(
             current => current.id === invoice.id
           )
 
-          schedule.invoices[invoiceIndex] = invoice
+          if (invoiceIndex !== -1) {
+            schedule.invoices[invoiceIndex] = invoice
+          }
         }
 
         draft.markingScheduleInvoiceAsNonReceived = false

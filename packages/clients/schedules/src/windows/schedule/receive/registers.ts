@@ -38,7 +38,7 @@ export function registerOpenReceiveScheduleWindow() {
 
     instance.removeMenu()
     instance.loadURL(resolvePath('schedule/receive'))
-    instance.webContents.openDevTools()
+    // instance.webContents.openDevTools()
 
     _instances[id] = instance
   })

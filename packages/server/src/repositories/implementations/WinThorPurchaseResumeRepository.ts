@@ -1,4 +1,4 @@
-import { parseISO, getDay } from 'date-fns'
+import { getDay } from 'date-fns'
 import {
   BuyerPurchaseResume,
   ProviderPurchaseResume,
@@ -11,7 +11,11 @@ import {
   IPurchaseResumeRepository,
   Options
 } from 'repositories/IPurchaseResumeRepository'
-import { formatDate, generateDateIntervals } from 'utils/date-intervals'
+import {
+  formatDate,
+  generateDateIntervals,
+  normalizeDate
+} from 'utils/date-intervals'
 
 interface RawBuyerPurchaseResume
   extends Omit<BuyerPurchaseResume, 'buyer' | 'representativity' | 'period'> {
@@ -44,10 +48,6 @@ interface RawPurchaseResumeInvoice
   providerFantasy: string
   providerCNPJ: string
   providerPrincipalCode: number
-}
-
-function normalizeDate(date: string | Date): Date {
-  return typeof date === 'string' ? parseISO(date) : date
 }
 
 const days = [

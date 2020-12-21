@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { remote } from 'electron'
 import { useFormValidatorRef } from 'hookable-unform'
 import { ObjectSchema } from 'yup'
 
+import { useWatchAction } from '@shared/action-watcher'
 import {
   SubmitButton,
   TextInput,
@@ -13,8 +14,16 @@ import {
 } from '@shared/web-components'
 import { formatPriceWithoutSymbol } from '@shared/web-components/DataGrid/Body/Row/Cell/Contabil/format'
 
-import { Charge, Size } from '~/store/modules/schedules/types'
+import { useTypedSelector } from '~/store'
+import { receiveScheduleRequest } from '~/store/modules/schedules/actions'
+import {
+  Charge,
+  IReceiveScheduleData,
+  Size,
+  Types
+} from '~/store/modules/schedules/types'
 import { calculateInvoiceDischarge } from '~/utils/calculate-invoice-discharge'
+import { closeWindow } from '~/utils/close-window'
 
 import { Receipts } from './Receipts'
 import { perScheduleSchema, perInvoiceSchema } from './schema'
@@ -30,24 +39,28 @@ import { IReceiveScheduleScreenProps } from './types'
 const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
   schedule
 }) => {
+  const dispatch = useDispatch()
+
   const [schema, setSchema] = useState<ObjectSchema>(perScheduleSchema)
   const [formRef, validateForm] = useFormValidatorRef(schema)
 
+  const { receivingSchedules } = useTypedSelector(state => state.schedules)
+
   const [chargeType, setChargeType] = useState<Charge>('BEAT')
   const [pipeSize, setPipeSize] = useState<Size>('SMALL')
-  const [assistant, setAssistent] = useState<boolean>(true)
+  const [assistant, setAssistant] = useState<boolean>(true)
   const [palletized, setPalletized] = useState<boolean>(true)
   const [receiptPerInvoice, setReceiptPerInvoice] = useState(false)
 
   const handleSubmit = useCallback(
-    async (data: any) => {
+    async (data: IReceiveScheduleData) => {
       const { success } = await validateForm()
 
       if (!success) return
 
-      remote.dialog.showErrorBox('', JSON.stringify(data, null, 4))
+      dispatch(receiveScheduleRequest(schedule, { ...data, receiptPerInvoice }))
     },
-    [validateForm]
+    [dispatch, schedule, receiptPerInvoice, validateForm]
   )
 
   useEffect(() => {
@@ -106,6 +119,8 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
     setSchema(receiptPerInvoice ? perInvoiceSchema : perScheduleSchema)
   }, [receiptPerInvoice])
 
+  useWatchAction(closeWindow, Types.RECEIVE_SCHEDULES_SUCCESS)
+
   return (
     <Wrapper
       ref={formRef}
@@ -114,8 +129,8 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
         ...schedule,
         vehicleSize: 'SMALL',
         chargeType: 'BEAT',
-        paymentType: 'MONEY',
-        assistent: true,
+        paymentMethod: 'MONEY',
+        assistant: true,
         palletized: true,
         pipeSize: 'SMALL'
       }}
@@ -139,7 +154,7 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
             }}
           />
           <SelectInput
-            name="paymentType"
+            name="paymentMethod"
             label="Forma de Pagamento"
             inputProps={{
               options: [
@@ -191,9 +206,9 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
               }}
             />
             <SelectInput
-              name="assistent"
+              name="assistant"
               label="Assistente"
-              onSelectionChange={setAssistent}
+              onSelectionChange={setAssistant}
               inputProps={{
                 options: [
                   { label: 'Sim', value: true },
@@ -212,7 +227,7 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
           />
 
           {receiptPerInvoice || (
-            <NumberInput name="receiptValue" label="Valor do Recibo" />
+            <NumberInput name="receiptValue" label="Valor do Recibo" double />
           )}
         </Inline>
       </Container>
@@ -228,7 +243,7 @@ const ReceiveScheduleScreen: React.VFC<IReceiveScheduleScreenProps> = ({
           onValueChange={setReceiptPerInvoice}
         />
 
-        <SubmitButton label="Confirmar Recibos" />
+        <SubmitButton label="Confirmar Recibos" loading={receivingSchedules} />
       </ActionsWrapper>
     </Wrapper>
   )

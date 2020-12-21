@@ -15,5 +15,5 @@ export const updatePermissionsSchema = Yup.object().shape({
   accessAccompaniments: Yup.boolean().required(),
   manageAccompaniments: Yup.boolean().required(),
   accessRepresentatives: Yup.boolean().required(),
-  viewValues: Yup.boolean().required(),
+  viewValues: Yup.boolean().required()
 })

@@ -2,7 +2,7 @@
   "name": "@clients/schedules",
   "private": true,
   "description": "My application description",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
   "main": "app/background.js",
   "scripts": {

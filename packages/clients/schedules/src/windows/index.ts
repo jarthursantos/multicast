@@ -9,6 +9,7 @@ import { registerOpenFiltersWindow } from './filters/registers'
 import { registerOpenCreateInvoiceWindow } from './invoice/create/registers'
 import { registerOpenInvoiceEditModeWindow } from './invoice/edit/registers'
 import { registerOpenInvoiceReadonlyModeWindow } from './invoice/readonly/registers'
+import { registerOpenReceiptWindow } from './receipt/registers'
 import { registerOpenCreateScheduleRequestWindow } from './schedule-request/create/registers'
 import { registerOpenEditScheduleRequestWindow } from './schedule-request/edit/registers'
 import { registerOpenCreateScheduleWindow } from './schedule/create/registers'
@@ -16,7 +17,10 @@ import {
   registerOpenEditClosedScheduleWindow,
   registerOpenEditOpenedScheduleWindow
 } from './schedule/edit/registers'
+import { registerOpenNonReceivedScheduleWindow } from './schedule/non-received/registers'
+import { registerOpenReadonlyScheduleWindow } from './schedule/readonly/registers'
 import { registerOpenReceiveScheduleWindow } from './schedule/receive/registers'
+import { registerOpenStoppedScheduleWindow } from './schedule/stopped/registers'
 
 export function resolvePath(path: string) {
   if (isDevelopment) {
@@ -70,8 +74,13 @@ export async function registerWindows() {
   registerOpenEditOpenedScheduleWindow()
   registerOpenEditClosedScheduleWindow()
   registerOpenReceiveScheduleWindow()
+  registerOpenStoppedScheduleWindow()
+  registerOpenReadonlyScheduleWindow()
+  registerOpenNonReceivedScheduleWindow()
 
   registerOpenCreateInvoiceWindow()
   registerOpenInvoiceReadonlyModeWindow()
   registerOpenInvoiceEditModeWindow()
+
+  registerOpenReceiptWindow()
 }

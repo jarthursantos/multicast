@@ -60,7 +60,10 @@ import {
   Inline,
   RescheduleWrapper
 } from './styles'
-import { IEditClosedScheduleScreenProps } from './types'
+import {
+  IEditClosedScheduleScreenProps,
+  IChangeDivergenceActions
+} from './types'
 
 const EditClosedScheduleScreen: React.VFC<IEditClosedScheduleScreenProps> = ({
   schedule
@@ -115,11 +118,7 @@ const EditClosedScheduleScreen: React.VFC<IEditClosedScheduleScreenProps> = ({
     motiveDialogRef.current?.open()
   }, [motiveDialogRef])
 
-  useEffect(() => {
-    if (!schedule) return
-
-    setInvoices(schedule.invoices || [])
-  }, [schedule])
+  useEffect(() => schedule && setInvoices(schedule.invoices || []), [schedule])
 
   useEffect(() => {
     scheduleRef.current = schedule
@@ -128,7 +127,8 @@ const EditClosedScheduleScreen: React.VFC<IEditClosedScheduleScreenProps> = ({
   useWatchAction(closeWindow, [
     Types.UPDATE_SCHEDULES_SUCCESS,
     Types.CLOSE_SCHEDULES_SUCCESS,
-    Types.CANCEL_SCHEDULES_SUCCESS
+    Types.CANCEL_SCHEDULES_SUCCESS,
+    Types.RECEIVE_SCHEDULES_SUCCESS
   ])
 
   useWatchAction<IAddScheduleInvoiceSuccessAction>(
@@ -181,6 +181,23 @@ const EditClosedScheduleScreen: React.VFC<IEditClosedScheduleScreenProps> = ({
     },
     [Types.DELETE_SCHEDULE_INVOICES_SUCCESS],
     [schedule]
+  )
+
+  useWatchAction<IChangeDivergenceActions>(
+    ({ payload }) => {
+      const { invoice } = payload
+
+      setInvoices(currentInvoices =>
+        currentInvoices.map(currentInvoice =>
+          currentInvoice.id === invoice.id ? invoice : currentInvoice
+        )
+      )
+    },
+    [
+      Types.MARK_AS_RECEIVED_SCHEDULE_INVOICE_SUCCESS,
+      Types.MARK_AS_NON_RECEIVED_SCHEDULE_INVOICE_SUCCESS
+    ],
+    [invoices]
   )
 
   return (
@@ -278,7 +295,7 @@ const EditClosedScheduleScreen: React.VFC<IEditClosedScheduleScreenProps> = ({
                   (invoice.divergence &&
                     invoice.divergence !== InvoiceDivergence.ADDED)
                 ) {
-                  openInvoiceReadonlyModeWindow(invoice)
+                  openInvoiceReadonlyModeWindow(scheduleRef.current, invoice)
                 } else {
                   openInvoiceEditModeWindow(scheduleRef.current, invoice)
                 }

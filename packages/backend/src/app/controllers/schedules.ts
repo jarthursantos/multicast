@@ -1,11 +1,19 @@
 import { Request, Response } from 'express'
 
 import {
+  scheduleCostsReportModule,
+  parseScheduleCostReportOptions,
+  IScheduleCostReportRequest
+} from '~/modules/schedule-costs'
+import {
   createScheduleInvoicesModule,
   updateScheduleInvoicesModule,
   deleteScheduleInvoicesModule,
   cancelScheduleInvoicesModule,
-  moveScheduleInvoicesModule
+  moveScheduleInvoicesModule,
+  markScheduleInvoiceAsNonReceived,
+  markScheduleInvoiceAsReceived,
+  scheduleInvoiceReceiptModule
 } from '~/modules/schedule-invoices'
 import {
   createSchedulesModule,
@@ -20,8 +28,11 @@ import {
   searchSchedulesModule,
   ISearchSchedulesRequest,
   parseSearchSchedulesOptions,
-  receiveSchedulesModule
+  receiveSchedulesModule,
+  scheduleReceiptModule
 } from '~/modules/schedules'
+
+// #region Schedules
 
 export async function handleFindAllSchedules(
   req: IFindAllSchedulesRequest,
@@ -85,6 +96,51 @@ export async function handleDeleteSchedule(req: Request, res: Response) {
   res.json(result)
 }
 
+export async function handleSearchSchedules(
+  req: ISearchSchedulesRequest,
+  res: Response
+) {
+  const result = await searchSchedulesModule.execute(
+    parseSearchSchedulesOptions(req.query)
+  )
+
+  res.json(result)
+}
+
+export async function handleReceiveSchedules(req: Request, res: Response) {
+  const { id } = req.params
+
+  const result = await receiveSchedulesModule.execute(id, req.body)
+
+  res.json(result)
+}
+
+export async function handleGenerateScheduleCostsReport(
+  req: IScheduleCostReportRequest,
+  res: Response
+) {
+  const result = await scheduleCostsReportModule.execute(
+    parseScheduleCostReportOptions(req.query)
+  )
+
+  res.json(result)
+}
+
+export async function handleGenerateScheduleReceipt(
+  req: Request,
+  res: Response
+) {
+  const { id } = req.params
+
+  const result = await scheduleReceiptModule.execute(id)
+
+  res.json(result)
+}
+
+// #endregion
+
+// #region Invoices
+
 export async function handleCreateScheduleInvoice(req: Request, res: Response) {
   const { auth, body } = req
   const { id } = req.params
@@ -136,21 +192,37 @@ export async function handleMoveScheduleInvoice(req: Request, res: Response) {
   res.json(result)
 }
 
-export async function handleSearchSchedules(
-  req: ISearchSchedulesRequest,
+export async function handleMarkScheduleInvoiceAsNonReceived(
+  req: Request,
   res: Response
 ) {
-  const result = await searchSchedulesModule.execute(
-    parseSearchSchedulesOptions(req.query)
-  )
+  const { scheduleId, id } = req.params
+
+  const result = await markScheduleInvoiceAsNonReceived.execute(scheduleId, id)
 
   res.json(result)
 }
 
-export async function handleReceiveSchedules(req: Request, res: Response) {
-  const { id } = req.params
+export async function handleMarkScheduleInvoiceAsReceived(
+  req: Request,
+  res: Response
+) {
+  const { scheduleId, id } = req.params
 
-  const result = await receiveSchedulesModule.execute(id, req.body)
+  const result = await markScheduleInvoiceAsReceived.execute(scheduleId, id)
 
   res.json(result)
 }
+
+export async function handleGenerateScheduleInvoiceReceipt(
+  req: Request,
+  res: Response
+) {
+  const { scheduleId, id } = req.params
+
+  const result = await scheduleInvoiceReceiptModule.execute(scheduleId, id)
+
+  res.json(result)
+}
+
+// #endregion

@@ -52,7 +52,11 @@ import {
   IMarkScheduleInvoiceAsNonReceivedSuccessAction,
   IMarkScheduleInvoiceAsReceivedFailureAction,
   IMarkScheduleInvoiceAsReceivedRequestAction,
-  IMarkScheduleInvoiceAsReceivedSuccessAction
+  IMarkScheduleInvoiceAsReceivedSuccessAction,
+  IReceiveScheduleRequestAction,
+  IReceiveScheduleFailureAction,
+  IReceiveScheduleSuccessAction,
+  IReceiveScheduleData
 } from './types'
 
 // #region Filters
@@ -233,6 +237,40 @@ export function cancelScheduleFailure(
 ): ICancelScheduleFailureAction {
   return {
     type: Types.CANCEL_SCHEDULES_FAILURE,
+    payload: { message }
+  }
+}
+
+// #endregion
+
+// #region Receive
+
+export function receiveScheduleRequest(
+  schedule: ISchedule,
+  data: IReceiveScheduleData
+): IReceiveScheduleRequestAction {
+  return {
+    type: Types.RECEIVE_SCHEDULES_REQUEST,
+    payload: { schedule, data }
+  }
+}
+
+export function receiveScheduleSuccess(
+  schedule: ISchedule,
+  receivedSchedule: ISchedule
+): IReceiveScheduleSuccessAction {
+  return {
+    propagate: true,
+    type: Types.RECEIVE_SCHEDULES_SUCCESS,
+    payload: { schedule, receivedSchedule }
+  }
+}
+
+export function receiveScheduleFailure(
+  message: string
+): IReceiveScheduleFailureAction {
+  return {
+    type: Types.RECEIVE_SCHEDULES_FAILURE,
     payload: { message }
   }
 }

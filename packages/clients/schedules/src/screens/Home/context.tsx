@@ -4,7 +4,11 @@ import { isSameDay } from 'date-fns'
 import { cloneDeep } from 'lodash'
 
 import { useTypedSelector } from '~/store'
-import { IInvoice, ISchedule } from '~/store/modules/schedules/types'
+import {
+  IInvoice,
+  ISchedule,
+  ScheduleSituations
+} from '~/store/modules/schedules/types'
 import { normalizeDate } from '~/utils/normalize'
 
 import { IDayWithSchedule } from './Scredules/DatePicker'
@@ -119,6 +123,24 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
     )
   }, [filteredSchedules, selectedDate])
 
+  const pendingProccess = useMemo(() => {
+    return cloneDeep(
+      schedules.filter(schedule => {
+        if (
+          schedule.situation === ScheduleSituations.FINISHED ||
+          schedule.situation === ScheduleSituations.CANCELED ||
+          schedule.situation === ScheduleSituations.RESCHEDULED ||
+          schedule.situation === ScheduleSituations.OPENED ||
+          schedule.situation === ScheduleSituations.SCHEDULED
+        ) {
+          return false
+        }
+
+        return true
+      })
+    )
+  }, [schedules])
+
   const daysWithSchedules = useMemo((): IDayWithSchedule[] => {
     const result: IDayWithSchedule[] = []
 
@@ -190,7 +212,8 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
         schedulesOfDay,
         selectedSchedule,
         setSelectedSchedule,
-        invoicesOfSelectedSchedule
+        invoicesOfSelectedSchedule,
+        pendingProccess
       }}
     >
       {children}

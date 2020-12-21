@@ -6,6 +6,7 @@ import { IDayWithSchedule } from './Scredules/DatePicker'
 export interface HomeScreenContextHandles {
   selectedDate: Date
   setSelectedDate(date: Date): void
+
   daysWithSchedules: IDayWithSchedule[]
 
   isLoadingData: boolean
@@ -19,6 +20,8 @@ export interface HomeScreenContextHandles {
 
   selectedSchedule: ISchedule | undefined
   setSelectedSchedule(schedule: ISchedule): void
+
+  pendingProccess: ISchedule[]
 }
 
 export enum HomeScreenTabs {

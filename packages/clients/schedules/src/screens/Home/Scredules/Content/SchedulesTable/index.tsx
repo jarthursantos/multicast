@@ -14,8 +14,11 @@ import {
   openEditClosedScheduleWindow,
   openEditOpenedScheduleWindow
 } from '~/windows/schedule/edit/actions'
+import { openNonReceivedScheduleWindow } from '~/windows/schedule/non-received/actions'
+import { openReadonlyScheduleWindow } from '~/windows/schedule/readonly/actions'
+import { openStoppedScheduleWindow } from '~/windows/schedule/stopped/actions'
 
-export const invoiceSituationFormatter: Formatter = cell => {
+export const scheduleSituationFormatter: Formatter = cell => {
   const situation: ScheduleSituations = cell.getValue()
 
   switch (situation) {
@@ -51,7 +54,7 @@ const SchedulesTable: React.VFC = () => {
         height: '100%',
         selectable: 1,
         rowClick: (_, row) => {
-          row.select()
+          row?.select()
         },
         rowDblClick: (_, row) => {
           const schedule: ISchedule = row.getData()
@@ -67,22 +70,18 @@ const SchedulesTable: React.VFC = () => {
             case ScheduleSituations.RECEIVING:
             case ScheduleSituations.RECEIVED:
             case ScheduleSituations.FINISHED:
-              // TODO waitingDialogRef.current?.open(schedule.id)
-              break
+              return openReadonlyScheduleWindow(schedule)
 
             case ScheduleSituations.CANCELED:
             case ScheduleSituations.RESCHEDULED:
-              // TODO nonFinishedDialogRef.current?.open(schedule.id)
-              break
+              return openStoppedScheduleWindow(schedule)
 
             case ScheduleSituations.NON_RECEIVED:
-              // TODO nonReceivedDialogRef.current?.open(schedule.id)
-              break
+              return openNonReceivedScheduleWindow(schedule)
           }
         },
-        rowSelectionChanged: ([schedule]: ISchedule[]) => {
-          setSelectedSchedule(schedule)
-        },
+        rowSelectionChanged: ([schedule]: ISchedule[]) =>
+          setSelectedSchedule(schedule),
         rowFormatter: row => {
           const { situation }: ISchedule = row.getData()
 
@@ -107,7 +106,7 @@ const SchedulesTable: React.VFC = () => {
             field: 'situation',
             bottomCalc: 'count',
             hozAlign: 'center',
-            formatter: invoiceSituationFormatter
+            formatter: scheduleSituationFormatter
           },
           {
             title: 'Peso Total',

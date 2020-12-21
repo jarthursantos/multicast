@@ -27,8 +27,6 @@ class Mail {
   }
 
   async sendMail(message: IMessage): Promise<void> {
-    console.log({ message })
-
     await this.transporter.sendMail({
       to: {
         name: message.to.name,

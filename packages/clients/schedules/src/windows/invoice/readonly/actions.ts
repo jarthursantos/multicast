@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { store } from '~/store'
-import { IInvoice } from '~/store/modules/schedules/types'
+import { IInvoice, ISchedule } from '~/store/modules/schedules/types'
 import { RootState } from '~/store/state'
 
 import {
@@ -11,23 +11,33 @@ import {
   OPEN_INVOICE_READONLY_MODE_PAYLOAD
 } from './types'
 
-export function openInvoiceReadonlyModeWindow(invoice: IInvoice) {
+export function openInvoiceReadonlyModeWindow(
+  schedule: ISchedule,
+  invoice: IInvoice
+) {
   const state = store.getState() as RootState
 
-  ipcRenderer.send(OPEN_INVOICE_READONLY_MODE, invoice, state.auth.token)
+  ipcRenderer.send(
+    OPEN_INVOICE_READONLY_MODE,
+    schedule,
+    invoice,
+    state.auth.token
+  )
 }
 
-export function useInvoiceReadonlyModePayload(): [IInvoice, string] {
+export function useInvoiceReadonlyModePayload(): [ISchedule, IInvoice, string] {
   const [token, setToken] = useState<string>()
+  const [schedule, setSchedule] = useState<ISchedule>()
   const [invoice, setInvoice] = useState<IInvoice>()
 
   ipcRenderer.once(
     OPEN_INVOICE_READONLY_MODE_PAYLOAD,
-    (_, invoice: IInvoice, token: string) => {
+    (_, schedule: ISchedule, invoice: IInvoice, token: string) => {
       setToken(token)
+      setSchedule(schedule)
       setInvoice(invoice)
     }
   )
 
-  return [invoice, token]
+  return [schedule, invoice, token]
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useWatchAction } from '@shared/action-watcher'
@@ -27,8 +27,6 @@ import { IFilterScreenProps } from './types'
 
 const FilterScreen: React.VFC<IFilterScreenProps> = ({ filters }) => {
   const dispatch = useDispatch()
-
-  useEffect(() => console.log({ filters }), [filters])
 
   const handleSubmit = useCallback(
     (data: IScheduleFilters) => dispatch(applyScheduleFilters(data)),

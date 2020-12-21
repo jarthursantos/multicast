@@ -1,6 +1,6 @@
 export interface FindPurchaseResumesQueryOptions {
-  buyers?: string | string[]
-  providers?: string | string[]
+  buyers?: string
+  providers?: string
   situation: 'all' | 'normal' | 'bonification' | 'importation'
   periodFrom: string
   periodTo: string
@@ -45,21 +45,13 @@ export function parsePurchaseResumeOptions(
   let buyers: string[] = []
 
   if (query.buyers) {
-    if (typeof query.buyers === 'string') {
-      buyers = [query.buyers]
-    } else {
-      buyers = query.buyers
-    }
+    buyers = query.buyers.split(',')
   }
 
   let providers: string[] = []
 
   if (query.providers) {
-    if (typeof query.providers === 'string') {
-      providers = [query.providers]
-    } else {
-      providers = query.providers
-    }
+    providers = query.providers.split(',')
   }
 
   return {

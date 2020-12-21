@@ -5,9 +5,11 @@ import { FindProvidersUseCase } from './FindProvidersUseCase'
 export class FindProvidersController {
   constructor(private findProvidersCase: FindProvidersUseCase) {}
 
-  async handle(req: Request, res: Response) {
+  async handle(req: Request<{}, {}, {}, { query?: string }>, res: Response) {
+    const { query } = req.query
+
     try {
-      const providers = await this.findProvidersCase.execute()
+      const providers = await this.findProvidersCase.execute(query)
 
       return res.json(providers)
     } catch (err) {

@@ -2,6 +2,7 @@ import React from 'react'
 
 import Head from 'next/head'
 
+import { useCloseWindow } from '~/hooks/use-close-window'
 import { useSetupAuth } from '~/hooks/use-setup-auth'
 import { FilterScreen } from '~/screens/Filter'
 import { useFiltersPayload } from '~/windows/filters/actions'
@@ -10,6 +11,7 @@ const Filters = () => {
   const [filters, token] = useFiltersPayload()
 
   useSetupAuth(token)
+  useCloseWindow()
 
   return (
     <React.Fragment>
@@ -17,7 +19,9 @@ const Filters = () => {
         <title>Filtros</title>
       </Head>
 
-      <FilterScreen filters={filters || {}} />
+      <FilterScreen
+        filters={{ ...filters, invoiceNumber: filters?.invoiceNumber || 0 }}
+      />
     </React.Fragment>
   )
 }

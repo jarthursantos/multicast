@@ -33,10 +33,13 @@ const AuthPage: React.FC<AuthProps> = props => {
   const formRef = useRef<FormHandles>(null)
   const validateForm = useFormValidator(formRef, authSchema)
   const [loading, setLoading] = useState(false)
+  const [submitHandled, setSubmitHandled] = useState(false)
 
   const handleSubmit = useCallback(
     async (authCredentials: Credentials) => {
       try {
+        setSubmitHandled(true)
+
         const { success } = await validateForm()
 
         if (success) {
@@ -56,6 +59,8 @@ const AuthPage: React.FC<AuthProps> = props => {
         const message = extractErrorMessage(error)
 
         toast.error(message)
+
+        setSubmitHandled(false)
       } finally {
         setLoading(false)
       }
@@ -68,12 +73,17 @@ const AuthPage: React.FC<AuthProps> = props => {
   }, [])
 
   useEffect(() => {
+    if (!credentials || submitHandled) {
+      return
+    }
+
     if (
       credentials?.keepConnected &&
       credentials?.email &&
       credentials?.password
     ) {
       formRef.current?.submitForm()
+      setSubmitHandled(true)
     }
   }, [credentials, formRef])
 

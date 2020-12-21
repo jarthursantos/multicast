@@ -155,12 +155,12 @@ const IconWrapper = styled.button.attrs({
   background: none;
   border: none;
   border-radius: 4px;
-  color: #666;
+  color: #999;
   width: 36px;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: #333;
+    color: #666;
   }
 `
 

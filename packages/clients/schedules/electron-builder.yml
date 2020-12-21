@@ -1,5 +1,5 @@
-appId: br.com.dantasdistribuidora.schedules-next
-productName: Agendamentos (Desenvolvimento)
+appId: br.com.dantasdistribuidora.schedules
+productName: Agendamentos
 copyright: Copyright © 2020 Dantas Distribuidora
 electronVersion: 10.1.1
 directories:

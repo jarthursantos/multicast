@@ -87,7 +87,7 @@ const InvoicesTable: React.VFC = () => {
             (invoice.divergence &&
               invoice.divergence !== InvoiceDivergence.ADDED)
           ) {
-            openInvoiceReadonlyModeWindow(invoice)
+            openInvoiceReadonlyModeWindow(schedule.current, invoice)
           } else {
             openInvoiceEditModeWindow(schedule.current, invoice)
           }

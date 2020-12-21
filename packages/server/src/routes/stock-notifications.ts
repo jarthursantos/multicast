@@ -1,16 +1,12 @@
-import { Request, Response, Router } from 'express'
-import { validateBody } from 'middlewares/validate-body'
-import {
-  findStockNotificationsController,
-  findStockNotificationsSchema
-} from 'use-cases/FindStockNotifications'
+import { Response, Router } from 'express'
+import { findStockNotificationsController } from 'use-cases/FindStockNotifications'
+import { FindStockNotificationsRequest } from 'utils/parse-stock-notifications-options'
 
 const router = Router()
 
-router.post(
+router.get(
   '/stockNotifications',
-  validateBody(findStockNotificationsSchema),
-  (req: Request, res: Response) => {
+  (req: FindStockNotificationsRequest, res: Response) => {
     findStockNotificationsController.handle(req, res)
   }
 )

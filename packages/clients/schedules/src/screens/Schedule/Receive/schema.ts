@@ -85,7 +85,7 @@ export const perInvoiceSchema = Yup.object().shape({
             'divergence',
             (divergence: string, receiptValue: Yup.NumberSchema) => {
               return divergence !== 'NOT_RECEIVED'
-                ? receiptValue.required()
+                ? receiptValue.required('!')
                 : receiptValue
             }
           )

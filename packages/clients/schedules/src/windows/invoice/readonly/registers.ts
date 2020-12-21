@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain } from 'electron'
 
-import { IInvoice } from '~/store/modules/schedules/types'
+import { IInvoice, ISchedule } from '~/store/modules/schedules/types'
 import { resolvePath } from '~/windows'
 
 import {
@@ -13,7 +13,7 @@ export function registerOpenInvoiceReadonlyModeWindow() {
 
   ipcMain.on(
     OPEN_INVOICE_READONLY_MODE,
-    (_, invoice: IInvoice, token: string) => {
+    (_, schedule: ISchedule, invoice: IInvoice, token: string) => {
       const { id } = invoice
 
       if (_instances[id]) {
@@ -40,6 +40,7 @@ export function registerOpenInvoiceReadonlyModeWindow() {
       instance.webContents.once('did-finish-load', () => {
         instance.webContents.send(
           OPEN_INVOICE_READONLY_MODE_PAYLOAD,
+          schedule,
           invoice,
           token
         )

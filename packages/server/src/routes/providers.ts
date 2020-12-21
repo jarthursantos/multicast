@@ -4,9 +4,12 @@ import { findProvidersController } from 'use-cases/FindProviders'
 
 const router = Router()
 
-router.get('/providers', (req: Request, res: Response) => {
-  findProvidersController.handle(req, res)
-})
+router.get(
+  '/providers',
+  (req: Request<{}, {}, {}, { query?: string }>, res: Response) => {
+    findProvidersController.handle(req, res)
+  }
+)
 
 router.get('/providers/:id', (req: Request, res: Response) => {
   findProviderByIdController.handle(req, res)

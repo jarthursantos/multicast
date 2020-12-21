@@ -1,7 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { FormHandles } from '@unform/core'
+import { remote } from 'electron'
 
+import { extractErrorMessage, useAxios } from '@shared/axios'
 import {
   Button,
   SingleProviderInput,
@@ -12,7 +14,8 @@ import {
 } from '@shared/web-components'
 
 import { KeyField } from '~/components/KeyField'
-import { InvoiceDivergence } from '~/store/modules/schedules/types'
+import { IFile, InvoiceDivergence } from '~/store/modules/schedules/types'
+import { openReceiptWindow } from '~/windows/receipt/actions'
 
 import { InvoiceAttachments } from '../Attachments'
 import {
@@ -26,9 +29,31 @@ import {
 import { IReadonlyInvoiceScreenProps } from './types'
 
 const ReadonlyInvoiceScreen: React.VFC<IReadonlyInvoiceScreenProps> = ({
+  schedule,
   invoice
 }) => {
   const formRef = useRef<FormHandles>(null)
+
+  const [api] = useAxios()
+  const [isGeneratingReceipt, setGeneratingReceipt] = useState<boolean>(false)
+
+  const handleGenerateReceipt = useCallback(async () => {
+    try {
+      setGeneratingReceipt(true)
+
+      const { data } = await api.get<IFile>(
+        `/schedules/${schedule.id}/invoices/${invoice.id}/receipt`
+      )
+
+      openReceiptWindow(data.filename, data.url)
+    } catch (error) {
+      const message = extractErrorMessage(error)
+
+      remote?.dialog.showErrorBox('Erro ao gerar recibo', String(message))
+    } finally {
+      setGeneratingReceipt(false)
+    }
+  }, [api, schedule, invoice])
 
   return (
     <Wrapper>
@@ -125,6 +150,8 @@ const ReadonlyInvoiceScreen: React.VFC<IReadonlyInvoiceScreenProps> = ({
           <Button
             secondary
             label="Gerar Recibo"
+            onClick={handleGenerateReceipt}
+            loading={isGeneratingReceipt}
             disabled={
               Boolean(invoice?.canceledAt) ||
               Boolean(invoice?.divergence === InvoiceDivergence.NOT_RECEIVED) ||
