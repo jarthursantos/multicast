@@ -64,6 +64,7 @@ export function createWinThorProvidersModel(): IProvidersModel {
     return `
       AND (
         TO_CHAR(PCFORNEC.CODFORNEC) LIKE '${query.toUpperCase()}' OR
+        PCFORNEC.CGC LIKE '%${query.toUpperCase()}%' OR
         PCFORNEC.FORNECEDOR LIKE '%${query.toUpperCase()}%' OR
         PCFORNEC.FANTASIA LIKE '%${query.toUpperCase()}%'
       )`

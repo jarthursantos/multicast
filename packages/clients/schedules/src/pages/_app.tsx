@@ -48,7 +48,7 @@ export default function (props: AppProps) {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <StoreContextProvider>
-            <AxiosContextProvider baseURL="http://192.168.1.16:3333">
+            <AxiosContextProvider baseURL="http://192.168.1.2:3334">
               <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
                 <Component {...pageProps} />
 
