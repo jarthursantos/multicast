@@ -40,7 +40,6 @@ export const perScheduleSchema = Yup.object().shape({
   receiptValue: Yup.number()
     .transform(value => value || undefined)
     .required('Obrigatório')
-    .min(0)
 })
 
 export const perInvoiceSchema = Yup.object().shape({

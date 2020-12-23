@@ -20,8 +20,6 @@ export function registerOpenDischargeTableCostsWindow() {
       resizable: false,
       height: 500,
       width: 450,
-      parent: BrowserWindow.getFocusedWindow(),
-      modal: true,
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true

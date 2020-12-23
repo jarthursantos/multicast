@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { Formatter } from 'tabulator-tables'
 
@@ -11,11 +11,14 @@ import {
 import { HomeScreenContext } from '~/screens/Home/context'
 import {
   Divergence,
+  IInvoice,
   InvoiceDivergence,
   InvoiceSituations,
   ISchedule,
   ScheduleSituations
 } from '~/store/modules/schedules/types'
+import { openInvoiceEditModeWindow } from '~/windows/invoice/edit/actions'
+import { openInvoiceReadonlyModeWindow } from '~/windows/invoice/readonly/actions'
 
 import { Layout, SchedulesWrapper, InvoicesWrapper } from './styles'
 
@@ -91,7 +94,12 @@ export const invoiceDivergenceFormatter: Formatter = cell => {
 const PendingProccessReport: React.VFC = () => {
   const { pendingProccess } = useContext(HomeScreenContext)
 
+  const schedule = useRef<ISchedule>(null)
   const [selectedSchedule, setSelectedSchedule] = useState<ISchedule>()
+
+  useEffect(() => {
+    schedule.current = selectedSchedule
+  }, [selectedSchedule])
 
   return (
     <Layout>
@@ -135,6 +143,21 @@ const PendingProccessReport: React.VFC = () => {
         <Table
           options={{
             height: '100%',
+            rowDblClick: (_, row) => {
+              if (!schedule.current) return
+
+              const invoice: IInvoice = row.getData()
+
+              if (
+                schedule.current.receivedAt ||
+                (invoice.divergence &&
+                  invoice.divergence !== InvoiceDivergence.ADDED)
+              ) {
+                openInvoiceReadonlyModeWindow(schedule.current, invoice)
+              } else {
+                openInvoiceEditModeWindow(schedule.current, invoice)
+              }
+            },
             data:
               selectedSchedule?.invoices.filter(invoice => {
                 if (

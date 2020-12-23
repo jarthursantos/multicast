@@ -192,9 +192,13 @@ function* loadSchedules() {
       'schedules'
     )
 
+    console.log({ data })
+
     yield put(loadSchedulesSuccess(data))
   } catch (error) {
     const message = extractErrorMessage(error)
+
+    console.log({ message })
 
     yield put(loadSchedulesFailure(message))
   }

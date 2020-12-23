@@ -24,8 +24,6 @@ export function registerOpenReadonlyScheduleWindow() {
         resizable: false,
         height: 450,
         width: 900,
-        parent: BrowserWindow.getFocusedWindow(),
-        modal: true,
         webPreferences: {
           nodeIntegration: true,
           enableRemoteModule: true

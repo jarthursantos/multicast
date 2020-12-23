@@ -22,8 +22,6 @@ export function registerOpenStoppedScheduleWindow() {
       resizable: false,
       height: 400,
       width: 900,
-      parent: BrowserWindow.getFocusedWindow(),
-      modal: true,
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true

@@ -21,8 +21,6 @@ export function registerOpenFiltersWindow() {
       resizable: false,
       height: 530,
       width: 450,
-      parent: BrowserWindow.getFocusedWindow(),
-      modal: true,
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true
