@@ -1,10 +1,12 @@
 import { createWinThorProvidersModel } from '~/models/providers/WinThorProvidersModel'
 
-import { createSearchProviderModel } from './search'
+import { createFindProviderByCodeModule } from './find-by-code'
+import { createSearchProviderModule } from './search'
 
 const providersModel = createWinThorProvidersModel()
 
-const searchProvidersModel = createSearchProviderModel(providersModel)
+const searchProvidersModule = createSearchProviderModule(providersModel)
+const findProviderByCodeModule = createFindProviderByCodeModule(providersModel)
 
-export { searchProvidersModel }
+export { searchProvidersModule, findProviderByCodeModule }
 export * from './search/parser'

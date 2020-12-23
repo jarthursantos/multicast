@@ -1,10 +1,12 @@
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import {
-  searchProvidersModel,
+  searchProvidersModule,
+  findProviderByCodeModule,
   parseSeachProvidersOptions,
   ISearchProvidersRequest
 } from '~/modules/providers'
+import { normalizeInt } from '~/utilities/normalizations'
 
 export async function handleSearchProviders(
   req: ISearchProvidersRequest,
@@ -12,9 +14,17 @@ export async function handleSearchProviders(
 ) {
   const { query } = req
 
-  const result = await searchProvidersModel.execute(
+  const result = await searchProvidersModule.execute(
     parseSeachProvidersOptions(query)
   )
+
+  res.json(result)
+}
+
+export async function handleFindProviderByCode(req: Request, res: Response) {
+  const { id } = req.params
+
+  const result = await findProviderByCodeModule.execute(normalizeInt(id))
 
   res.json(result)
 }

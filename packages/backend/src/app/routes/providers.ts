@@ -1,9 +1,13 @@
 import { Router } from 'express'
 
-import { handleSearchProviders } from '~/app/controllers/providers'
+import {
+  handleSearchProviders,
+  handleFindProviderByCode
+} from '~/app/controllers/providers'
 
 const router = Router()
 
 router.get('/', handleSearchProviders)
+router.get('/:id', handleFindProviderByCode)
 
 export { router as providersRoutes }

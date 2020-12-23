@@ -2,7 +2,7 @@ import { IProvidersModel } from '~/models/providers/IProvidersModel'
 
 import { ISearchProvidersOptions } from './parser'
 
-export function createSearchProviderModel(providersModel: IProvidersModel) {
+export function createSearchProviderModule(providersModel: IProvidersModel) {
   return {
     async execute({ query = '' }: ISearchProvidersOptions) {
       const providers = await providersModel.findMany(
