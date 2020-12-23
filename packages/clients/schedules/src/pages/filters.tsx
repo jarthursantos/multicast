@@ -19,9 +19,7 @@ const Filters = () => {
         <title>Filtros</title>
       </Head>
 
-      <FilterScreen
-        filters={{ ...filters, invoiceNumber: filters?.invoiceNumber || 0 }}
-      />
+      <FilterScreen filters={filters || {}} />
     </React.Fragment>
   )
 }

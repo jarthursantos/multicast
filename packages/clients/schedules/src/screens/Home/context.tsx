@@ -61,59 +61,57 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
     )
   }, [filteredScheduleRequestss, selectedDate])
 
-  const filteredSchedules = useMemo(
-    () =>
-      schedules.filter(schedule => {
-        if (filters) {
-          const { shippingName, invoiceNumber, providers, situation } = filters
+  const filteredSchedules = useMemo(() => {
+    if (!filters) return schedules
 
-          if (
-            shippingName &&
-            schedule.shippingName
-              .toUpperCase()
-              .search(shippingName.toUpperCase()) === -1
-          ) {
-            return false
-          }
+    const { shippingName, invoiceNumber, providers, situation } = filters
 
-          if (situation && situation !== schedule.situation) {
-            return false
-          }
+    return schedules.filter(schedule => {
+      if (
+        shippingName &&
+        schedule.shippingName
+          .toUpperCase()
+          .search(shippingName.toUpperCase()) === -1
+      ) {
+        return false
+      }
 
-          if (invoiceNumber) {
-            const invoicesWithNumber = schedule.invoices.filter(
-              invoice => invoice.number === invoiceNumber
+      if (situation && situation !== schedule.situation) {
+        return false
+      }
+
+      if (invoiceNumber) {
+        const invoicesWithNumber = schedule.invoices.filter(
+          invoice => String(invoice.number) === String(invoiceNumber)
+        )
+
+        if (invoicesWithNumber.length === 0) {
+          return false
+        }
+      }
+
+      if (providers?.length !== 0) {
+        let invoicesOfProvider: IInvoice[] = []
+
+        for (let i = 0; i < providers.length; i++) {
+          const provider = providers[i]
+
+          invoicesOfProvider = [
+            ...invoicesOfProvider,
+            ...schedule.invoices.filter(
+              invoice => invoice.providerCode === provider.code
             )
-
-            if (invoicesWithNumber.length === 0) {
-              return false
-            }
-          }
-
-          if (providers) {
-            let invoicesOfProvider: IInvoice[] = []
-
-            for (let i = 0; i < providers.length; i++) {
-              const provider = providers[i]
-
-              invoicesOfProvider = [
-                ...invoicesOfProvider,
-                ...schedule.invoices.filter(
-                  invoice => invoice.providerCode === provider.code
-                )
-              ]
-            }
-
-            if (invoicesOfProvider.length === 0) {
-              return false
-            }
-          }
+          ]
         }
 
-        return true
-      }),
-    [filters, schedules]
-  )
+        if (invoicesOfProvider.length === 0) {
+          return false
+        }
+      }
+
+      return true
+    })
+  }, [filters, schedules])
 
   const schedulesOfDay = useMemo(() => {
     return cloneDeep(

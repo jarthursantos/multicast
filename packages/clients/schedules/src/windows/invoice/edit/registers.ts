@@ -21,11 +21,13 @@ export function registerOpenInvoiceEditModeWindow() {
       const instance = new BrowserWindow({
         title: `Editar Nota Fiscal ${invoice.number}`,
         maximizable: false,
-        resizable: false,
+        resizable: true,
         height: 610,
+        minHeight: 610,
+        maxHeight: 610,
         width: 1100,
-        modal: true,
-        parent: BrowserWindow.getFocusedWindow(),
+        minWidth: 500,
+        maxWidth: 1100,
         webPreferences: {
           nodeIntegration: true,
           enableRemoteModule: true

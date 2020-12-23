@@ -27,8 +27,6 @@ export function registerOpenInvoiceReadonlyModeWindow() {
         resizable: false,
         height: 610,
         width: 1100,
-        modal: true,
-        parent: BrowserWindow.getFocusedWindow(),
         webPreferences: {
           nodeIntegration: true,
           enableRemoteModule: true

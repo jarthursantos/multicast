@@ -99,7 +99,8 @@ const EditOpenedScheduleScreen: React.VFC<IEditOpenedScheduleScreenProps> = ({
   useWatchAction(closeWindow, [
     Types.UPDATE_SCHEDULES_SUCCESS,
     Types.CLOSE_SCHEDULES_SUCCESS,
-    Types.DELETE_SCHEDULES_SUCCESS
+    Types.DELETE_SCHEDULES_SUCCESS,
+    Types.RESCHEDULE_SCHEDULES_SUCCESS
   ])
 
   useWatchAction<IAddScheduleInvoiceSuccessAction>(

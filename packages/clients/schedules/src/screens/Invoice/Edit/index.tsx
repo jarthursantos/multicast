@@ -156,11 +156,11 @@ const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
             <KeyField name="key" label="Chave da Nota" />
 
             <Inline>
-              <NumberInput name="weight" label="Peso" />
+              <NumberInput name="weight" label="Peso" double />
 
-              <NumberInput name="volume" label="Volume" />
+              <NumberInput name="volume" label="Volume" double />
 
-              <NumberInput name="value" label="Valor" />
+              <NumberInput name="value" label="Valor" double />
             </Inline>
 
             <InlineCTE>

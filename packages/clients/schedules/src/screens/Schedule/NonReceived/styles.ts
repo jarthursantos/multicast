@@ -67,3 +67,23 @@ export const Inline = styled.div`
     margin-left: 12px;
   }
 `
+
+export const RescheduleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  & > * {
+    flex: 1;
+  }
+
+  & > * + * {
+    margin-left: 12px;
+    flex: 0;
+  }
+
+  button {
+    height: 40px;
+    width: 40px;
+  }
+`

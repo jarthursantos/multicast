@@ -13,8 +13,6 @@ export function registerOpenCreateInvoiceWindow() {
       resizable: false,
       height: 610,
       width: 500,
-      modal: true,
-      parent: BrowserWindow.getFocusedWindow(),
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true

@@ -309,7 +309,6 @@ export function createPrismaSchedulesModel(
         data: {
           ...omit(
             schedule,
-            'scheduledAt',
             'dischargeTable',
             'scheduleRequest',
             'invoices',

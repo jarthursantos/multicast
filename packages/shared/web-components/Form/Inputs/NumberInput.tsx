@@ -38,6 +38,10 @@ const NumberInput: React.FC<Props> = ({
         const parsedValue = parseInt(value)
 
         if (!isNaN(parsedValue)) {
+          if (double) {
+            return parseFloat(value)
+          }
+
           return parseInt(value)
         }
 
@@ -52,7 +56,7 @@ const NumberInput: React.FC<Props> = ({
         input.value = ''
       }
     })
-  }, [fieldName, inputRef, registerField])
+  }, [double, fieldName, inputRef, registerField])
 
   return (
     <InputContainer {...rest} hasError={!!error}>
@@ -66,7 +70,7 @@ const NumberInput: React.FC<Props> = ({
         id={fieldName}
         style={{ width }}
         onFocus={clearError}
-        step={double ? 0.1 : 1}
+        step={double ? 0.001 : 1}
         defaultValue={defaultValue}
       />
 

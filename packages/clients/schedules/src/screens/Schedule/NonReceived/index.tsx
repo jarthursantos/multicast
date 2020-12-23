@@ -1,10 +1,17 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { MdAutorenew, MdSave } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
+import { useFormValidatorRef } from 'hookable-unform'
+import { pick } from 'lodash'
+
+import { useWatchAction } from '@shared/action-watcher'
 import {
   DateInput,
   CheckboxInput,
   TextInput,
-  SelectInput
+  SelectInput,
+  Button
 } from '@shared/web-components'
 
 import {
@@ -13,43 +20,89 @@ import {
   doubleFormatter,
   Table
 } from '~/components/Table'
+import { useTypedSelector } from '~/store'
+import { rescheduleScheduleRequest } from '~/store/modules/schedules/actions'
 import {
   IInvoice,
   InvoiceDivergence,
   InvoiceSituations,
-  ISchedule
+  IRescheduleScheduleData,
+  ISchedule,
+  Types
 } from '~/store/modules/schedules/types'
+import { closeWindow } from '~/utils/close-window'
 import { openInvoiceReadonlyModeWindow } from '~/windows/invoice/readonly/actions'
 
+import { schema } from './schema'
 import {
   Layout,
   FormWrapper,
   Container,
   Inline,
-  InvoicesWrapper
+  InvoicesWrapper,
+  RescheduleWrapper
 } from './styles'
 import { INonReceivedScheduleScreenProps } from './types'
 
 const NonReceivedScheduleScreen: React.VFC<INonReceivedScheduleScreenProps> = ({
   schedule
 }) => {
+  const dispatch = useDispatch()
   const scheduleRef = useRef<ISchedule>(null)
+  const [formRef, validateForm] = useFormValidatorRef(schema)
+
+  const [rescheduleMode, setRescheduleMode] = useState(false)
+
+  const { reschedulingSchedule } = useTypedSelector(state => state.schedules)
+
+  const handleReschedule = useCallback(async () => {
+    if (!rescheduleMode) {
+      setRescheduleMode(true)
+      return
+    }
+
+    const { success } = await validateForm()
+
+    if (!success || !schedule) return
+
+    const data = formRef.current.getData() as IRescheduleScheduleData
+
+    dispatch(rescheduleScheduleRequest(schedule, pick(data, 'scheduledAt')))
+  }, [schedule, rescheduleMode, formRef, validateForm])
 
   useEffect(() => {
     scheduleRef.current = schedule
   }, [schedule])
 
+  useWatchAction(closeWindow, [Types.RESCHEDULE_SCHEDULES_SUCCESS])
+
   return (
     <Layout>
-      <FormWrapper onSubmit={console.log} initialData={schedule}>
+      <FormWrapper onSubmit={console.log} initialData={schedule} ref={formRef}>
         <Container>
           <h2>Reagendar</h2>
 
-          <DateInput
-            name="scheduledAt"
-            label="Data do Agendamento"
-            inputProps={{ disabled: true }}
-          />
+          <RescheduleWrapper>
+            <DateInput
+              name="scheduledAt"
+              label="Data do Agendamento"
+              inputProps={{ disabled: !rescheduleMode }}
+            />
+
+            <Button
+              label="Reagendar"
+              secondary={!rescheduleMode}
+              loading={reschedulingSchedule}
+              icon={
+                rescheduleMode ? (
+                  <MdSave size={24} />
+                ) : (
+                  <MdAutorenew size={24} />
+                )
+              }
+              onClick={handleReschedule}
+            />
+          </RescheduleWrapper>
 
           <hr />
 

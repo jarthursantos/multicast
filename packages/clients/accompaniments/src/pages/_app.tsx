@@ -3,11 +3,12 @@ import 'chartjs-plugin-labels'
 
 // import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
-import 'tabulator-tables/dist/css/tabulator_simple.min.css'
+// import 'tabulator-tables/dist/css/tabulator_simple.min.css'
 
 import '../public/styles/calendar.css'
 import '../public/styles/resizable.css'
 import '../public/styles/scrollbar.css'
+import '../public/styles/table.css'
 import '../public/styles/toastify.css'
 
 import React from 'react'
@@ -51,7 +52,7 @@ export default function (props: AppProps) {
 
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <AxiosContextProvider baseURL="http://192.168.1.16:3333">
+          <AxiosContextProvider baseURL="http://192.168.1.2:3334">
             <StoreContextProvider>
               <ThemeProvider theme={selectTheme(Themes.LIGHT)}>
                 <Component {...pageProps} />
