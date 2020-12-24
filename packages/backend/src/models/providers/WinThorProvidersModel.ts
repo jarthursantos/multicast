@@ -122,8 +122,7 @@ export function createWinThorProvidersModel(): IProvidersModel {
           CODCOMPRADOR as "buyerCode",
           NOME as "buyerName"
         FROM PCFORNEC LEFT JOIN PCEMPR ON CODCOMPRADOR = MATRICULA
-        WHERE ROWNUM <= 10
-          ${formatQuery(query)}
+        WHERE ${formatQuery(query)}
         ORDER BY FORNECEDOR
       `)
 
