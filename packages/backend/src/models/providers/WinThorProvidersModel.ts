@@ -62,7 +62,7 @@ export function createWinThorProvidersModel(): IProvidersModel {
     if (!query) return ''
 
     return `
-      AND (
+      WHERE (
         TO_CHAR(PCFORNEC.CODFORNEC) LIKE '${query.toUpperCase()}' OR
         PCFORNEC.CGC LIKE '%${query.toUpperCase()}%' OR
         PCFORNEC.FORNECEDOR LIKE '%${query.toUpperCase()}%' OR
@@ -122,7 +122,7 @@ export function createWinThorProvidersModel(): IProvidersModel {
           CODCOMPRADOR as "buyerCode",
           NOME as "buyerName"
         FROM PCFORNEC LEFT JOIN PCEMPR ON CODCOMPRADOR = MATRICULA
-        WHERE ${formatQuery(query)}
+        ${formatQuery(query)}
         ORDER BY FORNECEDOR
       `)
 
