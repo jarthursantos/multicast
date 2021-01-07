@@ -30,18 +30,18 @@ import {
 import {
   Types,
   Accompaniment,
-  UntrackedInvoice
+  UntrackedInvoice,
+  MarkAccompanimentAsSendedSuccessAction,
+  MarkAccompanimentAsReleasedSuccessAction,
+  MarkAccompanimentAsReviewedSuccessAction,
+  AddAnnotationSuccessAction
 } from '~/store/modules/accompaniments/types'
 import { closeWindow } from '~/utils/close-window'
 
 import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { schema } from './schema'
 import { Wrapper, Container } from './styles'
-import {
-  AccompanimentSuccessActionResult,
-  AnnotationSuccessActionResult,
-  AccompanimentDetailsScreenProps
-} from './types'
+import { AccompanimentDetailsScreenProps } from './types'
 
 const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = ({
   accompaniment: remoteAccompaniment
@@ -133,17 +133,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
   }, [formRef])
 
   useEffect(() => {
-    if (remoteAccompaniment) {
-      setAccompaniment(remoteAccompaniment)
-    }
-  }, [remoteAccompaniment])
-
-  useEffect(() => {
-    console.log({ haveToken })
-
     async function loadInvoices() {
-      console.log('loadInvoices()')
-
       try {
         const { data } = await api.get<UntrackedInvoice[]>(
           `accompaniments/${accompaniment.id}/untrackedInvoices`
@@ -161,7 +151,6 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
         }
       } catch (error) {
         setInvoices([])
-        console.log(error)
       }
     }
 
@@ -170,18 +159,26 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
     }
   }, [accompaniment, api, haveToken])
 
-  useWatchAction<AccompanimentSuccessActionResult>(
-    ({ payload }) => {
-      setAccompaniment(payload.accompaniment)
-    },
-    [
-      Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS,
-      Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS,
-      Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
-    ]
+  useEffect(() => {
+    remoteAccompaniment && setAccompaniment(remoteAccompaniment)
+  }, [remoteAccompaniment])
+
+  useWatchAction<MarkAccompanimentAsSendedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS
   )
 
-  useWatchAction<AnnotationSuccessActionResult>(
+  useWatchAction<MarkAccompanimentAsReleasedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
+  )
+
+  useWatchAction<MarkAccompanimentAsReviewedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS
+  )
+
+  useWatchAction<AddAnnotationSuccessAction>(
     ({ payload }) => {
       setAccompaniment(oldValue => ({
         ...oldValue,

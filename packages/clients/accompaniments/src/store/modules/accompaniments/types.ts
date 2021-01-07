@@ -147,21 +147,21 @@ export interface AddAnnotationFailureAction extends BaseAction {
   }
 }
 
-export interface MarkAccompanimentAsSendRequestAction extends BaseAction {
+export interface MarkAccompanimentAsSendedRequestAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_SENDED_REQUEST
   payload: {
     id: string
   }
 }
 
-export interface MarkAccompanimentAsSendSuccessAction extends BaseAction {
+export interface MarkAccompanimentAsSendedSuccessAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS
   payload: {
     accompaniment: Accompaniment
   }
 }
 
-export interface MarkAccompanimentAsSendFailureAction extends BaseAction {
+export interface MarkAccompanimentAsSendedFailureAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_SENDED_FAILURE
   payload: {
     message: string
@@ -189,21 +189,21 @@ export interface MarkAccompanimentAsReviewedFailureAction extends BaseAction {
   }
 }
 
-export interface MarkAccompanimentAsReleadedRequestAction extends BaseAction {
+export interface MarkAccompanimentAsReleasedRequestAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_RELEASED_REQUEST
   payload: {
     id: string
   }
 }
 
-export interface MarkAccompanimentAsReleadedSuccessAction extends BaseAction {
+export interface MarkAccompanimentAsReleasedSuccessAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
   payload: {
     accompaniment: Accompaniment
   }
 }
 
-export interface MarkAccompanimentAsReleadedFailureAction extends BaseAction {
+export interface MarkAccompanimentAsReleasedFailureAction extends BaseAction {
   type: typeof Types.MARK_ACCOMPANIMENT_RELEASED_FAILURE
   payload: {
     message: string
@@ -237,15 +237,15 @@ export type AccompanimentsActionTypes =
   | AddAnnotationRequestAction
   | AddAnnotationSuccessAction
   | AddAnnotationFailureAction
-  | MarkAccompanimentAsSendRequestAction
-  | MarkAccompanimentAsSendSuccessAction
-  | MarkAccompanimentAsSendFailureAction
+  | MarkAccompanimentAsSendedRequestAction
+  | MarkAccompanimentAsSendedSuccessAction
+  | MarkAccompanimentAsSendedFailureAction
   | MarkAccompanimentAsReviewedRequestAction
   | MarkAccompanimentAsReviewedSuccessAction
   | MarkAccompanimentAsReviewedFailureAction
-  | MarkAccompanimentAsReleadedRequestAction
-  | MarkAccompanimentAsReleadedSuccessAction
-  | MarkAccompanimentAsReleadedFailureAction
+  | MarkAccompanimentAsReleasedRequestAction
+  | MarkAccompanimentAsReleasedSuccessAction
+  | MarkAccompanimentAsReleasedFailureAction
   | FilterAccompanimentRequestAction
   | ClearFilterAccompanimentRequestAction
 

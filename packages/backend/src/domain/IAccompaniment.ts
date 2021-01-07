@@ -63,6 +63,8 @@ export function createAccompaniment(
     delay: props.delay,
     criticalLevel: props.criticalLevel,
 
+    schedule: props.schedule,
+
     id: id || uuid(),
 
     createdAt: props.createdAt || new Date(),

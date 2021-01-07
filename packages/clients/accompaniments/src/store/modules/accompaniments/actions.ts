@@ -7,13 +7,13 @@ import {
   AddAnnotationRequestAction,
   AddAnnotationSuccessAction,
   AddAnnotationFailureAction,
-  MarkAccompanimentAsSendRequestAction,
+  MarkAccompanimentAsSendedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
-  MarkAccompanimentAsReleadedRequestAction,
-  MarkAccompanimentAsSendSuccessAction,
-  MarkAccompanimentAsSendFailureAction,
-  MarkAccompanimentAsReleadedFailureAction,
-  MarkAccompanimentAsReleadedSuccessAction,
+  MarkAccompanimentAsReleasedRequestAction,
+  MarkAccompanimentAsSendedSuccessAction,
+  MarkAccompanimentAsSendedFailureAction,
+  MarkAccompanimentAsReleasedFailureAction,
+  MarkAccompanimentAsReleasedSuccessAction,
   MarkAccompanimentAsReviewedSuccessAction,
   MarkAccompanimentAsReviewedFailureAction,
   UpdateAccompanimentRequestAction,
@@ -175,18 +175,18 @@ export function addAnnotationFailure(
   }
 }
 
-export function markAccompanimentAsSendRequest(
+export function markAccompanimentAsSendedRequest(
   id: string
-): MarkAccompanimentAsSendRequestAction {
+): MarkAccompanimentAsSendedRequestAction {
   return {
     type: Types.MARK_ACCOMPANIMENT_SENDED_REQUEST,
     payload: { id }
   }
 }
 
-export function markAccompanimentAsSendSuccess(
+export function markAccompanimentAsSendedSuccess(
   accompaniment: Accompaniment
-): MarkAccompanimentAsSendSuccessAction {
+): MarkAccompanimentAsSendedSuccessAction {
   return {
     propagate: true,
     type: Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS,
@@ -194,9 +194,9 @@ export function markAccompanimentAsSendSuccess(
   }
 }
 
-export function markAccompanimentAsSendFailure(
+export function markAccompanimentAsSendedFailure(
   message: string
-): MarkAccompanimentAsSendFailureAction {
+): MarkAccompanimentAsSendedFailureAction {
   return {
     type: Types.MARK_ACCOMPANIMENT_SENDED_FAILURE,
     payload: { message }
@@ -233,7 +233,7 @@ export function markAccompanimentAsReviewedFailure(
 
 export function markAccompanimentAsReleasedRequest(
   id: string
-): MarkAccompanimentAsReleadedRequestAction {
+): MarkAccompanimentAsReleasedRequestAction {
   return {
     type: Types.MARK_ACCOMPANIMENT_RELEASED_REQUEST,
     payload: { id }
@@ -242,7 +242,7 @@ export function markAccompanimentAsReleasedRequest(
 
 export function markAccompanimentAsReleasedSuccess(
   accompaniment: Accompaniment
-): MarkAccompanimentAsReleadedSuccessAction {
+): MarkAccompanimentAsReleasedSuccessAction {
   return {
     propagate: true,
     type: Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS,
@@ -252,7 +252,7 @@ export function markAccompanimentAsReleasedSuccess(
 
 export function markAccompanimentAsReleasedFailure(
   message: string
-): MarkAccompanimentAsReleadedFailureAction {
+): MarkAccompanimentAsReleasedFailureAction {
   return {
     type: Types.MARK_ACCOMPANIMENT_RELEASED_FAILURE,
     payload: { message }

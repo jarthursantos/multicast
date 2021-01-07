@@ -18,8 +18,8 @@ import {
   markAccompanimentAsReleasedSuccess,
   markAccompanimentAsReviewedFailure,
   markAccompanimentAsReviewedSuccess,
-  markAccompanimentAsSendFailure,
-  markAccompanimentAsSendSuccess,
+  markAccompanimentAsSendedFailure,
+  markAccompanimentAsSendedSuccess,
   renewAccompanimentFailure,
   renewAccompanimentSuccess,
   updateAccompanimentFailure,
@@ -30,9 +30,9 @@ import {
   AddAnnotationRequestAction,
   Annotation,
   CancelAccompanimentRequestAction,
-  MarkAccompanimentAsReleadedRequestAction,
+  MarkAccompanimentAsReleasedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
-  MarkAccompanimentAsSendRequestAction,
+  MarkAccompanimentAsSendedRequestAction,
   RenewAccompanimentRequestAction,
   Types,
   UpdateAccompanimentRequestAction
@@ -161,7 +161,7 @@ export function* addAnnotation({ payload }: AddAnnotationRequestAction) {
 
 export function* markAccompanimentAsSended({
   payload
-}: MarkAccompanimentAsSendRequestAction) {
+}: MarkAccompanimentAsSendedRequestAction) {
   try {
     const { id } = payload
 
@@ -169,7 +169,7 @@ export function* markAccompanimentAsSended({
 
     const accompaniment: Accompaniment = response.data
 
-    yield put(markAccompanimentAsSendSuccess(accompaniment))
+    yield put(markAccompanimentAsSendedSuccess(accompaniment))
 
     toast.success('Acompanhamento Atualizado')
   } catch (err) {
@@ -177,7 +177,7 @@ export function* markAccompanimentAsSended({
 
     toast.error(message)
 
-    yield put(markAccompanimentAsSendFailure(message))
+    yield put(markAccompanimentAsSendedFailure(message))
   }
 }
 
@@ -208,7 +208,7 @@ export function* markAccompanimentAsReviewed({
 
 export function* markAccompanimentAsReleased({
   payload
-}: MarkAccompanimentAsReleadedRequestAction) {
+}: MarkAccompanimentAsReleasedRequestAction) {
   try {
     const { id } = payload
 
