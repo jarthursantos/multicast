@@ -18,13 +18,18 @@ export function createHBSScheduleInvoiceReceiptProvider(
       const receiptValue = (data.receiptValue || 0).toFixed(2).replace('.', ',')
       const receiptValueExtense = extense(receiptValue, { mode: 'currency' })
 
-      const filename = await generateReport('receipt-per-invoice', 'receipt', {
-        ...data,
-        receiptValue,
-        receiptValueExtense,
-        providerName: data.name,
-        emittedAt: format(new Date(), 'dd/MM/yyyy')
-      })
+      const filename = await generateReport(
+        'reports',
+        'receipt-per-invoice',
+        'receipt',
+        {
+          ...data,
+          receiptValue,
+          receiptValueExtense,
+          providerName: data.name,
+          emittedAt: format(new Date(), 'dd/MM/yyyy')
+        }
+      )
 
       const file = createFile({ filename, originalname: filename })
 

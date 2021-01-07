@@ -1,13 +1,13 @@
 import React, { forwardRef } from 'react'
 
-import { InProgressScreenContextProvider } from '~/screens/Accompaniments/InProgress/context'
-import { InProgressSituationGroup } from '~/screens/Accompaniments/InProgress/SituationGroup'
-import { InProgressSituationPresenter } from '~/screens/Accompaniments/InProgress/SituationPresenter'
-import { Wrapper, Header } from '~/screens/Accompaniments/InProgress/styles'
+import { InProgressScreenContextProvider } from './context'
+import { InProgressSituationGroup } from './SituationGroup'
+import { InProgressSituationPresenter } from './SituationPresenter'
+import { Wrapper, Header } from './styles'
 import {
   AccompanimentsInProgressComponentHandles,
   InProgressTabs
-} from '~/screens/Accompaniments/InProgress/types'
+} from './types'
 
 const AccompanimentsInProgressComponent: React.ForwardRefRenderFunction<AccompanimentsInProgressComponentHandles> = (
   _,

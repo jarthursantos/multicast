@@ -4,6 +4,8 @@ import installExtension, {
 } from 'electron-devtools-installer'
 import isDevelopment from 'electron-is-dev'
 
+import { registerOpenProviderFinderWindow } from '@shared/web-components/Form/Inputs/ProviderInput/Finder/register'
+
 import { registerOpenDischargeTableCostsWindow } from './discharge-costs-table/registers'
 import { registerOpenFiltersWindow } from './filters/registers'
 import { registerOpenCreateInvoiceWindow } from './invoice/create/registers'
@@ -83,4 +85,6 @@ export async function registerWindows() {
   registerOpenInvoiceEditModeWindow()
 
   registerOpenReceiptWindow()
+
+  registerOpenProviderFinderWindow(resolvePath('providersFinder'))
 }

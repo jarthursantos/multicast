@@ -47,12 +47,14 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
       <DateInput
         name="freeOnBoardAt"
         label="FOB SP"
+        position="top"
         inputProps={{ disabled: disabled || !isFreeOnBoard }}
       />
 
       <DateInput
         name="schedulingAt"
         label="Previsão do Agendamento"
+        position="top"
         inputProps={{ disabled }}
       />
     </Container>

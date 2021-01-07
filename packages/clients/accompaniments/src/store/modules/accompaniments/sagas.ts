@@ -1,26 +1,29 @@
 import { toast } from 'react-toastify'
 
-import { all, takeLatest, call, put } from 'redux-saga/effects'
+import { remote } from 'electron'
+import { all, takeLatest, call, put, select } from 'redux-saga/effects'
 
 import { api, extractErrorMessage } from '@shared/axios'
 
+import { RootState } from '~/store/state'
+
 import {
-  addAnnotationFailureAction,
-  addAnnotationSuccessAction,
-  cancelAccompanimentFailureAction,
-  cancelAccompanimentSuccessAction,
-  loadAccompanimentsFailureAction,
-  loadAccompanimentsSuccessAction,
-  markAccompanimentAsReleasedFailureAction,
-  markAccompanimentAsReleasedSuccessAction,
-  markAccompanimentAsReviewedFailureAction,
-  markAccompanimentAsReviewedSuccessAction,
-  markAccompanimentAsSendFailureAction,
-  markAccompanimentAsSendSuccessAction,
-  renewAccompanimentFailureAction,
-  renewAccompanimentSuccessAction,
-  updateAccompanimentFailureAction,
-  updateAccompanimentSuccessAction
+  addAnnotationFailure,
+  addAnnotationSuccess,
+  cancelAccompanimentFailure,
+  cancelAccompanimentSuccess,
+  loadAccompanimentsFailure,
+  loadAccompanimentsSuccess,
+  markAccompanimentAsReleasedFailure,
+  markAccompanimentAsReleasedSuccess,
+  markAccompanimentAsReviewedFailure,
+  markAccompanimentAsReviewedSuccess,
+  markAccompanimentAsSendFailure,
+  markAccompanimentAsSendSuccess,
+  renewAccompanimentFailure,
+  renewAccompanimentSuccess,
+  updateAccompanimentFailure,
+  updateAccompanimentSuccess
 } from './actions'
 import {
   Accompaniment,
@@ -37,19 +40,28 @@ import {
 
 export function* loadAccompaniments() {
   try {
-    const response = yield call(api.get, '/accompaniments')
+    const token: string = yield select((state: RootState) => state.auth.token)
+
+    const response = yield call(api.get, '/accompaniments', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
 
     const accompaniments: Accompaniment[] = response.data
 
     toast.success('Acompanhamentos atualizados')
 
-    yield put(loadAccompanimentsSuccessAction(accompaniments))
+    yield put(loadAccompanimentsSuccess(accompaniments))
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao carregar acompanhamentos',
+      String(message)
+    )
 
-    yield put(loadAccompanimentsFailureAction(message))
+    yield put(loadAccompanimentsFailure(message))
   }
 }
 
@@ -65,13 +77,13 @@ export function* updateAccompaniment({
 
     toast.success('Acompanhamento atualizado')
 
-    yield put(updateAccompanimentSuccessAction(accompaniment))
+    yield put(updateAccompanimentSuccess(accompaniment))
   } catch (err) {
     const message = extractErrorMessage(err)
 
     toast.error(message)
 
-    yield put(updateAccompanimentFailureAction(message))
+    yield put(updateAccompanimentFailure(message))
   }
 }
 
@@ -93,15 +105,13 @@ export function* renewAccompaniment({
 
     toast.success('Acompanhamento Renovado')
 
-    yield put(
-      renewAccompanimentSuccessAction(accompaniment, renewedAccompaniment)
-    )
+    yield put(renewAccompanimentSuccess(accompaniment, renewedAccompaniment))
   } catch (err) {
     const message = extractErrorMessage(err)
 
     toast.error(message)
 
-    yield put(renewAccompanimentFailureAction(message))
+    yield put(renewAccompanimentFailure(message))
   }
 }
 
@@ -115,13 +125,13 @@ export function* cancelAccompaniment({
 
     toast.success('Acompanhamento Cancelado')
 
-    yield put(cancelAccompanimentSuccessAction(id))
+    yield put(cancelAccompanimentSuccess(id))
   } catch (err) {
     const message = extractErrorMessage(err)
 
     toast.error(message)
 
-    yield put(cancelAccompanimentFailureAction(message))
+    yield put(cancelAccompanimentFailure(message))
   }
 }
 
@@ -139,13 +149,13 @@ export function* addAnnotation({ payload }: AddAnnotationRequestAction) {
 
     toast.success('Observação adicionada')
 
-    yield put(addAnnotationSuccessAction(id, annotation))
+    yield put(addAnnotationSuccess(id, annotation))
   } catch (err) {
     const message = extractErrorMessage(err)
 
     toast.error(message)
 
-    yield put(addAnnotationFailureAction(message))
+    yield put(addAnnotationFailure(message))
   }
 }
 
@@ -159,7 +169,7 @@ export function* markAccompanimentAsSended({
 
     const accompaniment: Accompaniment = response.data
 
-    yield put(markAccompanimentAsSendSuccessAction(accompaniment))
+    yield put(markAccompanimentAsSendSuccess(accompaniment))
 
     toast.success('Acompanhamento Atualizado')
   } catch (err) {
@@ -167,7 +177,7 @@ export function* markAccompanimentAsSended({
 
     toast.error(message)
 
-    yield put(markAccompanimentAsSendFailureAction(message))
+    yield put(markAccompanimentAsSendFailure(message))
   }
 }
 
@@ -184,7 +194,7 @@ export function* markAccompanimentAsReviewed({
 
     const accompaniment: Accompaniment = response.data
 
-    yield put(markAccompanimentAsReviewedSuccessAction(accompaniment))
+    yield put(markAccompanimentAsReviewedSuccess(accompaniment))
 
     toast.success('Acompanhamento Atualizado')
   } catch (err) {
@@ -192,7 +202,7 @@ export function* markAccompanimentAsReviewed({
 
     toast.error(message)
 
-    yield put(markAccompanimentAsReviewedFailureAction(message))
+    yield put(markAccompanimentAsReviewedFailure(message))
   }
 }
 
@@ -209,7 +219,7 @@ export function* markAccompanimentAsReleased({
 
     const accompaniment: Accompaniment = response.data
 
-    yield put(markAccompanimentAsReleasedSuccessAction(accompaniment))
+    yield put(markAccompanimentAsReleasedSuccess(accompaniment))
 
     toast.success('Acompanhamento Atualizado')
   } catch (err) {
@@ -217,7 +227,7 @@ export function* markAccompanimentAsReleased({
 
     toast.error(message)
 
-    yield put(markAccompanimentAsReleasedFailureAction(message))
+    yield put(markAccompanimentAsReleasedFailure(message))
   }
 }
 

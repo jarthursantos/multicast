@@ -31,7 +31,7 @@ export function registerOpenAccompanimentFilters(parentWindow: BrowserWindow) {
       })
 
       window.removeMenu()
-      window.webContents.openDevTools()
+      // window.webContents.openDevTools()
 
       window.loadURL(resolvePath('accompanimentFilters'))
     }

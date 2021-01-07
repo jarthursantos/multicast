@@ -24,8 +24,8 @@ import {
 import { Modal } from '~/components/Modal'
 import { useTypedSelector } from '~/store'
 import {
-  clearFilterAccompanimentRequestAction,
-  filterAccompanimentRequestAction
+  clearFilterAccompanimentRequest,
+  filterAccompanimentRequest
 } from '~/store/modules/accompaniments/actions'
 import {
   AccompanimentFilters,
@@ -62,13 +62,12 @@ const AccompanimentsFilterComponent: React.ForwardRefRenderFunction<Accompanimen
   const close = useCallback(() => setOpened(false), [])
 
   const handleClearFilter = useCallback(
-    () => dispatch(clearFilterAccompanimentRequestAction()),
+    () => dispatch(clearFilterAccompanimentRequest()),
     [dispatch]
   )
 
   const handleApplyFilter = useCallback(
-    (data: AccompanimentFilters) =>
-      dispatch(filterAccompanimentRequestAction(data)),
+    (data: AccompanimentFilters) => dispatch(filterAccompanimentRequest(data)),
     [dispatch]
   )
 

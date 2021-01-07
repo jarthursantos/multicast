@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useWatchAction } from '@shared/action-watcher'
@@ -7,7 +7,6 @@ import {
   SubmitButton,
   TextInput,
   SelectInput,
-  MultipleProviderInput,
   NumberInput,
   ProviderInput
 } from '@shared/web-components'
@@ -29,8 +28,6 @@ import { IFilterScreenProps } from './types'
 const FilterScreen: React.VFC<IFilterScreenProps> = ({ filters }) => {
   const dispatch = useDispatch()
 
-  useEffect(() => console.log({ filters }), [filters])
-
   const handleSubmit = useCallback(
     (data: IScheduleFilters) => dispatch(applyScheduleFilters(data)),
     [dispatch]
@@ -50,8 +47,6 @@ const FilterScreen: React.VFC<IFilterScreenProps> = ({ filters }) => {
     <Wrapper onSubmit={handleSubmit} initialData={filters} noValidate>
       <Container>
         <ProviderInput name="providers" label="Fornecedor" />
-
-        <MultipleProviderInput name="providers" label="Fornecedor" />
 
         <hr />
 

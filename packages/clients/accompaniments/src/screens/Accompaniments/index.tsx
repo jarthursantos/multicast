@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useRef } from 'react'
 
+import { LoadingPanel } from '@shared/web-components'
 import { Pager } from '@shared/web-components/Pager'
 
 import { AccompanimentsGeneralResume } from '~/screens/Accompaniments/GeneralResume'
@@ -16,7 +17,7 @@ import {
 const AccompanimentsScreen: React.FC = () => {
   const inProgressRef = useRef<AccompanimentsInProgressComponentHandles>(null)
 
-  const { currentAccompanimentTab } = useContext(HomeScreenContext)
+  const { currentAccompanimentTab, isLoading } = useContext(HomeScreenContext)
 
   const handleChangeCurrentInProgress = useCallback(
     (tab: InProgressTabs) => {
@@ -26,21 +27,25 @@ const AccompanimentsScreen: React.FC = () => {
   )
 
   return (
-    <Pager currentPage={currentAccompanimentTab}>
-      <Pager.Page name={AccompanimentTabs.GENERAL_RESUME}>
-        <AccompanimentsGeneralResume
-          changeCurrentInProgressTab={handleChangeCurrentInProgress}
-        />
-      </Pager.Page>
+    <React.Fragment>
+      <Pager currentPage={currentAccompanimentTab}>
+        <Pager.Page name={AccompanimentTabs.GENERAL_RESUME}>
+          <AccompanimentsGeneralResume
+            changeCurrentInProgressTab={handleChangeCurrentInProgress}
+          />
+        </Pager.Page>
 
-      <Pager.Page name={AccompanimentTabs.IN_PROGRESS}>
-        <AccompanimentsInProgress ref={inProgressRef} />
-      </Pager.Page>
+        <Pager.Page name={AccompanimentTabs.IN_PROGRESS}>
+          <AccompanimentsInProgress ref={inProgressRef} />
+        </Pager.Page>
 
-      <Pager.Page name={AccompanimentTabs.IN_RECEIVEMENT}>
-        <AccompanimentsInReceivement />
-      </Pager.Page>
-    </Pager>
+        <Pager.Page name={AccompanimentTabs.IN_RECEIVEMENT}>
+          <AccompanimentsInReceivement />
+        </Pager.Page>
+      </Pager>
+
+      <LoadingPanel isLoading={isLoading} />
+    </React.Fragment>
   )
 }
 

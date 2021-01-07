@@ -6,11 +6,13 @@ export const updateSchema = Yup.object().shape({
     .typeError('O Número é obrigatório')
     .required('O Número é obrigatório'),
 
-  provider: Yup.object()
-    .shape({
-      code: Yup.number().integer().required('É necessário um fornecedor')
-    })
-    .required(),
+  // providers: Yup.array().of(
+  //   Yup.object()
+  //     .shape({
+  //       code: Yup.number().integer().required('É necessário um fornecedor')
+  //     })
+  //     .required()
+  // ),
 
   emittedAt: Yup.date().typeError('A Data da emissão não é válida').nullable(),
 

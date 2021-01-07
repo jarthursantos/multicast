@@ -88,23 +88,20 @@ export function useAccompaniments() {
 export function useInProgressAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments.filter(
-    accompaniment => accompaniment.schedulingAt === null
-  )
+  return accompaniments.filter(accompaniment => !accompaniment.schedulingAt)
 }
 
 export function useNonSendedAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments.filter(accompaniment => accompaniment.sendedAt === null)
+  return accompaniments.filter(accompaniment => !accompaniment.sendedAt)
 }
 
 export function useNonRevisedAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment =>
-      accompaniment.sendedAt !== null && accompaniment.reviewedAt === null
+    accompaniment => accompaniment.sendedAt && !accompaniment.reviewedAt
   )
 }
 
@@ -112,8 +109,7 @@ export function useNonReleasedAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment =>
-      accompaniment.reviewedAt !== null && accompaniment.releasedAt === null
+    accompaniment => accompaniment.reviewedAt && !accompaniment.releasedAt
   )
 }
 
@@ -122,8 +118,7 @@ export function useNonExpectedBillingAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.releasedAt !== null &&
-      accompaniment.expectedBillingAt === null
+      accompaniment.releasedAt && !accompaniment.expectedBillingAt
   )
 }
 
@@ -132,8 +127,8 @@ export function useNonBilledAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.expectedBillingAt !== null &&
-      (accompaniment.billingAt === null || !accompaniment.transactionNumber)
+      accompaniment.expectedBillingAt &&
+      (!accompaniment.billingAt || !accompaniment.transactionNumber)
   )
 }
 
@@ -143,7 +138,7 @@ export function useNonFreeOnBoardAccompaniments() {
   return accompaniments.filter(
     accompaniment =>
       accompaniment.transactionNumber &&
-      accompaniment.freeOnBoardAt === null &&
+      !accompaniment.freeOnBoardAt &&
       accompaniment.purchaseOrder.freight === 'FOB'
   )
 }
@@ -152,7 +147,7 @@ export function useNonSchedulingAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(accompaniment => {
-    if (accompaniment.schedulingAt !== null) {
+    if (accompaniment.schedulingAt) {
       return false
     }
 
@@ -165,7 +160,7 @@ export function useNonSchedulingAccompaniments() {
 
     if (
       accompaniment.purchaseOrder.freight !== 'CIF' &&
-      accompaniment.freeOnBoardAt !== null &&
+      accompaniment.freeOnBoardAt &&
       accompaniment.transactionNumber
     ) {
       return true
@@ -178,9 +173,7 @@ export function useNonSchedulingAccompaniments() {
 export function useNonScheduledAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments.filter(
-    accompaniment => accompaniment.schedulingAt !== null
-  )
+  return accompaniments.filter(accompaniment => accompaniment.schedulingAt)
 }
 
 export function useScheduledAccompaniments() {
@@ -196,8 +189,7 @@ export function useReceivingAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt !== null &&
-      accompaniment.schedule !== undefined
+      accompaniment.schedulingAt && accompaniment.schedule !== undefined
   )
 }
 
@@ -206,8 +198,7 @@ export function useDownloadedAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt !== null &&
-      accompaniment.schedule !== undefined
+      accompaniment.schedulingAt && accompaniment.schedule !== undefined
   )
 }
 
@@ -216,7 +207,6 @@ export function useUnlockedAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt !== null &&
-      accompaniment.schedule !== undefined
+      accompaniment.schedulingAt && accompaniment.schedule !== undefined
   )
 }

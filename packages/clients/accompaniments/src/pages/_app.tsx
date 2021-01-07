@@ -1,9 +1,7 @@
 import 'chart.js'
 import 'chartjs-plugin-labels'
 
-// import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
-// import 'tabulator-tables/dist/css/tabulator_simple.min.css'
 
 import '../public/styles/calendar.css'
 import '../public/styles/resizable.css'

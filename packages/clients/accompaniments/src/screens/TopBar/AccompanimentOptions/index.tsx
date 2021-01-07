@@ -12,7 +12,7 @@ import { MdFilter, MdPendingAction, MdReceiptLong } from '~/components/Icons'
 import { HomeScreenContext } from '~/screens/context'
 import { HomeScreenTabs, AccompanimentTabs } from '~/screens/types'
 import { useTypedSelector } from '~/store'
-import { loadAccompanimentsRequestAction } from '~/store/modules/accompaniments/actions'
+import { loadAccompanimentsRequest } from '~/store/modules/accompaniments/actions'
 import { openAccompanimentFilters } from '~/windows/AccompanimentFilters/action'
 
 const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
@@ -30,7 +30,7 @@ const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
   }, [filters, token])
 
   const handleRefresh = useCallback(() => {
-    dispatch(loadAccompanimentsRequestAction())
+    dispatch(loadAccompanimentsRequest())
   }, [dispatch])
 
   return (

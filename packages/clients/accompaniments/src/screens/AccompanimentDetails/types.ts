@@ -13,3 +13,7 @@ export interface AnnotationSuccessActionResult {
     annotation: Annotation
   }
 }
+
+export interface AccompanimentDetailsScreenProps {
+  accompaniment: Accompaniment
+}

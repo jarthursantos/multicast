@@ -17,6 +17,10 @@ export default function auth(state = INITIAL_STATE, action: AuthActionTypes) {
         draft.signed = false
         break
       }
+      case Types.SET_AUTH_TOKEN: {
+        draft.token = action.payload.token
+        break
+      }
       default:
     }
   })

@@ -4,6 +4,7 @@ import { CriticalLevel } from './CriticalLevel'
 import { IAnnotation } from './IAnnotation'
 import { IInvoice } from './IInvoice'
 import { IPurchaseOrder } from './IPurchaseOrder'
+import { ISchedule } from './ISchedule'
 
 export interface IAccompaniment {
   readonly id: string
@@ -35,6 +36,8 @@ export interface IAccompaniment {
   updatedAt?: Date
 
   isOutstanding: boolean
+
+  schedule?: ISchedule
 }
 
 export function createAccompaniment(

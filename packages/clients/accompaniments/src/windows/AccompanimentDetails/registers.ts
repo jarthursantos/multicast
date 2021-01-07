@@ -41,10 +41,9 @@ export function registerOpenAccompanimentDetails() {
           )
         })
 
+        window.loadURL(resolvePath('accompanimentDetails'))
         window.removeMenu()
         // window.webContents.openDevTools()
-
-        window.loadURL(resolvePath('accompanimentDetails'))
       }
     }
   )

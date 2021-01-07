@@ -7,7 +7,7 @@ import { useWatchAction } from '@shared/action-watcher'
 import {
   Button,
   SubmitButton,
-  SingleProviderInput,
+  ProviderInput,
   DateInput,
   CheckboxInput,
   SelectInput,
@@ -116,7 +116,7 @@ const EditScheduleRequestScreen: React.VFC<IEditScheduleRequestScreenProps> = ({
           inputProps={{ autoFocus: true }}
         />
 
-        <SingleProviderInput name="providers" label="Fornecedor" />
+        <ProviderInput name="providers" label="Fornecedor" single />
 
         <hr />
 

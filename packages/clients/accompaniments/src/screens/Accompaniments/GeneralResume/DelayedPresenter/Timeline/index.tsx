@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { format, parseISO } from 'date-fns'
+
+import { Button } from '@shared/web-components/Button'
+
+import { useTypedSelector } from '~/store'
+import {
+  Accompaniment,
+  CriticalLevel
+} from '~/store/modules/accompaniments/types'
+import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
 
 import {
   Wrapper,
@@ -9,16 +18,40 @@ import {
   BodyContainer,
   Item,
   ItemLabel
-} from '~/screens/Accompaniments/GeneralResume/DelayedPresenter/Timeline/styles'
-import { SectionTimelineProps } from '~/screens/Accompaniments/GeneralResume/DelayedPresenter/Timeline/types'
-import { useTypedSelector } from '~/store'
-import { CriticalLevel } from '~/store/modules/accompaniments/types'
-import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
+} from './styles'
+import { SectionTimelineProps } from './types'
+
+function delayComparer(accompaniment: Accompaniment, other: Accompaniment) {
+  if (accompaniment.criticalLevel === other.criticalLevel) {
+    return other.delay - accompaniment.delay
+  }
+
+  if (accompaniment.criticalLevel === CriticalLevel.DANGER) {
+    return -1
+  }
+
+  if (other.criticalLevel === CriticalLevel.DANGER) {
+    return 1
+  }
+
+  if (accompaniment.criticalLevel === CriticalLevel.ALERT) {
+    return -1
+  }
+
+  if (other.criticalLevel === CriticalLevel.ALERT) {
+    return 1
+  }
+}
 
 const SectionTimeline: React.VFC<SectionTimelineProps> = ({
-  accompaniments
+  accompaniments,
+  onShowMoreClick
 }) => {
   const { token } = useTypedSelector(state => state.auth)
+
+  const remainingCount = useMemo(() => accompaniments.length - 5, [
+    accompaniments
+  ])
 
   return (
     <Wrapper>
@@ -34,48 +67,61 @@ const SectionTimeline: React.VFC<SectionTimelineProps> = ({
       </HeaderContainer>
 
       <BodyContainer>
-        {accompaniments.map(accompaniment => (
-          <Item
-            key={accompaniment.id}
-            onClick={() => openAccompanimentDetails(accompaniment, token)}
-            className={
-              accompaniment.criticalLevel === CriticalLevel.DANGER
-                ? 'danger'
-                : accompaniment.criticalLevel === CriticalLevel.ALERT
-                ? 'alert'
-                : ''
-            }
-          >
-            <ItemLabel id="number">
-              {accompaniment.purchaseOrder.number}
-            </ItemLabel>
-            <ItemLabel id="providerCode">
-              {accompaniment.purchaseOrder.provider.code}
-            </ItemLabel>
-            <ItemLabel id="providerName">
-              {accompaniment.purchaseOrder.provider.name}
-            </ItemLabel>
-            <ItemLabel id="fantasy">
-              {accompaniment.purchaseOrder.provider.fantasy || '-'}
-            </ItemLabel>
-            <ItemLabel id="invoice">
-              {accompaniment.invoiceNumber || '-'}
-            </ItemLabel>
-            <ItemLabel id="emittedAt">
-              {format(
-                typeof accompaniment.purchaseOrder.emittedAt === 'string'
-                  ? parseISO(accompaniment.purchaseOrder.emittedAt)
-                  : accompaniment.purchaseOrder.emittedAt,
-                'dd/MM/yyyy'
-              )}
-            </ItemLabel>
-            <ItemLabel id="delay">{accompaniment.delay || '-'}</ItemLabel>
-            <ItemLabel id="observation">
-              {accompaniment.annotations.length || '-'}
-            </ItemLabel>
-          </Item>
-        ))}
+        {accompaniments
+          .splice(0, 5)
+          .sort(delayComparer)
+          .map(accompaniment => (
+            <Item
+              key={accompaniment.id}
+              onClick={() => openAccompanimentDetails(accompaniment, token)}
+              className={
+                accompaniment.criticalLevel === CriticalLevel.DANGER
+                  ? 'danger'
+                  : accompaniment.criticalLevel === CriticalLevel.ALERT
+                  ? 'alert'
+                  : ''
+              }
+            >
+              <ItemLabel id="number">
+                {accompaniment.purchaseOrder.number}
+              </ItemLabel>
+              <ItemLabel id="providerCode">
+                {accompaniment.purchaseOrder.provider.code}
+              </ItemLabel>
+              <ItemLabel id="providerName">
+                {accompaniment.purchaseOrder.provider.name}
+              </ItemLabel>
+              <ItemLabel id="fantasy">
+                {accompaniment.purchaseOrder.provider.fantasy || '-'}
+              </ItemLabel>
+              <ItemLabel id="invoice">
+                {accompaniment.invoiceNumber || '-'}
+              </ItemLabel>
+              <ItemLabel id="emittedAt">
+                {format(
+                  typeof accompaniment.purchaseOrder.emittedAt === 'string'
+                    ? parseISO(accompaniment.purchaseOrder.emittedAt)
+                    : accompaniment.purchaseOrder.emittedAt,
+                  'dd/MM/yyyy'
+                )}
+              </ItemLabel>
+              <ItemLabel id="delay">{accompaniment.delay || '-'}</ItemLabel>
+              <ItemLabel id="observation">
+                {accompaniment.annotations.length || '-'}
+              </ItemLabel>
+            </Item>
+          ))}
       </BodyContainer>
+
+      {remainingCount > 0 && (
+        <Button
+          secondary
+          onClick={onShowMoreClick}
+          label={`Exibir mais ${remainingCount} acompanhamento${
+            remainingCount === 1 ? '' : 's'
+          }`}
+        />
+      )}
     </Wrapper>
   )
 }

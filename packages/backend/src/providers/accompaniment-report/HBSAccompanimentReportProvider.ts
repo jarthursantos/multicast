@@ -76,28 +76,33 @@ export function createHBSAccompanimentReportProvider(
         .toFixed(2)
         .replace('.', ',')
 
-      const filename = await generateReport('accompaniment', 'accompaniment', {
-        ...header,
-        freight: header.freight === 'C' ? 'CIF' : 'FOB',
-        emittedAt: formatDate(normalizeDate(emittedAt)),
-        billingAt: formatDate(normalizeDate(billingAt)),
-        boardingAt: formatDate(normalizeDate(boardingAt)),
-        expectedDeliveryAt: formatDate(normalizeDate(deliveryAt)),
-        amountICMSBase,
-        amountICMSValue,
-        amountVolume,
-        totalAmountValue,
-        deadline,
-        productCount: products.length,
-        products: products.map(product => ({
-          ...product,
-          ipi: product.ipi?.toFixed(2).replace('.', ','),
-          price: product.price.toFixed(2).replace('.', ','),
-          amountValue: (product.price * product.requestedQuantity)
-            .toFixed(2)
-            .replace('.', ',')
-        }))
-      })
+      const filename = await generateReport(
+        'reports',
+        'accompaniment',
+        'accompaniment',
+        {
+          ...header,
+          freight: header.freight === 'C' ? 'CIF' : 'FOB',
+          emittedAt: formatDate(normalizeDate(emittedAt)),
+          billingAt: formatDate(normalizeDate(billingAt)),
+          boardingAt: formatDate(normalizeDate(boardingAt)),
+          expectedDeliveryAt: formatDate(normalizeDate(deliveryAt)),
+          amountICMSBase,
+          amountICMSValue,
+          amountVolume,
+          totalAmountValue,
+          deadline,
+          productCount: products.length,
+          products: products.map(product => ({
+            ...product,
+            ipi: product.ipi?.toFixed(2).replace('.', ','),
+            price: product.price.toFixed(2).replace('.', ','),
+            amountValue: (product.price * product.requestedQuantity)
+              .toFixed(2)
+              .replace('.', ',')
+          }))
+        }
+      )
 
       const file = createFile({ filename, originalname: filename })
 

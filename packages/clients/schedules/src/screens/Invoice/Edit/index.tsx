@@ -8,7 +8,7 @@ import { useAxios } from '@shared/axios'
 import {
   Button,
   SubmitButton,
-  SingleProviderInput,
+  ProviderInput,
   DateInput,
   NumberInput,
   FileInput,
@@ -44,7 +44,7 @@ import { IEditInvoiceScreenProps } from './types'
 
 interface IRawScheduleInvoice
   extends Omit<IUpdateInvoiceData, 'provider' | 'id'> {
-  provider: IProvider
+  providers: IProvider[]
 }
 
 const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
@@ -63,9 +63,11 @@ const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
 
   const handleSubmit = useCallback(
     async (data: IRawScheduleInvoice) => {
-      const { success } = await validateForm()
+      const { success, errors } = await validateForm()
 
-      if (!success) return
+      console.log(data, { errors }, data.providers.length)
+
+      if (!success || data.providers.length === 0) return
 
       let invoiceFileId: string
       let cteFileId: string
@@ -99,7 +101,7 @@ const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
           ...data,
           cteFileId,
           invoiceFileId,
-          providerCode: data.provider.code
+          providerCode: data.providers[0].code
         })
       )
     },
@@ -130,11 +132,14 @@ const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
       <Wrapper>
         <FormWrapper
           onSubmit={handleSubmit}
-          initialData={invoice}
+          initialData={{
+            ...invoice,
+            providers: invoice ? [invoice.provider] : undefined
+          }}
           ref={formRef}
         >
           <Container>
-            <SingleProviderInput name="provider" label="Fornecedor" />
+            <ProviderInput name="providers" label="Fornecedor" single />
 
             <Inline>
               <NumberInput name="number" label="Número" />

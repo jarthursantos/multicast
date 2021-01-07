@@ -122,9 +122,11 @@ const DateInput: React.FC<Props> = ({
             onChange={event => setTextValue(event.target.value)}
           />
 
-          <IconWrapper onClick={handleOpenPicker}>
-            <MdToday size={24} />
-          </IconWrapper>
+          {inputProps?.disabled || (
+            <IconWrapper onClick={handleOpenPicker}>
+              <MdToday size={24} />
+            </IconWrapper>
+          )}
         </div>
 
         {error && <InputError>{error}</InputError>}

@@ -47,7 +47,7 @@ export function registerOpenInvoiceEditModeWindow() {
 
       instance.removeMenu()
       instance.loadURL(resolvePath('invoice/edit'))
-      // instance.webContents.openDevTools()
+      instance.webContents.openDevTools()
 
       _instances[id] = instance
     }

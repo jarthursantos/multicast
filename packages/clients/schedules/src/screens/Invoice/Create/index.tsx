@@ -8,7 +8,7 @@ import { useWatchAction } from '@shared/action-watcher'
 import { useAxios } from '@shared/axios'
 import {
   SubmitButton,
-  SingleProviderInput,
+  ProviderInput,
   DateInput,
   SelectInput,
   NumberInput,
@@ -32,7 +32,7 @@ import { ICreateInvoiceScreenProps } from './types'
 
 interface IRawScheduleInvoice
   extends Omit<ICreateInvoiceData, 'provider' | 'id'> {
-  provider: IProvider
+  providers: IProvider[]
 }
 
 const CreateInvoiceScreen: React.VFC<ICreateInvoiceScreenProps> = ({
@@ -50,7 +50,7 @@ const CreateInvoiceScreen: React.VFC<ICreateInvoiceScreenProps> = ({
     async (data: IRawScheduleInvoice) => {
       const { success } = await validateForm()
 
-      if (!success) return
+      if (!success || data.providers.length === 0) return
 
       let invoiceFileId: string
       let cteFileId: string
@@ -84,7 +84,7 @@ const CreateInvoiceScreen: React.VFC<ICreateInvoiceScreenProps> = ({
           ...data,
           cteFileId,
           invoiceFileId,
-          providerCode: data.provider.code
+          providerCode: data.providers[0].code
         })
       )
     },
@@ -106,7 +106,7 @@ const CreateInvoiceScreen: React.VFC<ICreateInvoiceScreenProps> = ({
       initialData={{ importation: false }}
     >
       <Container>
-        <SingleProviderInput name="provider" label="Fornecedor" />
+        <ProviderInput name="providers" label="Fornecedor" single />
 
         <Inline>
           <NumberInput name="number" label="Número" />

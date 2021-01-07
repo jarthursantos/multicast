@@ -32,13 +32,13 @@ import {
   ClearFilterAccompanimentRequestAction
 } from './types'
 
-export function loadAccompanimentsRequestAction(): LoadAccompanimentsRequestAction {
+export function loadAccompanimentsRequest(): LoadAccompanimentsRequestAction {
   return {
     type: Types.LOAD_ACCOMPANIMENTS_REQUEST
   }
 }
 
-export function loadAccompanimentsFailureAction(
+export function loadAccompanimentsFailure(
   message: string
 ): LoadAccompanimentsFailureAction {
   return {
@@ -48,7 +48,7 @@ export function loadAccompanimentsFailureAction(
   }
 }
 
-export function loadAccompanimentsSuccessAction(
+export function loadAccompanimentsSuccess(
   accompaniments: Accompaniment[]
 ): LoadAccompanimentsSuccessAction {
   return {
@@ -58,7 +58,7 @@ export function loadAccompanimentsSuccessAction(
   }
 }
 
-export function updateAccompanimentRequestAction(
+export function updateAccompanimentRequest(
   id: string,
   data: Accompaniment
 ): UpdateAccompanimentRequestAction {
@@ -68,7 +68,7 @@ export function updateAccompanimentRequestAction(
   }
 }
 
-export function updateAccompanimentSuccessAction(
+export function updateAccompanimentSuccess(
   accompaniment: Accompaniment
 ): UpdateAccompanimentSuccessAction {
   return {
@@ -78,7 +78,7 @@ export function updateAccompanimentSuccessAction(
   }
 }
 
-export function updateAccompanimentFailureAction(
+export function updateAccompanimentFailure(
   message: string
 ): UpdateAccompanimentFailureAction {
   return {
@@ -87,7 +87,7 @@ export function updateAccompanimentFailureAction(
   }
 }
 
-export function renewAccompanimentRequestAction(
+export function renewAccompanimentRequest(
   id: string
 ): RenewAccompanimentRequestAction {
   return {
@@ -96,7 +96,7 @@ export function renewAccompanimentRequestAction(
   }
 }
 
-export function renewAccompanimentSuccessAction(
+export function renewAccompanimentSuccess(
   accompaniment: Accompaniment,
   renewedAccompaniment: Accompaniment
 ): RenewAccompanimentSuccessAction {
@@ -107,7 +107,7 @@ export function renewAccompanimentSuccessAction(
   }
 }
 
-export function renewAccompanimentFailureAction(
+export function renewAccompanimentFailure(
   message: string
 ): RenewAccompanimentFailureAction {
   return {
@@ -116,7 +116,7 @@ export function renewAccompanimentFailureAction(
   }
 }
 
-export function cancelAccompanimentRequestAction(
+export function cancelAccompanimentRequest(
   id: string,
   motive: string
 ): CancelAccompanimentRequestAction {
@@ -126,7 +126,7 @@ export function cancelAccompanimentRequestAction(
   }
 }
 
-export function cancelAccompanimentSuccessAction(
+export function cancelAccompanimentSuccess(
   id: string
 ): CancelAccompanimentSuccessAction {
   return {
@@ -136,7 +136,7 @@ export function cancelAccompanimentSuccessAction(
   }
 }
 
-export function cancelAccompanimentFailureAction(
+export function cancelAccompanimentFailure(
   message: string
 ): CancelAccompanimentFailureAction {
   return {
@@ -145,7 +145,7 @@ export function cancelAccompanimentFailureAction(
   }
 }
 
-export function addAnnotationRequestAction(
+export function addAnnotationRequest(
   id: string,
   data: AnnotationContent
 ): AddAnnotationRequestAction {
@@ -155,7 +155,7 @@ export function addAnnotationRequestAction(
   }
 }
 
-export function addAnnotationSuccessAction(
+export function addAnnotationSuccess(
   id: string,
   annotation: Annotation
 ): AddAnnotationSuccessAction {
@@ -166,7 +166,7 @@ export function addAnnotationSuccessAction(
   }
 }
 
-export function addAnnotationFailureAction(
+export function addAnnotationFailure(
   message: string
 ): AddAnnotationFailureAction {
   return {
@@ -175,7 +175,7 @@ export function addAnnotationFailureAction(
   }
 }
 
-export function markAccompanimentAsSendRequestAction(
+export function markAccompanimentAsSendRequest(
   id: string
 ): MarkAccompanimentAsSendRequestAction {
   return {
@@ -184,7 +184,7 @@ export function markAccompanimentAsSendRequestAction(
   }
 }
 
-export function markAccompanimentAsSendSuccessAction(
+export function markAccompanimentAsSendSuccess(
   accompaniment: Accompaniment
 ): MarkAccompanimentAsSendSuccessAction {
   return {
@@ -194,7 +194,7 @@ export function markAccompanimentAsSendSuccessAction(
   }
 }
 
-export function markAccompanimentAsSendFailureAction(
+export function markAccompanimentAsSendFailure(
   message: string
 ): MarkAccompanimentAsSendFailureAction {
   return {
@@ -203,7 +203,7 @@ export function markAccompanimentAsSendFailureAction(
   }
 }
 
-export function markAccompanimentAsReviewedRequestAction(
+export function markAccompanimentAsReviewedRequest(
   id: string
 ): MarkAccompanimentAsReviewedRequestAction {
   return {
@@ -212,7 +212,7 @@ export function markAccompanimentAsReviewedRequestAction(
   }
 }
 
-export function markAccompanimentAsReviewedSuccessAction(
+export function markAccompanimentAsReviewedSuccess(
   accompaniment: Accompaniment
 ): MarkAccompanimentAsReviewedSuccessAction {
   return {
@@ -222,7 +222,7 @@ export function markAccompanimentAsReviewedSuccessAction(
   }
 }
 
-export function markAccompanimentAsReviewedFailureAction(
+export function markAccompanimentAsReviewedFailure(
   message: string
 ): MarkAccompanimentAsReviewedFailureAction {
   return {
@@ -231,7 +231,7 @@ export function markAccompanimentAsReviewedFailureAction(
   }
 }
 
-export function markAccompanimentAsReleasedRequestAction(
+export function markAccompanimentAsReleasedRequest(
   id: string
 ): MarkAccompanimentAsReleadedRequestAction {
   return {
@@ -240,7 +240,7 @@ export function markAccompanimentAsReleasedRequestAction(
   }
 }
 
-export function markAccompanimentAsReleasedSuccessAction(
+export function markAccompanimentAsReleasedSuccess(
   accompaniment: Accompaniment
 ): MarkAccompanimentAsReleadedSuccessAction {
   return {
@@ -250,7 +250,7 @@ export function markAccompanimentAsReleasedSuccessAction(
   }
 }
 
-export function markAccompanimentAsReleasedFailureAction(
+export function markAccompanimentAsReleasedFailure(
   message: string
 ): MarkAccompanimentAsReleadedFailureAction {
   return {
@@ -259,7 +259,7 @@ export function markAccompanimentAsReleasedFailureAction(
   }
 }
 
-export function filterAccompanimentRequestAction(
+export function filterAccompanimentRequest(
   filter: AccompanimentFilters
 ): FilterAccompanimentRequestAction {
   return {
@@ -268,7 +268,7 @@ export function filterAccompanimentRequestAction(
   }
 }
 
-export function clearFilterAccompanimentRequestAction(): ClearFilterAccompanimentRequestAction {
+export function clearFilterAccompanimentRequest(): ClearFilterAccompanimentRequestAction {
   return {
     type: Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
   }

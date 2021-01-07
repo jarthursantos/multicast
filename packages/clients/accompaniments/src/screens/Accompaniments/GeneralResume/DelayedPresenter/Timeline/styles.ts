@@ -1,6 +1,13 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
+  margin-bottom: 48px;
+
+  button {
+    margin-top: 16px;
+    width: 100%;
+  }
+
   #number {
     width: 60px;
   }

@@ -1,4 +1,6 @@
 export interface HomeScreenContextHandles {
+  isLoading: boolean
+
   currentAccompanimentTab: AccompanimentTabs
   changeAccompanimentTab(tab: AccompanimentTabs): void
 

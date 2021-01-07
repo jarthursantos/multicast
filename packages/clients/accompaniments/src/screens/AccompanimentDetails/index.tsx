@@ -6,7 +6,7 @@ import { IEmailOptions } from 'create-outlook-mail'
 import { useFormValidator } from 'hookable-unform'
 
 import { useWatchAction } from '@shared/action-watcher'
-import { extractErrorMessage, useAxios, useSetToken } from '@shared/axios'
+import { extractErrorMessage, useAxios } from '@shared/axios'
 import { createMailModal } from '@shared/outlook-mail'
 import { Button } from '@shared/web-components'
 import { formatPrice } from '@shared/web-components/DataGrid/Body/Row/Cell/Contabil/format'
@@ -22,10 +22,10 @@ import Observations from '~/components/Forms/Observations'
 import RequestData from '~/components/Forms/RequestData'
 import { useTypedSelector } from '~/store'
 import {
-  markAccompanimentAsReleasedRequestAction,
-  markAccompanimentAsReviewedRequestAction,
-  renewAccompanimentRequestAction,
-  updateAccompanimentRequestAction
+  markAccompanimentAsReleasedRequest,
+  markAccompanimentAsReviewedRequest,
+  renewAccompanimentRequest,
+  updateAccompanimentRequest
 } from '~/store/modules/accompaniments/actions'
 import {
   Types,
@@ -33,29 +33,31 @@ import {
   UntrackedInvoice
 } from '~/store/modules/accompaniments/types'
 import { closeWindow } from '~/utils/close-window'
-import { useAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
 
 import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { schema } from './schema'
 import { Wrapper, Container } from './styles'
 import {
   AccompanimentSuccessActionResult,
-  AnnotationSuccessActionResult
+  AnnotationSuccessActionResult,
+  AccompanimentDetailsScreenProps
 } from './types'
 
-const AccompanimentDetailsScreen: React.VFC = () => {
+const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = ({
+  accompaniment: remoteAccompaniment
+}) => {
   const dispatch = useDispatch()
 
   const formRef = useRef<FormHandles>(null)
   const validateForm = useFormValidator(formRef, schema)
 
   const [api, haveToken] = useAxios()
-  const setToken = useSetToken()
 
   const [sendingMail, setSendingMail] = useState(false)
   const [isConfirmMailOpen, setConfirmMailOpen] = useState(false)
-  const [remoteAccompaniment, token] = useAccompanimentDetails()
-  const [accompaniment, setAccompaniment] = useState<Accompaniment>()
+  const [accompaniment, setAccompaniment] = useState<Accompaniment>(
+    remoteAccompaniment
+  )
   const [invoices, setInvoices] = useState<OptionData[]>([])
 
   const {
@@ -71,20 +73,6 @@ const AccompanimentDetailsScreen: React.VFC = () => {
 
   const openConfirmMail = useCallback(() => setConfirmMailOpen(true), [])
   const closeConfirmMail = useCallback(() => setConfirmMailOpen(false), [])
-
-  // const handleGeneratePDF = useCallback(async () => {
-  //   try {
-  //     const { data } = await api.get(
-  //       `accompaniments/${accompaniment.id}/generatePDF`
-  //     )
-
-  //     console.log({ data })
-  //   } catch (error) {
-  //     const message = extractErrorMessage(error)
-
-  //     toast.error(message)
-  //   }
-  // }, [api, accompaniment])
 
   const handleSendMail = useCallback(async () => {
     try {
@@ -116,15 +104,15 @@ const AccompanimentDetailsScreen: React.VFC = () => {
   }, [accompaniment, openConfirmMail])
 
   const handleMarkAsReviewed = useCallback(() => {
-    dispatch(markAccompanimentAsReviewedRequestAction(accompaniment.id))
+    dispatch(markAccompanimentAsReviewedRequest(accompaniment.id))
   }, [dispatch, accompaniment])
 
   const handleMarkAsReleased = useCallback(() => {
-    dispatch(markAccompanimentAsReleasedRequestAction(accompaniment.id))
+    dispatch(markAccompanimentAsReleasedRequest(accompaniment.id))
   }, [dispatch, accompaniment])
 
   const handleRenew = useCallback(() => {
-    dispatch(renewAccompanimentRequestAction(accompaniment.id))
+    dispatch(renewAccompanimentRequest(accompaniment.id))
   }, [accompaniment, dispatch])
 
   const handleSubmit = useCallback(
@@ -134,7 +122,7 @@ const AccompanimentDetailsScreen: React.VFC = () => {
       if (success) {
         formRef.current?.setErrors({})
 
-        dispatch(updateAccompanimentRequestAction(accompaniment.id, data))
+        dispatch(updateAccompanimentRequest(accompaniment.id, data))
       }
     },
     [dispatch, accompaniment, validateForm, formRef]
@@ -150,10 +138,12 @@ const AccompanimentDetailsScreen: React.VFC = () => {
     }
   }, [remoteAccompaniment])
 
-  useEffect(() => setToken(token), [setToken, token])
-
   useEffect(() => {
+    console.log({ haveToken })
+
     async function loadInvoices() {
+      console.log('loadInvoices()')
+
       try {
         const { data } = await api.get<UntrackedInvoice[]>(
           `accompaniments/${accompaniment.id}/untrackedInvoices`
@@ -175,10 +165,10 @@ const AccompanimentDetailsScreen: React.VFC = () => {
       }
     }
 
-    if (haveToken) {
+    if (accompaniment && haveToken) {
       loadInvoices()
     }
-  }, [accompaniment, haveToken])
+  }, [accompaniment, api, haveToken])
 
   useWatchAction<AccompanimentSuccessActionResult>(
     ({ payload }) => {
@@ -301,3 +291,17 @@ const AccompanimentDetailsScreen: React.VFC = () => {
 }
 
 export { AccompanimentDetailsScreen }
+
+// const handleGeneratePDF = useCallback(async () => {
+//   try {
+//     const { data } = await api.get(
+//       `accompaniments/${accompaniment.id}/generatePDF`
+//     )
+
+//     console.log({ data })
+//   } catch (error) {
+//     const message = extractErrorMessage(error)
+
+//     toast.error(message)
+//   }
+// }, [api, accompaniment])

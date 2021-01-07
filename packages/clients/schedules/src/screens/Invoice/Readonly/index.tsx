@@ -6,7 +6,7 @@ import { remote } from 'electron'
 import { extractErrorMessage, useAxios } from '@shared/axios'
 import {
   Button,
-  SingleProviderInput,
+  ProviderInput,
   DateInput,
   NumberInput,
   FileInput,
@@ -59,11 +59,7 @@ const ReadonlyInvoiceScreen: React.VFC<IReadonlyInvoiceScreenProps> = ({
     <Wrapper>
       <FormWrapper onSubmit={console.log} initialData={invoice} ref={formRef}>
         <Container>
-          <SingleProviderInput
-            name="provider"
-            label="Fornecedor"
-            inputProps={{ isDisabled: true }}
-          />
+          <ProviderInput name="provider" label="Fornecedor" single disabled />
 
           <Inline>
             <NumberInput

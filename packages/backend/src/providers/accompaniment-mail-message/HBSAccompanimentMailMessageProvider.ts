@@ -65,7 +65,7 @@ export function createHBSAccompanimentMailMessageProvider(
         )
       }
 
-      const body = await generateHTML(reportName, 'accompaniment', {
+      const body = await generateHTML('emails', reportName, 'accompaniment', {
         number: purchaseOrder.number,
         name: provider.name,
         fantasy: provider.fantasy,

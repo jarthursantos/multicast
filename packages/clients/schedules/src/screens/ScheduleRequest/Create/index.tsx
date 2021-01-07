@@ -6,7 +6,7 @@ import { useFormValidatorRef } from 'hookable-unform'
 import { useWatchAction } from '@shared/action-watcher'
 import {
   SubmitButton,
-  SingleProviderInput,
+  ProviderInput,
   DateInput,
   IProvider
 } from '@shared/web-components/Form'
@@ -71,7 +71,7 @@ const CreateScheduleRequestScreen: React.VFC = () => {
           inputProps={{ autoFocus: true }}
         />
 
-        <SingleProviderInput name="providers" label="Fornecedor" />
+        <ProviderInput name="providers" label="Fornecedor" single />
       </Container>
 
       <ActionsWrapper>

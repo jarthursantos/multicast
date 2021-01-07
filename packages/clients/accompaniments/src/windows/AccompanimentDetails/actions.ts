@@ -16,7 +16,7 @@ export function openAccompanimentDetails(
   ipcRenderer.send(OPEN_ACCOMPANIMENT_DETAILS, accompaniment, token)
 }
 
-export function useAccompanimentDetails(): [Accompaniment, string] {
+export function useAccompanimentDetailsPayload(): [Accompaniment, string] {
   const [accompaniment, setAccompaniment] = useState<Accompaniment>()
   const [token, setToken] = useState<string>()
 

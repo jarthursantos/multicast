@@ -14,7 +14,7 @@ import {
 
 import { Modal } from '~/components/Modal'
 import { useTypedSelector } from '~/store'
-import { cancelAccompanimentRequestAction } from '~/store/modules/accompaniments/actions'
+import { cancelAccompanimentRequest } from '~/store/modules/accompaniments/actions'
 
 import { schema } from './schema'
 import { Wrapper, Container, Title, Message } from './styles'
@@ -42,7 +42,7 @@ const CancelDialog: React.VFC<CancelDialogProps> = ({
       if (success) {
         formRef.current?.setErrors({})
 
-        dispatch(cancelAccompanimentRequestAction(accompanimentId, data.motive))
+        dispatch(cancelAccompanimentRequest(accompanimentId, data.motive))
       }
     },
     [accompanimentId, dispatch, validateForm, formRef]

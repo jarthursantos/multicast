@@ -13,35 +13,9 @@ import {
   useNonSchedulingAccompaniments,
   useNonSendedAccompaniments
 } from '~/store/context'
-import {
-  Accompaniment,
-  CriticalLevel
-} from '~/store/modules/accompaniments/types'
 
 import { InProgressTabs } from '../../InProgress/types'
 import { AccompanimentsGeneralResumeProps } from '../types'
-
-function delayComparer(acc: Accompaniment, other: Accompaniment) {
-  if (acc.criticalLevel === other.criticalLevel) {
-    return other.delay - acc.delay
-  }
-
-  if (acc.criticalLevel === CriticalLevel.DANGER) {
-    return -1
-  }
-
-  if (other.criticalLevel === CriticalLevel.DANGER) {
-    return 1
-  }
-
-  if (acc.criticalLevel === CriticalLevel.ALERT) {
-    return -1
-  }
-
-  if (other.criticalLevel === CriticalLevel.ALERT) {
-    return 1
-  }
-}
 
 const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps> = ({
   changeCurrentInProgressTab
@@ -71,35 +45,38 @@ const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps>
       <Section>
         <h2>Acompanhamentos em atraso</h2>
 
-        <div style={{ height: 24 }} />
+        <div style={{ height: 16 }} />
 
         {nonSended.length > 0 && (
           <React.Fragment>
             <h3 onClick={handleGoTo(InProgressTabs.NON_SENDED)}>A Enviar</h3>
+
             <SectionTimeline
-              accompaniments={nonSended.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonSended}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_SENDED)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
         {nonRevised.length > 0 && (
           <React.Fragment>
             <h3 onClick={handleGoTo(InProgressTabs.NON_REVISED)}>A Revisar</h3>
+
             <SectionTimeline
-              accompaniments={nonRevised.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonRevised}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_REVISED)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
         {nonReleased.length > 0 && (
           <React.Fragment>
             <h3 onClick={handleGoTo(InProgressTabs.NON_RELEASED)}>A Liberar</h3>
+
             <SectionTimeline
-              accompaniments={nonReleased.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonReleased}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_RELEASED)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
@@ -108,22 +85,22 @@ const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps>
             <h3 onClick={handleGoTo(InProgressTabs.NON_EXPECTED_BILLING)}>
               A Prever Faturamento
             </h3>
+
             <SectionTimeline
-              accompaniments={nonExpectedBilling
-                .splice(0, 5)
-                .sort(delayComparer)}
+              accompaniments={nonExpectedBilling}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_EXPECTED_BILLING)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
         {nonBilled.length > 0 && (
           <React.Fragment>
             <h3 onClick={handleGoTo(InProgressTabs.NON_BILLED)}>A Faturar</h3>
+
             <SectionTimeline
-              accompaniments={nonBilled.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonBilled}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_BILLED)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
@@ -132,10 +109,11 @@ const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps>
             <h3 onClick={handleGoTo(InProgressTabs.NON_FREE_ON_BOARD)}>
               A Agendar FOB
             </h3>
+
             <SectionTimeline
-              accompaniments={nonFreeOnBoard.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonFreeOnBoard}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_FREE_ON_BOARD)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
 
@@ -144,10 +122,11 @@ const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps>
             <h3 onClick={handleGoTo(InProgressTabs.NON_SCHEDULING)}>
               A Prever Agendamento
             </h3>
+
             <SectionTimeline
-              accompaniments={nonScheduling.splice(0, 5).sort(delayComparer)}
+              accompaniments={nonScheduling}
+              onShowMoreClick={handleGoTo(InProgressTabs.NON_SCHEDULING)}
             />
-            <div style={{ height: 48 }} />
           </React.Fragment>
         )}
       </Section>

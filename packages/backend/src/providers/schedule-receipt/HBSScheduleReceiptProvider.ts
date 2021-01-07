@@ -15,7 +15,7 @@ export function createHBSScheduleReceiptProvider(
 ): IScheduleReceiptProvider {
   return {
     async generate(data: IScheduleReceiptData): Promise<IFile> {
-      const filename = await generateReport('receipt', 'receipt', {
+      const filename = await generateReport('reports', 'receipt', 'receipt', {
         ...data,
         receiptValue: (data.receiptValue || 0).toFixed(2).replace('.', ','),
         receiptValueExtense: extense(

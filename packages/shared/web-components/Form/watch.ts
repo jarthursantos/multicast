@@ -2,11 +2,11 @@ import { useState, RefObject, useEffect } from 'react'
 
 import { FormHandles } from './index'
 
-export function useFieldWatch(
+export function useFieldWatch<T>(
   formRef: RefObject<FormHandles>,
   fieldName: string
 ) {
-  const [value, setValue] = useState()
+  const [value, setValue] = useState<T>()
 
   useEffect(() => {
     const inputRef: HTMLInputElement = formRef.current?.getFieldRef(fieldName)
@@ -16,7 +16,7 @@ export function useFieldWatch(
     }
 
     inputRef.oninput = () => {
-      const fieldValue = formRef.current?.getFieldValue(fieldName)
+      const fieldValue: T = formRef.current?.getFieldValue(fieldName)
 
       setValue(fieldValue)
     }

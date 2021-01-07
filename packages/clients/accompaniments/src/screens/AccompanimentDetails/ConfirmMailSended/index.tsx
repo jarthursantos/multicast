@@ -6,7 +6,7 @@ import { Button } from '@shared/web-components'
 
 import { Modal } from '~/components/Modal'
 import { useTypedSelector } from '~/store'
-import { markAccompanimentAsSendRequestAction } from '~/store/modules/accompaniments/actions'
+import { markAccompanimentAsSendRequest } from '~/store/modules/accompaniments/actions'
 import { Types } from '~/store/modules/accompaniments/types'
 
 import { Wrapper, Container } from './styles'
@@ -22,7 +22,7 @@ const ConfirmMailSendedDialog: React.VFC<ConfirmMailSendedDialogProps> = ({
   const { markingAsSended } = useTypedSelector(state => state.accompaniments)
 
   const handleMarkAsSended = useCallback(() => {
-    dispatch(markAccompanimentAsSendRequestAction(accompaniment.id))
+    dispatch(markAccompanimentAsSendRequest(accompaniment.id))
   }, [dispatch, accompaniment])
 
   useWatchAction(onClose, [

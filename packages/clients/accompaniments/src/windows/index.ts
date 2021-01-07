@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from 'electron'
 import isDevelopment from 'electron-is-dev'
 
+import { registerOpenBuyerFinderWindow } from '@shared/web-components/Form/Inputs/BuyerInput/Finder/register'
+import { registerOpenProviderFinderWindow } from '@shared/web-components/Form/Inputs/ProviderInput/Finder/register'
+
 import { registerOpenAccompanimentDetails } from './AccompanimentDetails/registers'
 import { registerOpenAccompanimentFilters } from './AccompanimentFilters/register'
 
@@ -28,7 +31,11 @@ export async function registerWindows() {
 
   mainWindow.removeMenu()
   mainWindow.loadURL(resolvePath('auth'))
+  mainWindow.webContents.openDevTools()
 
   registerOpenAccompanimentDetails()
   registerOpenAccompanimentFilters(mainWindow)
+
+  registerOpenBuyerFinderWindow(resolvePath('buyersFinder'))
+  registerOpenProviderFinderWindow(resolvePath('providersFinder'))
 }

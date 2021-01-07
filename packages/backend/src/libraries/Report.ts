@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid'
 import puppeteerOptions from '~/configs/puppeteer'
 
 export async function generateHTML(
+  view: string,
   template: string,
   layout: string,
   data: any
@@ -14,7 +15,7 @@ export async function generateHTML(
     ? template
     : `${template}.hbs`
 
-  const viewsPath = resolve(__dirname, '..', 'app', 'views', 'reports')
+  const viewsPath = resolve(__dirname, '..', 'app', 'views', view)
   const templatePath = join(viewsPath, normalizedTemplate)
 
   const engine = exphbs.create({
@@ -40,11 +41,12 @@ export async function generateHTML(
 }
 
 export async function generateReport(
+  view: string,
   template: string,
   layout: string,
   data: any
 ) {
-  const html = await generateHTML(template, layout, data)
+  const html = await generateHTML(view, template, layout, data)
 
   const browser = await puppeteer.launch({
     args: ['--no-sandbox'],

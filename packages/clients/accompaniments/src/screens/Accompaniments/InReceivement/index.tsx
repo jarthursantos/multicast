@@ -1,9 +1,36 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-// import { Container } from './styles';
+import { ReceivementScreenContextProvider } from './context'
+import { ReceivementSituationGroup } from './SituationGroup'
+import { ReceivementSituationPresenter } from './SituationPresenter'
+import { Wrapper, Header } from './styles'
+import {
+  AccompanimentsInReceivementComponentHandles,
+  InReceivementTabs
+} from './types'
 
-const AccompanimentsInReceivement: React.FC = () => {
-  return <div />
+const AccompanimentsInReceivementComponent: React.ForwardRefRenderFunction<AccompanimentsInReceivementComponentHandles> = (
+  _,
+  ref
+) => {
+  return (
+    <ReceivementScreenContextProvider
+      ref={ref}
+      initialSituation={InReceivementTabs.NON_SCHEDULED}
+    >
+      <Wrapper>
+        <Header>
+          <ReceivementSituationGroup />
+        </Header>
+
+        <ReceivementSituationPresenter />
+      </Wrapper>
+    </ReceivementScreenContextProvider>
+  )
 }
+
+const AccompanimentsInReceivement = forwardRef(
+  AccompanimentsInReceivementComponent
+)
 
 export { AccompanimentsInReceivement }

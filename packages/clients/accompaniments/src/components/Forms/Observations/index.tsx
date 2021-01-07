@@ -13,7 +13,7 @@ import {
 } from '@shared/web-components'
 
 import { useTypedSelector } from '~/store'
-import { addAnnotationRequestAction } from '~/store/modules/accompaniments/actions'
+import { addAnnotationRequest } from '~/store/modules/accompaniments/actions'
 import {
   Annotation,
   AnnotationContent,
@@ -50,7 +50,7 @@ const Observations: React.VFC<Props> = ({ accompanimentId, observations }) => {
       if (success) {
         formRef.current?.setErrors({})
 
-        dispatch(addAnnotationRequestAction(accompanimentId, data))
+        dispatch(addAnnotationRequest(accompanimentId, data))
       }
     },
     [validateForm, dispatch, accompanimentId, formRef]

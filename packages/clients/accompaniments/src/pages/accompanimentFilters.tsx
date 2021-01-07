@@ -5,7 +5,8 @@ import Head from 'next/head'
 import styled from 'styled-components'
 
 import { useSetToken, useAxios } from '@shared/axios'
-import { Form, NumberInput, BuyerInput } from '@shared/web-components/Form'
+import { Form, NumberInput } from '@shared/web-components/Form'
+import { BuyerInput } from '@shared/web-components/Form/Inputs/BuyerInput'
 import { ProviderInput } from '@shared/web-components/Form/Inputs/ProviderInput'
 
 import { useAccompanimentFilters } from '~/windows/AccompanimentFilters/action'
@@ -34,13 +35,15 @@ const Home = () => {
 
           <Form onSubmit={console.log}>
             <Container>
+              {/* <BuyerInput name="buyer" label="(Código, Nome)" /> */}
+
               <h3>Comprador</h3>
 
-              <BuyerInput name="buyer" label="(Código, Nome)" />
+              <BuyerInput name="buyers" label="" />
 
               <h3>Fornecedor</h3>
 
-              <ProviderInput name="provider" label="(Código, Nome, Fantasia)" />
+              <ProviderInput name="providers" label="" />
 
               <h3>Número do Pedido</h3>
 
