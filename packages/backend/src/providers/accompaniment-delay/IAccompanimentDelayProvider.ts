@@ -16,6 +16,7 @@ export type IAccompanimentCalcData = Pick<
   | 'billingAt'
   | 'freeOnBoardAt'
   | 'schedulingAt'
+  | 'annotations'
 >
 
 export interface IAccompanimentDelayProvider {

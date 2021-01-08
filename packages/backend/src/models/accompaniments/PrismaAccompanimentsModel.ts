@@ -119,14 +119,15 @@ export function createPrismaAccompanimentsModel(
         : undefined
 
       const { count, criticalLevel } = accompanimentDelayProvider.calculate({
-        purchaseOrder,
         billingAt: accompaniment.billingAt || undefined,
         expectedBillingAt: accompaniment.expectedBillingAt || undefined,
         freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
         releasedAt: accompaniment.releasedAt || undefined,
         reviewedAt: accompaniment.reviewedAt || undefined,
         schedulingAt: accompaniment.schedulingAt || undefined,
-        sendedAt: accompaniment.sendedAt || undefined
+        sendedAt: accompaniment.sendedAt || undefined,
+        purchaseOrder,
+        annotations
       })
 
       return createAccompaniment(
@@ -206,7 +207,8 @@ export function createPrismaAccompanimentsModel(
           reviewedAt: accompaniment.reviewedAt || undefined,
           schedulingAt: accompaniment.schedulingAt || undefined,
           sendedAt: accompaniment.sendedAt || undefined,
-          purchaseOrder
+          purchaseOrder,
+          annotations
         })
 
         result.push(
@@ -306,7 +308,8 @@ export function createPrismaAccompanimentsModel(
         reviewedAt: updatedData.reviewedAt || undefined,
         schedulingAt: updatedData.schedulingAt || undefined,
         sendedAt: updatedData.sendedAt || undefined,
-        purchaseOrder
+        purchaseOrder,
+        annotations
       })
 
       return createAccompaniment(
