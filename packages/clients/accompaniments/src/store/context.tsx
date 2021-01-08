@@ -148,6 +148,10 @@ export function useNonSchedulingAccompaniments() {
 
   return accompaniments.filter(accompaniment => {
     if (accompaniment.schedulingAt) {
+      if (accompaniment.purchaseOrder.number === 16211) {
+        console.log('useNonSchedulingAccompaniments', 1, { accompaniment })
+      }
+
       return false
     }
 
@@ -155,15 +159,27 @@ export function useNonSchedulingAccompaniments() {
       accompaniment.purchaseOrder.freight === 'CIF' &&
       accompaniment.transactionNumber
     ) {
+      if (accompaniment.purchaseOrder.number === 16211) {
+        console.log('useNonSchedulingAccompaniments', 2, { accompaniment })
+      }
+
       return true
     }
 
     if (
-      accompaniment.purchaseOrder.freight !== 'CIF' &&
+      accompaniment.purchaseOrder.freight === 'FOB' &&
       accompaniment.freeOnBoardAt &&
       accompaniment.transactionNumber
     ) {
+      if (accompaniment.purchaseOrder.number === 16211) {
+        console.log('useNonSchedulingAccompaniments', 3, { accompaniment })
+      }
+
       return true
+    }
+
+    if (accompaniment.purchaseOrder.number === 16211) {
+      console.log('useNonSchedulingAccompaniments', 4, { accompaniment })
     }
 
     return false

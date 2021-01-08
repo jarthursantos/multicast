@@ -280,33 +280,35 @@ export default all([
 // before
 
 // annotations: []
-// createdAt: "2020-10-26T16:35:59.242Z"
+// billingAt: "2021-01-06T03:00:00.000Z"
+// createdAt: "2020-10-26T16:35:59.341Z"
 // criticalLevel: "NORMAL"
-// delay: null
-// expectedBillingAt: "2021-01-08T03:00:00.000Z"
-// id: "7d86c3b6-a9a7-4993-a554-2682ade50041"
+// delay: 2
+// expectedBillingAt: "2021-01-05T03:00:00.000Z"
+// id: "9d548cf1-c8b1-4276-a081-0b5ac338ca85"
 // isOutstanding: false
-// purchaseOrder: {number: 16207, emittedAt: "2020-09-18T03:00:00.000Z", provider: {…}, buyer: {…}}
-// releasedAt: "2021-01-08T03:00:00.000Z"
-// reviewedAt: "2021-01-07T18:02:02.845Z"
-// sendedAt: "2020-11-19T12:33:19.153Z"
-// updatedAt: "2021-01-08T11:15:19.224Z"
+// purchaseOrder: {number: 16211, emittedAt: "2020-09-21T03:00:00.000Z", provider: {…}, buyer: {…}}
+// releasedAt: "2021-01-04T03:00:00.000Z"
+// reviewedAt: "2021-01-08T13:08:21.504Z"
+// sendedAt: "2021-01-08T13:08:05.845Z"
+// updatedAt: "2021-01-08T13:09:47.161Z"
 
-// after
+// freeOnBoardAt: undefined
 
-// annotations: []
-// billingAt: "2021-01-08T03:00:00.000Z"
-// createdAt: "2020-10-26T16:35:59.242Z"
-// criticalLevel: "NORMAL"
-// delay: null
-// expectedBillingAt: "2021-01-08T03:00:00.000Z"
-// id: "7d86c3b6-a9a7-4993-a554-2682ade50041"
-// invoiceNumber: 85439
-// invoiceProvider: 1274
-// isOutstanding: false
-// purchaseOrder: {number: 16207, emittedAt: "2020-09-18T03:00:00.000Z", provider: {…}, buyer: {…}}
-// releasedAt: "2021-01-08T03:00:00.000Z"
-// reviewedAt: "2021-01-07T18:02:02.845Z"
-// sendedAt: "2020-11-19T12:33:19.153Z"
-// transactionNumber: 551428
-// updatedAt: "2021-01-08T11:15:23.949Z"
+// schedulingAt: undefined
+
+// "sendedAt": "2021-01-08T13:08:05.845Z",
+// "reviewedAt": "2021-01-08T13:08:21.504Z",
+// "releasedAt": "2021-01-04T03:00:00.000Z",
+// "expectedBillingAt": "2021-01-05T03:00:00.000Z",
+// "billingAt": "2021-01-06T03:00:00.000Z",
+// "transactionNumber": 559939,
+// "invoiceNumber": 16393,
+// "invoiceProvider": 1379,
+// "annotations": [],
+// "isOutstanding": false,
+// "delay": 2,
+// "criticalLevel": "DANGER",
+// "id": "9d548cf1-c8b1-4276-a081-0b5ac338ca85",
+// "createdAt": "2020-10-26T16:35:59.341Z",
+// "updatedAt": "2021-01-08T13:24:13.491Z"

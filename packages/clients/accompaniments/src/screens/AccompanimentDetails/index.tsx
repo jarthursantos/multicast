@@ -161,6 +161,8 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
   useEffect(() => {
     remoteAccompaniment && setAccompaniment(remoteAccompaniment)
+
+    console.log({ remoteAccompaniment })
   }, [remoteAccompaniment])
 
   useWatchAction<MarkAccompanimentAsSendedSuccessAction>(

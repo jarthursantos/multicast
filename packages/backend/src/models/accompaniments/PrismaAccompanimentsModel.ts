@@ -290,6 +290,14 @@ export function createPrismaAccompanimentsModel(
         ? await invoicesModel.findById(updatedData.invoiceId)
         : undefined
 
+      const purchaseOrder = await purchaseOrderModel.findByNumber(
+        updatedData.number
+      )
+
+      if (!purchaseOrder) {
+        throw new createHttpError.NotFound('Pedido de compra não existe')
+      }
+
       const { count, criticalLevel } = accompanimentDelayProvider.calculate({
         billingAt: updatedData.billingAt || undefined,
         expectedBillingAt: updatedData.expectedBillingAt || undefined,
@@ -298,7 +306,7 @@ export function createPrismaAccompanimentsModel(
         reviewedAt: updatedData.reviewedAt || undefined,
         schedulingAt: updatedData.schedulingAt || undefined,
         sendedAt: updatedData.sendedAt || undefined,
-        purchaseOrder: accompaniment.purchaseOrder
+        purchaseOrder
       })
 
       return createAccompaniment(
@@ -315,7 +323,7 @@ export function createPrismaAccompanimentsModel(
           schedulingAt: updatedData.schedulingAt || undefined,
           sendedAt: updatedData.sendedAt || undefined,
           updatedAt: updatedData.updatedAt || undefined,
-          purchaseOrder: accompaniment.purchaseOrder,
+          purchaseOrder,
           delay: count,
           criticalLevel,
           annotations,
