@@ -15,13 +15,10 @@ export const AxiosContextProvider: React.FC<AxiosContextProviderProps> = ({
   const handleSetToken = useCallback((newToken: string) => {
     if (!newToken) return
 
-    console.log('useCallback', { token: newToken })
-
     api.interceptors.request.use(config => {
       config.params = config.params || {}
 
       config.headers.Authorization = `Bearer ${newToken}`
-      console.log('interceptors', { token: newToken })
 
       return config
     })

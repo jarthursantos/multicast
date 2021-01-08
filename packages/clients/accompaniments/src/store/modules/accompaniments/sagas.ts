@@ -75,6 +75,8 @@ export function* updateAccompaniment({
 
     const accompaniment: Accompaniment = response.data
 
+    console.log({ accompaniment, data })
+
     toast.success('Acompanhamento atualizado')
 
     yield put(updateAccompanimentSuccess(accompaniment))
@@ -255,3 +257,56 @@ export default all([
     markAccompanimentAsReleased
   )
 ])
+
+// annotations: []
+// billingAt: "2021-01-10T03:00:00.000Z"
+// createdAt: "2020-10-26T16:35:59.461Z"
+// criticalLevel: "NORMAL"
+// delay: null
+// expectedBillingAt: "2021-01-09T03:00:00.000Z"
+// id: "879d2cf0-acaf-476b-8d24-26286420b2ae"
+// invoiceNumber: 2882
+// invoiceProvider: 1075
+// isOutstanding: false
+// purchaseOrder: {number: 16216, emittedAt: "2020-09-23T03:00:00.000Z", provider: {…}, buyer: {…}}
+// releasedAt: "2021-01-08T03:00:00.000Z"
+// reviewedAt: "2021-01-07T18:21:19.918Z"
+// sendedAt: "2020-10-27T19:42:10.333Z"
+// transactionNumber: 555745
+// updatedAt: "2021-01-08T11:02:44.058Z"
+
+// TODO
+
+// before
+
+// annotations: []
+// createdAt: "2020-10-26T16:35:59.242Z"
+// criticalLevel: "NORMAL"
+// delay: null
+// expectedBillingAt: "2021-01-08T03:00:00.000Z"
+// id: "7d86c3b6-a9a7-4993-a554-2682ade50041"
+// isOutstanding: false
+// purchaseOrder: {number: 16207, emittedAt: "2020-09-18T03:00:00.000Z", provider: {…}, buyer: {…}}
+// releasedAt: "2021-01-08T03:00:00.000Z"
+// reviewedAt: "2021-01-07T18:02:02.845Z"
+// sendedAt: "2020-11-19T12:33:19.153Z"
+// updatedAt: "2021-01-08T11:15:19.224Z"
+
+// after
+
+// annotations: []
+// billingAt: "2021-01-08T03:00:00.000Z"
+// createdAt: "2020-10-26T16:35:59.242Z"
+// criticalLevel: "NORMAL"
+// delay: null
+// expectedBillingAt: "2021-01-08T03:00:00.000Z"
+// id: "7d86c3b6-a9a7-4993-a554-2682ade50041"
+// invoiceNumber: 85439
+// invoiceProvider: 1274
+// isOutstanding: false
+// purchaseOrder: {number: 16207, emittedAt: "2020-09-18T03:00:00.000Z", provider: {…}, buyer: {…}}
+// releasedAt: "2021-01-08T03:00:00.000Z"
+// reviewedAt: "2021-01-07T18:02:02.845Z"
+// sendedAt: "2020-11-19T12:33:19.153Z"
+// transactionNumber: 551428
+// updatedAt: "2021-01-08T11:15:23.949Z"

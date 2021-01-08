@@ -122,11 +122,11 @@ export function createPrismaAccompanimentsModel(
         purchaseOrder,
         billingAt: accompaniment.billingAt || undefined,
         expectedBillingAt: accompaniment.expectedBillingAt || undefined,
-        freeOnBoardAt: accompaniment.billingAt || undefined,
-        releasedAt: accompaniment.billingAt || undefined,
-        reviewedAt: accompaniment.billingAt || undefined,
-        schedulingAt: accompaniment.billingAt || undefined,
-        sendedAt: accompaniment.billingAt || undefined
+        freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+        releasedAt: accompaniment.releasedAt || undefined,
+        reviewedAt: accompaniment.reviewedAt || undefined,
+        schedulingAt: accompaniment.schedulingAt || undefined,
+        sendedAt: accompaniment.sendedAt || undefined
       })
 
       return createAccompaniment(
@@ -201,11 +201,11 @@ export function createPrismaAccompanimentsModel(
         const { count, criticalLevel } = accompanimentDelayProvider.calculate({
           billingAt: accompaniment.billingAt || undefined,
           expectedBillingAt: accompaniment.expectedBillingAt || undefined,
-          freeOnBoardAt: accompaniment.billingAt || undefined,
-          releasedAt: accompaniment.billingAt || undefined,
-          reviewedAt: accompaniment.billingAt || undefined,
-          schedulingAt: accompaniment.billingAt || undefined,
-          sendedAt: accompaniment.billingAt || undefined,
+          freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+          releasedAt: accompaniment.releasedAt || undefined,
+          reviewedAt: accompaniment.reviewedAt || undefined,
+          schedulingAt: accompaniment.schedulingAt || undefined,
+          sendedAt: accompaniment.sendedAt || undefined,
           purchaseOrder
         })
 
@@ -291,32 +291,32 @@ export function createPrismaAccompanimentsModel(
         : undefined
 
       const { count, criticalLevel } = accompanimentDelayProvider.calculate({
-        billingAt: accompaniment.billingAt || undefined,
-        expectedBillingAt: accompaniment.expectedBillingAt || undefined,
-        freeOnBoardAt: accompaniment.billingAt || undefined,
-        releasedAt: accompaniment.billingAt || undefined,
-        reviewedAt: accompaniment.billingAt || undefined,
-        schedulingAt: accompaniment.billingAt || undefined,
-        sendedAt: accompaniment.billingAt || undefined,
+        billingAt: updatedData.billingAt || undefined,
+        expectedBillingAt: updatedData.expectedBillingAt || undefined,
+        freeOnBoardAt: updatedData.freeOnBoardAt || undefined,
+        releasedAt: updatedData.releasedAt || undefined,
+        reviewedAt: updatedData.reviewedAt || undefined,
+        schedulingAt: updatedData.schedulingAt || undefined,
+        sendedAt: updatedData.sendedAt || undefined,
         purchaseOrder: accompaniment.purchaseOrder
       })
 
       return createAccompaniment(
         {
-          billingAt: accompaniment.billingAt || undefined,
-          createdAt: accompaniment.createdAt || undefined,
-          expectedBillingAt: accompaniment.expectedBillingAt || undefined,
-          freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
-          invoiceNumber: accompaniment.invoiceNumber || undefined,
-          invoiceProvider: accompaniment.invoiceProvider || undefined,
-          releasedAt: accompaniment.releasedAt || undefined,
-          renewedAt: accompaniment.renewedAt || undefined,
-          reviewedAt: accompaniment.reviewedAt || undefined,
-          schedulingAt: accompaniment.schedulingAt || undefined,
-          sendedAt: accompaniment.sendedAt || undefined,
-          updatedAt: accompaniment.updatedAt || undefined,
+          billingAt: updatedData.billingAt || undefined,
+          createdAt: updatedData.createdAt || undefined,
+          expectedBillingAt: updatedData.expectedBillingAt || undefined,
+          freeOnBoardAt: updatedData.freeOnBoardAt || undefined,
+          invoiceNumber: updatedData.invoiceNumber || undefined,
+          invoiceProvider: updatedData.invoiceProvider || undefined,
+          releasedAt: updatedData.releasedAt || undefined,
+          renewedAt: updatedData.renewedAt || undefined,
+          reviewedAt: updatedData.reviewedAt || undefined,
+          schedulingAt: updatedData.schedulingAt || undefined,
+          sendedAt: updatedData.sendedAt || undefined,
+          updatedAt: updatedData.updatedAt || undefined,
           purchaseOrder: accompaniment.purchaseOrder,
-          delay: count || 0,
+          delay: count,
           criticalLevel,
           annotations,
           invoice,
