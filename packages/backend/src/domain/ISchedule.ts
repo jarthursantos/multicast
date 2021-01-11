@@ -46,6 +46,7 @@ export interface ISchedule {
 
   totalWeight: number
   totalVolume: number
+  totalValue: number
 
   rescheduledTo?: ISchedule
   rescheduledFrom?: ISchedule
@@ -85,6 +86,7 @@ export function createSchedule(
     scheduleRequest: props.scheduleRequest,
     totalWeight: props.totalWeight,
     totalVolume: props.totalVolume,
+    totalValue: props.totalValue,
     rescheduledTo: props.rescheduledTo,
     rescheduledFrom: props.rescheduledFrom,
 

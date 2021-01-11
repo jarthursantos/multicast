@@ -30,9 +30,15 @@ export function createPrismaRescheduleSchedulesModel(
       0
     )
 
+    const totalValue = invoices.reduce(
+      (currentValue, { value }) => currentValue + (value || 0),
+      0
+    )
+
     return {
       totalWeight,
-      totalVolume
+      totalVolume,
+      totalValue
     }
   }
 
@@ -111,7 +117,7 @@ export function createPrismaRescheduleSchedulesModel(
         rescheduledInvoices
       )
 
-      const { totalVolume, totalWeight } = extractTotals(invoices)
+      const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
       const dischargeTable = createDischargeTable(
         schedule.dischargeTable,
@@ -175,6 +181,7 @@ export function createPrismaRescheduleSchedulesModel(
             dischargeTable,
             totalVolume,
             totalWeight,
+            totalValue,
             invoices,
             situation: updatedSituation
           },
@@ -224,6 +231,7 @@ export function createPrismaRescheduleSchedulesModel(
             dischargeTable,
             totalVolume,
             totalWeight,
+            totalValue,
             invoices: rescheduledInvoices,
             situation: rescheduleSituation
           },

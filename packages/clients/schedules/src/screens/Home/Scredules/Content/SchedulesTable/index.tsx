@@ -109,6 +109,15 @@ const SchedulesTable: React.VFC = () => {
             formatter: scheduleSituationFormatter
           },
           {
+            title: 'Valor Total',
+            width: 150,
+            field: 'totalValue',
+            sorter: 'number',
+            formatter: contabilFormatter,
+            bottomCalc: 'sum',
+            bottomCalcFormatter: contabilFormatter
+          },
+          {
             title: 'Peso Total',
             width: 150,
             field: 'totalWeight',

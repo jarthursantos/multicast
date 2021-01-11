@@ -131,6 +131,7 @@ export default function accompaniments(
 
         if (accompanimentIndex !== -1) {
           draft.accompaniments[accompanimentIndex].annotations.push(annotation)
+          draft.accompaniments[accompanimentIndex].delay = 0
         }
 
         draft.additingAnnotation = false

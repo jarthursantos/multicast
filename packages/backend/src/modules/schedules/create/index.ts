@@ -34,6 +34,7 @@ export function createCreateSchedulesModule(
         invoices: [],
         totalVolume: 0,
         totalWeight: 0,
+        totalValue: 0,
         situation: ScheduleSituations.OPENED
       })
 

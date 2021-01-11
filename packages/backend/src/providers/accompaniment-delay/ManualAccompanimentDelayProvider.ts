@@ -48,6 +48,14 @@ export function createManualAccompanimentDelayProvider(): IAccompanimentDelayPro
     return dateToCompare
   }
 
+  function resolveCriticalLevel(count: number, limiar: number) {
+    return count > limiar
+      ? CriticalLevel.DANGER
+      : count === limiar
+      ? CriticalLevel.ALERT
+      : CriticalLevel.NORMAL
+  }
+
   return {
     calculate(accompaniment: IAccompanimentCalcData): IAccompanimentDelay {
       const {
@@ -69,95 +77,63 @@ export function createManualAccompanimentDelayProvider(): IAccompanimentDelayPro
       if (sendedAt && !reviewedAt) {
         const count = differenceInBusinessDays(
           new Date(),
-          mostRecentlyAnnotation
-            ? getMostBiggerDate(sendedAt, mostRecentlyAnnotation)
-            : sendedAt
+          getMostBiggerDate(sendedAt, mostRecentlyAnnotation || sendedAt)
         )
 
         return {
           count,
-          criticalLevel:
-            count > 2
-              ? CriticalLevel.DANGER
-              : count === 2
-              ? CriticalLevel.ALERT
-              : CriticalLevel.NORMAL
+          criticalLevel: resolveCriticalLevel(count, 2)
         }
       }
 
       if (reviewedAt && !releasedAt) {
         const count = differenceInBusinessDays(
           new Date(),
-          mostRecentlyAnnotation
-            ? getMostBiggerDate(reviewedAt, mostRecentlyAnnotation)
-            : reviewedAt
+          getMostBiggerDate(reviewedAt, mostRecentlyAnnotation || reviewedAt)
         )
 
         return {
           count,
-          criticalLevel:
-            count > 3
-              ? CriticalLevel.DANGER
-              : count === 3
-              ? CriticalLevel.ALERT
-              : CriticalLevel.NORMAL
+          criticalLevel: resolveCriticalLevel(count, 3)
         }
       }
 
       if (releasedAt && !expectedBillingAt) {
         const count = differenceInBusinessDays(
           new Date(),
-          mostRecentlyAnnotation
-            ? getMostBiggerDate(releasedAt, mostRecentlyAnnotation)
-            : releasedAt
+          getMostBiggerDate(releasedAt, mostRecentlyAnnotation || releasedAt)
         )
 
         return {
           count,
-          criticalLevel:
-            count > 3
-              ? CriticalLevel.DANGER
-              : count === 3
-              ? CriticalLevel.ALERT
-              : CriticalLevel.NORMAL
+          criticalLevel: resolveCriticalLevel(count, 3)
         }
       }
 
       if (expectedBillingAt && !billingAt) {
         const count = differenceInBusinessDays(
           new Date(),
-          mostRecentlyAnnotation
-            ? getMostBiggerDate(expectedBillingAt, mostRecentlyAnnotation)
-            : expectedBillingAt
+          getMostBiggerDate(
+            expectedBillingAt,
+            mostRecentlyAnnotation || expectedBillingAt
+          )
         )
 
         return {
           count,
-          criticalLevel:
-            count > 3
-              ? CriticalLevel.DANGER
-              : count === 3
-              ? CriticalLevel.ALERT
-              : CriticalLevel.NORMAL
+          criticalLevel: resolveCriticalLevel(count, 3)
         }
       }
 
       if (billingAt && purchaseOrder.freight === 'CIF' && !schedulingAt) {
         const count = differenceInBusinessDays(
           new Date(),
-          mostRecentlyAnnotation
-            ? getMostBiggerDate(billingAt, mostRecentlyAnnotation)
-            : billingAt
+          getMostBiggerDate(billingAt, mostRecentlyAnnotation || billingAt)
         )
 
         return {
           count,
-          criticalLevel:
-            count > 1
-              ? CriticalLevel.DANGER
-              : count === 1
-              ? CriticalLevel.ALERT
-              : CriticalLevel.NORMAL
+          criticalLevel: resolveCriticalLevel(count, 1)
         }
       }
 
@@ -165,57 +141,36 @@ export function createManualAccompanimentDelayProvider(): IAccompanimentDelayPro
         if (billingAt && !freeOnBoardAt) {
           const count = differenceInBusinessDays(
             new Date(),
-            mostRecentlyAnnotation
-              ? getMostBiggerDate(billingAt, mostRecentlyAnnotation)
-              : billingAt
+            getMostBiggerDate(billingAt, mostRecentlyAnnotation || billingAt)
           )
 
           return {
             count,
-            criticalLevel:
-              count > 3
-                ? CriticalLevel.DANGER
-                : count === 3
-                ? CriticalLevel.ALERT
-                : CriticalLevel.NORMAL
+            criticalLevel: resolveCriticalLevel(count, 3)
           }
         }
       } else {
         if (billingAt && !schedulingAt) {
           const count = differenceInBusinessDays(
             new Date(),
-            mostRecentlyAnnotation
-              ? getMostBiggerDate(billingAt, mostRecentlyAnnotation)
-              : billingAt
+            getMostBiggerDate(billingAt, mostRecentlyAnnotation || billingAt)
           )
 
           return {
             count,
-            criticalLevel:
-              count > 3
-                ? CriticalLevel.DANGER
-                : count === 3
-                ? CriticalLevel.ALERT
-                : CriticalLevel.NORMAL
+            criticalLevel: resolveCriticalLevel(count, 3)
           }
         }
       }
 
       const count = differenceInBusinessDays(
         new Date(),
-        mostRecentlyAnnotation
-          ? getMostBiggerDate(emittedAt, mostRecentlyAnnotation)
-          : emittedAt
+        getMostBiggerDate(emittedAt, mostRecentlyAnnotation || emittedAt)
       )
 
       return {
         count,
-        criticalLevel:
-          count > 2
-            ? CriticalLevel.DANGER
-            : count === 2
-            ? CriticalLevel.ALERT
-            : CriticalLevel.NORMAL
+        criticalLevel: resolveCriticalLevel(count, 2)
       }
     }
   }

@@ -28,9 +28,15 @@ export function createPrismaSchedulesModel(
       0
     )
 
+    const totalValue = invoices.reduce(
+      (currentValue, { value }) => currentValue + (value || 0),
+      0
+    )
+
     return {
       totalWeight,
-      totalVolume
+      totalVolume,
+      totalValue
     }
   }
 
@@ -94,7 +100,7 @@ export function createPrismaSchedulesModel(
           invoices
         )
 
-        const { totalVolume, totalWeight } = extractTotals(invoices)
+        const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
         const dischargeTable = createDischargeTable(
           schedule.dischargeTable,
@@ -131,7 +137,8 @@ export function createPrismaSchedulesModel(
               invoices,
               situation,
               totalWeight,
-              totalVolume
+              totalVolume,
+              totalValue
             },
             schedule.id
           )
@@ -184,7 +191,7 @@ export function createPrismaSchedulesModel(
           invoices
         )
 
-        const { totalVolume, totalWeight } = extractTotals(invoices)
+        const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
         const dischargeTable = createDischargeTable(
           schedule.dischargeTable,
@@ -221,7 +228,8 @@ export function createPrismaSchedulesModel(
               invoices,
               situation,
               totalWeight,
-              totalVolume
+              totalVolume,
+              totalValue
             },
             schedule.id
           )
@@ -249,7 +257,7 @@ export function createPrismaSchedulesModel(
         schedule.id
       )
 
-      const { totalVolume, totalWeight } = extractTotals(invoices)
+      const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
       const situation = scheduleSituationsProvider.find(
         {
@@ -296,7 +304,8 @@ export function createPrismaSchedulesModel(
           invoices,
           situation,
           totalWeight,
-          totalVolume
+          totalVolume,
+          totalValue
         },
         schedule.id
       )
@@ -385,7 +394,7 @@ export function createPrismaSchedulesModel(
         canceledSchedule.id
       )
 
-      const { totalVolume, totalWeight } = extractTotals(invoices)
+      const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
       const situation = scheduleSituationsProvider.find(
         {
@@ -432,7 +441,8 @@ export function createPrismaSchedulesModel(
           invoices,
           situation,
           totalWeight,
-          totalVolume
+          totalVolume,
+          totalValue
         },
         canceledSchedule.id
       )
@@ -560,7 +570,7 @@ export function createPrismaSchedulesModel(
           invoices
         )
 
-        const { totalVolume, totalWeight } = extractTotals(invoices)
+        const { totalVolume, totalWeight, totalValue } = extractTotals(invoices)
 
         const dischargeTable = createDischargeTable(
           schedule.dischargeTable,
@@ -597,7 +607,8 @@ export function createPrismaSchedulesModel(
               invoices,
               situation,
               totalWeight,
-              totalVolume
+              totalVolume,
+              totalValue
             },
             schedule.id
           )
