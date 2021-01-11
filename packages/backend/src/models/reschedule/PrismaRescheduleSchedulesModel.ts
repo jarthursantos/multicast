@@ -63,7 +63,8 @@ export function createPrismaRescheduleSchedulesModel(
             'dischargeTable',
             'scheduleRequest',
             'totalWeight',
-            'totalVolume'
+            'totalVolume',
+            'totalValue'
           ),
           rescheduledFrom: { connect: { id: schedule.id } },
           dischargeTable: { connect: { id: schedule.dischargeTable.id } }
