@@ -57,6 +57,8 @@ const SchedulesTable: React.VFC = () => {
           row?.select()
         },
         rowDblClick: (_, row) => {
+          row?.select()
+
           const schedule: ISchedule = row.getData()
 
           switch (schedule.situation) {

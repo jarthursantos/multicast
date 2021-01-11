@@ -83,7 +83,10 @@ export function* updateAccompaniment({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao atualizar acompanhamento',
+      String(message)
+    )
 
     yield put(updateAccompanimentFailure(message))
   }
@@ -111,7 +114,10 @@ export function* renewAccompaniment({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao renovar acompanhamento',
+      String(message)
+    )
 
     yield put(renewAccompanimentFailure(message))
   }
@@ -131,7 +137,10 @@ export function* cancelAccompaniment({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao cancelar acompanhamento',
+      String(message)
+    )
 
     yield put(cancelAccompanimentFailure(message))
   }
@@ -155,7 +164,7 @@ export function* addAnnotation({ payload }: AddAnnotationRequestAction) {
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox('Erro ao adicionar anotação', String(message))
 
     yield put(addAnnotationFailure(message))
   }
@@ -177,8 +186,10 @@ export function* markAccompanimentAsSended({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
-
+    remote?.dialog.showErrorBox(
+      'Erro ao atualizar acompanhamento',
+      String(message)
+    )
     yield put(markAccompanimentAsSendedFailure(message))
   }
 }
@@ -202,7 +213,10 @@ export function* markAccompanimentAsReviewed({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao atualizar acompanhamento',
+      String(message)
+    )
 
     yield put(markAccompanimentAsReviewedFailure(message))
   }
@@ -227,7 +241,10 @@ export function* markAccompanimentAsReleased({
   } catch (err) {
     const message = extractErrorMessage(err)
 
-    toast.error(message)
+    remote?.dialog.showErrorBox(
+      'Erro ao atualizar acompanhamento',
+      String(message)
+    )
 
     yield put(markAccompanimentAsReleasedFailure(message))
   }

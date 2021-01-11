@@ -87,34 +87,40 @@ const ProductsContainer: React.VFC<ProductsContainerProps> = ({
         </Header>
 
         <Table
+          dataKey="code"
           style={{ gridArea: 'CONTENT', width: '100%', height: '100%' }}
           options={{
             data,
             layout: 'fitColumns',
+            resizableColumns: false,
             columns: [
               {
                 title: 'Código',
                 field: 'code',
                 sorter: 'number',
+                headerHozAlign: 'center',
                 hozAlign: 'right',
                 width: 80,
-                bottomCalc: 'count'
+                bottomCalc: 'count',
+                headerSort: false
               },
               {
                 title: 'Descrição',
                 field: 'description',
                 sorter: 'string',
-
                 widthGrow: 1,
-                widthShrink: 1
+                widthShrink: 1,
+                headerSort: false
               },
               {
                 title: 'Qtd',
                 field: 'requestedQuantity',
                 sorter: 'number',
                 hozAlign: 'right',
+                headerHozAlign: 'center',
                 width: 60,
-                bottomCalc: 'count'
+                bottomCalc: 'count',
+                headerSort: false
               }
             ]
           }}

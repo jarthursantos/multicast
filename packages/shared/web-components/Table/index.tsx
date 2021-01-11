@@ -23,7 +23,11 @@ export const dateColumnOptions: Partial<ColumnDefinition> = {
   }
 }
 
-const Table: React.VFC<TableProps> = ({ options, ...props }) => {
+const Table: React.VFC<TableProps> = ({
+  options,
+  dataKey = 'id',
+  ...props
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const tabulator = useRef<Tabulator>(null)
 
@@ -34,6 +38,7 @@ const Table: React.VFC<TableProps> = ({ options, ...props }) => {
 
     if (!tabulator.current) {
       tabulator.current = new Tabulator(ref.current, someOptions)
+      console.log('tabulator:createInstance')
     }
   }, [someOptions])
 
@@ -46,12 +51,13 @@ const Table: React.VFC<TableProps> = ({ options, ...props }) => {
   useEffect(() => {
     if (!tabulator.current || !data) return
 
-    const currentData = tabulator.current.getData()
+    const currentData = tabulator.current.getData() || []
 
-    if (!isEqual(sortBy(currentData), sortBy(data))) {
+    if (!isEqual(sortBy(currentData, dataKey), sortBy(data, dataKey))) {
       tabulator.current.setData(data)
+      console.log('tabulator:updateData', dataKey)
     }
-  }, [data])
+  }, [data, dataKey])
 
   useEffect(() => {
     if (!tabulator.current || !columns) return
@@ -60,6 +66,7 @@ const Table: React.VFC<TableProps> = ({ options, ...props }) => {
 
     if (!isEqual(sortBy(currentColumns, 'field'), sortBy(columns, 'field'))) {
       tabulator.current.setColumns(columns)
+      console.log('tabulator:updateColumns')
     }
   }, [columns])
 

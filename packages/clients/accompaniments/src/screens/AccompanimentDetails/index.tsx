@@ -36,7 +36,7 @@ import {
   MarkAccompanimentAsReviewedSuccessAction,
   AddAnnotationSuccessAction
 } from '~/store/modules/accompaniments/types'
-// import { closeWindow } from '~/utils/close-window'
+import { closeWindow } from '~/utils/close-window'
 
 import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { schema } from './schema'
@@ -190,11 +190,11 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
     [Types.ADD_ANNOTATION_SUCCESS]
   )
 
-  // useWatchAction(closeWindow, [
-  //   Types.UPDATE_ACCOMPANIMENT_SUCCESS,
-  //   Types.RENEW_ACCOMPANIMENT_SUCCESS,
-  //   Types.CANCEL_ACCOMPANIMENT_SUCCESS
-  // ])
+  useWatchAction(closeWindow, [
+    Types.UPDATE_ACCOMPANIMENT_SUCCESS,
+    Types.RENEW_ACCOMPANIMENT_SUCCESS,
+    Types.CANCEL_ACCOMPANIMENT_SUCCESS
+  ])
 
   return (
     <>

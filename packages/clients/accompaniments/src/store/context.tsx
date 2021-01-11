@@ -3,10 +3,37 @@ import React, { createContext, useContext, useMemo } from 'react'
 import { isAfter, isBefore, parseISO } from 'date-fns'
 
 import { useTypedSelector } from '~/store'
-import { Accompaniment } from '~/store/modules/accompaniments/types'
+import {
+  Accompaniment,
+  CriticalLevel
+} from '~/store/modules/accompaniments/types'
 
 const StoreContext = createContext<{ accompaniments: Accompaniment[] }>(null)
 
+export function delayComparer(
+  accompaniment: Accompaniment,
+  other: Accompaniment
+) {
+  if (accompaniment.criticalLevel === other.criticalLevel) {
+    return other.delay - accompaniment.delay
+  }
+
+  if (accompaniment.criticalLevel === CriticalLevel.DANGER) {
+    return -1
+  }
+
+  if (other.criticalLevel === CriticalLevel.DANGER) {
+    return 1
+  }
+
+  if (accompaniment.criticalLevel === CriticalLevel.ALERT) {
+    return -1
+  }
+
+  if (other.criticalLevel === CriticalLevel.ALERT) {
+    return 1
+  }
+}
 export const StoreContextProvider: React.FC = ({ children }) => {
   const { accompaniments, filters } = useTypedSelector(
     state => state.accompaniments
@@ -14,61 +41,63 @@ export const StoreContextProvider: React.FC = ({ children }) => {
 
   const filteredAccompaniments = useMemo(
     () =>
-      accompaniments.filter(accompaniment => {
-        if (
-          filters.emittedFrom &&
-          isBefore(
-            typeof accompaniment.purchaseOrder.emittedAt === 'string'
-              ? parseISO(accompaniment.purchaseOrder.emittedAt)
-              : accompaniment.purchaseOrder.emittedAt,
-            filters.emittedFrom
-          )
-        ) {
-          return false
-        }
+      accompaniments
+        .filter(accompaniment => {
+          if (
+            filters.emittedFrom &&
+            isBefore(
+              typeof accompaniment.purchaseOrder.emittedAt === 'string'
+                ? parseISO(accompaniment.purchaseOrder.emittedAt)
+                : accompaniment.purchaseOrder.emittedAt,
+              filters.emittedFrom
+            )
+          ) {
+            return false
+          }
 
-        if (
-          filters.emittedTo &&
-          isAfter(
-            typeof accompaniment.purchaseOrder.emittedAt === 'string'
-              ? parseISO(accompaniment.purchaseOrder.emittedAt)
-              : accompaniment.purchaseOrder.emittedAt,
-            filters.emittedTo
-          )
-        ) {
-          return false
-        }
+          if (
+            filters.emittedTo &&
+            isAfter(
+              typeof accompaniment.purchaseOrder.emittedAt === 'string'
+                ? parseISO(accompaniment.purchaseOrder.emittedAt)
+                : accompaniment.purchaseOrder.emittedAt,
+              filters.emittedTo
+            )
+          ) {
+            return false
+          }
 
-        if (
-          filters.numberFrom &&
-          accompaniment.purchaseOrder.number < filters.numberFrom
-        ) {
-          return false
-        }
+          if (
+            filters.numberFrom &&
+            accompaniment.purchaseOrder.number < filters.numberFrom
+          ) {
+            return false
+          }
 
-        if (
-          filters.numberTo &&
-          accompaniment.purchaseOrder.number > filters.numberTo
-        ) {
-          return false
-        }
+          if (
+            filters.numberTo &&
+            accompaniment.purchaseOrder.number > filters.numberTo
+          ) {
+            return false
+          }
 
-        if (
-          filters.providerCode &&
-          accompaniment.purchaseOrder.provider.code !== filters.providerCode
-        ) {
-          return false
-        }
+          if (
+            filters.providerCode &&
+            accompaniment.purchaseOrder.provider.code !== filters.providerCode
+          ) {
+            return false
+          }
 
-        if (
-          filters.buyerCode &&
-          accompaniment.purchaseOrder.buyer.code !== filters.buyerCode
-        ) {
-          return false
-        }
+          if (
+            filters.buyerCode &&
+            accompaniment.purchaseOrder.buyer.code !== filters.buyerCode
+          ) {
+            return false
+          }
 
-        return true
-      }),
+          return true
+        })
+        .sort(delayComparer),
     [accompaniments, filters]
   )
 

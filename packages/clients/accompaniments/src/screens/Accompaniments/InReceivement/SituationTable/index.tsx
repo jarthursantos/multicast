@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-import { useWatchAction } from '@shared/action-watcher'
 import { Table } from '@shared/web-components/Table'
 
-import { useTypedSelector } from '~/store'
-import { Accompaniment, Types } from '~/store/modules/accompaniments/types'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
 
 import { ReceivementSituationTableProps } from './types'
@@ -15,22 +13,6 @@ const ReceivementSituationTable: React.VFC<ReceivementSituationTableProps> = ({
   tab: persistenceID,
   onSelectionChange
 }) => {
-  const { token } = useTypedSelector(state => state.auth)
-
-  const [selectedRow, setSelectedRow] = useState<Accompaniment>()
-
-  useEffect(() => onSelectionChange(selectedRow), [
-    selectedRow,
-    onSelectionChange
-  ])
-
-  useWatchAction(() => {
-    setSelectedRow(undefined)
-  }, [
-    Types.FILTER_ACCOMPANIMENT_REQUEST,
-    Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
-  ])
-
   return (
     <Table
       options={{
@@ -41,18 +23,20 @@ const ReceivementSituationTable: React.VFC<ReceivementSituationTableProps> = ({
         headerHozAlign: 'center',
         movableColumns: true,
         headerSortTristate: true,
+        initialSort: [{ column: 'delay', dir: 'desc' }],
         persistenceID,
         persistence: {
           columns: true,
           sort: true
         },
-        rowClick: (_, row) => row.isSelected || row.select(),
-        rowSelected: row => setSelectedRow(row.getData()),
-        rowDeselected: () => setSelectedRow(undefined),
+        rowClick: (_, row) => row.select(),
+        rowSelectionChanged: ([accompaniment]: Accompaniment[]) => {
+          onSelectionChange(accompaniment)
+        },
         rowDblClick: (_, row) => {
           row.select()
 
-          openAccompanimentDetails(row.getData(), token)
+          openAccompanimentDetails(row.getData())
         },
         rowFormatter: row => {
           const accompaniment: Accompaniment = row.getData()

@@ -1,36 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-import { useWatchAction } from '@shared/action-watcher'
 import { Table } from '@shared/web-components/Table'
 
-import { useTypedSelector } from '~/store'
-import { Accompaniment, Types } from '~/store/modules/accompaniments/types'
+import { Accompaniment } from '~/store/modules/accompaniments/types'
 import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
 
 import { InProgressSituationTableProps } from './types'
 
-const InProgressSituationTable: React.VFC<InProgressSituationTableProps> = ({
+const InProgressSituationTableComponent: React.VFC<InProgressSituationTableProps> = ({
   data,
   columns,
   tab: persistenceID,
   onSelectionChange
 }) => {
-  const { token } = useTypedSelector(state => state.auth)
-
-  const [selectedRow, setSelectedRow] = useState<Accompaniment>()
-
-  useEffect(() => onSelectionChange(selectedRow), [
-    selectedRow,
-    onSelectionChange
-  ])
-
-  useWatchAction(() => {
-    setSelectedRow(undefined)
-  }, [
-    Types.FILTER_ACCOMPANIMENT_REQUEST,
-    Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
-  ])
-
   return (
     <Table
       options={{
@@ -48,12 +30,13 @@ const InProgressSituationTable: React.VFC<InProgressSituationTableProps> = ({
           sort: true
         },
         rowClick: (_, row) => row.select(),
-        rowSelected: row => setSelectedRow(row.getData()),
-        rowDeselected: () => setSelectedRow(undefined),
+        rowSelectionChanged: ([accompaniment]: Accompaniment[]) => {
+          onSelectionChange(accompaniment)
+        },
         rowDblClick: (_, row) => {
           row.select()
 
-          openAccompanimentDetails(row.getData(), token)
+          openAccompanimentDetails(row.getData())
         },
         rowFormatter: row => {
           const accompaniment: Accompaniment = row.getData()
@@ -71,4 +54,6 @@ const InProgressSituationTable: React.VFC<InProgressSituationTableProps> = ({
   )
 }
 
-export { InProgressSituationTable }
+export const InProgressSituationTable = React.memo(
+  InProgressSituationTableComponent
+)

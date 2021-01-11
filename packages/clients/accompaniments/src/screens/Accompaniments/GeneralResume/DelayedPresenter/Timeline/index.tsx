@@ -5,10 +5,8 @@ import { format, parseISO } from 'date-fns'
 import { Button } from '@shared/web-components/Button'
 
 import { useTypedSelector } from '~/store'
-import {
-  Accompaniment,
-  CriticalLevel
-} from '~/store/modules/accompaniments/types'
+import { delayComparer } from '~/store/context'
+import { CriticalLevel } from '~/store/modules/accompaniments/types'
 import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
 
 import {
@@ -20,28 +18,6 @@ import {
   ItemLabel
 } from './styles'
 import { SectionTimelineProps } from './types'
-
-function delayComparer(accompaniment: Accompaniment, other: Accompaniment) {
-  if (accompaniment.criticalLevel === other.criticalLevel) {
-    return other.delay - accompaniment.delay
-  }
-
-  if (accompaniment.criticalLevel === CriticalLevel.DANGER) {
-    return -1
-  }
-
-  if (other.criticalLevel === CriticalLevel.DANGER) {
-    return 1
-  }
-
-  if (accompaniment.criticalLevel === CriticalLevel.ALERT) {
-    return -1
-  }
-
-  if (other.criticalLevel === CriticalLevel.ALERT) {
-    return 1
-  }
-}
 
 const SectionTimeline: React.VFC<SectionTimelineProps> = ({
   accompaniments,

@@ -43,7 +43,7 @@ const GeneralResumeDelayedPresenter: React.VFC<AccompanimentsGeneralResumeProps>
   return (
     <React.Fragment>
       <Section>
-        <h2>Acompanhamentos em atraso</h2>
+        <h2>Acompanhamentos pendentes</h2>
 
         <div style={{ height: 16 }} />
 
