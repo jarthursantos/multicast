@@ -27,7 +27,7 @@ const Table: React.VFC<TableProps> = ({ options, ...props }) => {
   const ref = useRef<HTMLDivElement>(null)
   const tabulator = useRef<Tabulator>(null)
 
-  const { data, columns, ...someOptions } = options
+  const { data, columns, initialSort, ...someOptions } = options
 
   useEffect(() => {
     if (!ref.current) return
@@ -38,11 +38,17 @@ const Table: React.VFC<TableProps> = ({ options, ...props }) => {
   }, [someOptions])
 
   useEffect(() => {
+    if (!tabulator.current) return
+
+    tabulator.current.setSort(initialSort)
+  }, [data, initialSort])
+
+  useEffect(() => {
     if (!tabulator.current || !data) return
 
-    const currentColumns = tabulator.current.getData()
+    const currentData = tabulator.current.getData()
 
-    if (!isEqual(sortBy(currentColumns), sortBy(data))) {
+    if (!isEqual(sortBy(currentData), sortBy(data))) {
       tabulator.current.setData(data)
     }
   }, [data])

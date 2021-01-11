@@ -4,8 +4,8 @@ import { toast } from 'react-toastify'
 
 import { extractErrorMessage, useAxios } from '@shared/axios'
 import { Form, SelectInput } from '@shared/web-components'
+import { Table } from '@shared/web-components/Table'
 
-import { Table } from '../Table'
 import { Wrapper, Header, Container, LoadingWrapper } from './styles'
 import { ProductsContainerProps } from './types'
 

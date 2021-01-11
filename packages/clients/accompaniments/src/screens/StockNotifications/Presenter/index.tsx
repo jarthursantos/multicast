@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Table } from '~/components/Table'
+import { Table } from '@shared/web-components/Table'
 
 import { Wrapper, GroupWrapper, ProductsWrapper } from './styles'
 import { StockNotificationsPresenterProps } from './types'

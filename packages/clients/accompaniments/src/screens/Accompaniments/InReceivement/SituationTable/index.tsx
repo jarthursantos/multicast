@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { useWatchAction } from '@shared/action-watcher'
+import { Table } from '@shared/web-components/Table'
 
-import { Table } from '~/components/Table'
 import { useTypedSelector } from '~/store'
 import { Accompaniment, Types } from '~/store/modules/accompaniments/types'
 import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
@@ -41,12 +41,12 @@ const ReceivementSituationTable: React.VFC<ReceivementSituationTableProps> = ({
         headerHozAlign: 'center',
         movableColumns: true,
         headerSortTristate: true,
-        initialSort: [{ column: 'delay', dir: 'desc' }],
         persistenceID,
         persistence: {
           columns: true,
           sort: true
         },
+        rowClick: (_, row) => row.isSelected || row.select(),
         rowSelected: row => setSelectedRow(row.getData()),
         rowDeselected: () => setSelectedRow(undefined),
         rowDblClick: (_, row) => {

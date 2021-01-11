@@ -5,7 +5,7 @@ import {
   ColumnComponent
 } from 'tabulator-tables'
 
-import { contabilFormatter } from '~/components/Table'
+import { contabilFormatter } from '@shared/web-components/Table'
 
 const contextMenu: (MenuObject<ColumnComponent> | MenuSeparator)[] = [
   {

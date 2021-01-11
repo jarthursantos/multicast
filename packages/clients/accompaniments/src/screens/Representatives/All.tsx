@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Table } from '~/components/Table'
+import { Table } from '@shared/web-components/Table'
 
 import { useAllRepresentatives } from './context'
 

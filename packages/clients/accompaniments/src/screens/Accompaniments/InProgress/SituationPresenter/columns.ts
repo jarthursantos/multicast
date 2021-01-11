@@ -5,7 +5,7 @@ import {
   ColumnComponent
 } from 'tabulator-tables'
 
-import { contabilFormatter } from '~/components/Table'
+import { contabilFormatter } from '@shared/web-components/Table'
 
 const contextMenu: (MenuObject<ColumnComponent> | MenuSeparator)[] = [
   {
@@ -67,6 +67,8 @@ export const allColumns: ColumnDefinition[] = [
     sorter: 'number',
     width: 120,
     hozAlign: 'right',
+    headerSortStartingDir: 'desc',
+    headerSort: true,
     headerContextMenu: contextMenu
   },
   {
