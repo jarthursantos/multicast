@@ -12,7 +12,9 @@ import {
   markAccompanimentAsReviewedModule,
   markAccompanimentAsSendedModule,
   renewAccompanimentsModule,
-  updateAccompanimentsModule
+  updateAccompanimentsModule,
+  parseFindAccompanimentProductsOptions,
+  IFindAccompanimentProductsRequest
 } from '~/modules/accompaniments'
 
 export async function handleFindAllAccompaniments(req: Request, res: Response) {
@@ -58,12 +60,15 @@ export async function handleCancelAccompaniments(req: Request, res: Response) {
 }
 
 export async function handleFindAccompanimentProducts(
-  req: Request,
+  req: IFindAccompanimentProductsRequest,
   res: Response
 ) {
   const { id } = req.params
 
-  const result = await findAccompanimentsProductsModule.execute(id)
+  const result = await findAccompanimentsProductsModule.execute(
+    id,
+    parseFindAccompanimentProductsOptions(req.query)
+  )
 
   res.json(result)
 }

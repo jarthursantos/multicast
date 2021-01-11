@@ -129,3 +129,4 @@ export {
   updateAccompanimentsModule,
   updateAccompanimentsSchema
 }
+export * from './find-products/parser'
