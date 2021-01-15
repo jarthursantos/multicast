@@ -241,7 +241,7 @@ export function createPrismaSchedulesModel(
     },
 
     async findById(id: string): Promise<ISchedule | undefined> {
-      const schedule = await prisma.schedules.findOne({
+      const schedule = await prisma.schedules.findUnique({
         where: { id },
         include: { dischargeTable: true }
       })

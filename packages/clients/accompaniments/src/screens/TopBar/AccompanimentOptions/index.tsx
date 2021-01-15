@@ -11,23 +11,15 @@ import {
 import { MdFilter, MdPendingAction, MdReceiptLong } from '~/components/Icons'
 import { HomeScreenContext } from '~/screens/context'
 import { HomeScreenTabs, AccompanimentTabs } from '~/screens/types'
-import { useTypedSelector } from '~/store'
 import { loadAccompanimentsRequest } from '~/store/modules/accompaniments/actions'
 import { openAccompanimentFilters } from '~/windows/AccompanimentFilters/action'
 
 const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
   const dispatch = useDispatch()
 
-  const { filters } = useTypedSelector(state => state.accompaniments)
-  const { token } = useTypedSelector(state => state.auth)
-
   const { currentAccompanimentTab, changeAccompanimentTab } = useContext(
     HomeScreenContext
   )
-
-  const handleFilter = useCallback(() => {
-    openAccompanimentFilters(filters, token)
-  }, [filters, token])
 
   const handleRefresh = useCallback(() => {
     dispatch(loadAccompanimentsRequest())
@@ -65,7 +57,7 @@ const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
 
       <ActionIconButton
         icon={<MdFilter />}
-        onClick={handleFilter}
+        onClick={openAccompanimentFilters}
         width={80}
         label="Aplicar Filtro"
       />

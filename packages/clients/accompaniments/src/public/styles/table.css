@@ -358,7 +358,7 @@
   border-top: 1px solid #BBB;
   background-color: #fff;
   text-align: right;
-  color: #555;
+  color: #555 !important;
   font-weight: bold;
   white-space: nowrap;
   -ms-user-select: none;
@@ -432,7 +432,7 @@
 .tabulator .tabulator-footer .tabulator-page:not(.disabled):hover {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+  /* color: #fff; */
 }
 
 .tabulator .tabulator-loader {
@@ -490,6 +490,11 @@
 .tabulator-row.tabulator-selected {
   background-color: #f74343;
   color: #fff;
+}
+
+.tabulator-row.tabulator-selected.tabulator-calcs-bottom {
+  background-color: #f74343;
+  color: #555;
 }
 
 .tabulator-row.tabulator-selected:hover {

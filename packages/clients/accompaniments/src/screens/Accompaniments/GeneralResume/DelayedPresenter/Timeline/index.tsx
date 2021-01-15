@@ -4,7 +4,6 @@ import { format, parseISO } from 'date-fns'
 
 import { Button } from '@shared/web-components/Button'
 
-import { useTypedSelector } from '~/store'
 import { delayComparer } from '~/store/context'
 import { CriticalLevel } from '~/store/modules/accompaniments/types'
 import { openAccompanimentDetails } from '~/windows/AccompanimentDetails/actions'
@@ -23,8 +22,6 @@ const SectionTimeline: React.VFC<SectionTimelineProps> = ({
   accompaniments,
   onShowMoreClick
 }) => {
-  const { token } = useTypedSelector(state => state.auth)
-
   const remainingCount = useMemo(() => accompaniments.length - 5, [
     accompaniments
   ])
@@ -49,7 +46,7 @@ const SectionTimeline: React.VFC<SectionTimelineProps> = ({
           .map(accompaniment => (
             <Item
               key={accompaniment.id}
-              onClick={() => openAccompanimentDetails(accompaniment, token)}
+              onClick={() => openAccompanimentDetails(accompaniment)}
               className={
                 accompaniment.criticalLevel === CriticalLevel.DANGER
                   ? 'danger'

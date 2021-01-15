@@ -25,6 +25,7 @@ import { invoicesRouter } from '~/app/routes/invoices'
 import { permissionsRoutes } from '~/app/routes/permissions'
 import { providersRoutes } from '~/app/routes/providers'
 import { regionsRoutes } from '~/app/routes/regions'
+import { representativesRoutes } from '~/app/routes/representatives'
 import { salesClassesRoutes } from '~/app/routes/sales-classes'
 import { scheduleRequestsRoutes } from '~/app/routes/schedule-requests'
 import { schedulesRoutes } from '~/app/routes/schedules'
@@ -70,6 +71,7 @@ app.use('/distribuitions', distribuitionsRoutes)
 app.use('/invoices', invoicesRouter)
 app.use('/permissions', permissionsRoutes)
 app.use('/regions', regionsRoutes)
+app.use('/representatives', representativesRoutes)
 app.use('/salesClasses', salesClassesRoutes)
 app.use('/scheduleRequests', scheduleRequestsRoutes)
 app.use('/schedules', schedulesRoutes)
@@ -82,6 +84,8 @@ app.use((_req, _res, next) =>
 app.use(
   async (error: any, _req: Request, res: Response, next: NextFunction) => {
     if (isHttpError(error)) {
+      console.error(error)
+
       return res.status(error.statusCode).json({ message: error.message })
     }
 

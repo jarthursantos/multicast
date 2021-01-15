@@ -113,7 +113,7 @@ export function createPrismaInvoicesModel(
     },
 
     async findById(id: string): Promise<IInvoice | undefined> {
-      const invoice = await prisma.invoices.findOne({
+      const invoice = await prisma.invoices.findUnique({
         where: { id },
         include: { cteFile: true, invoiceFile: true }
       })

@@ -23,18 +23,23 @@ const ReceivementSituationTable: React.VFC<ReceivementSituationTableProps> = ({
         headerHozAlign: 'center',
         movableColumns: true,
         headerSortTristate: true,
-        initialSort: [{ column: 'delay', dir: 'desc' }],
         persistenceID,
         persistence: {
           columns: true,
           sort: true
         },
-        rowClick: (_, row) => row.select(),
+        rowClick: (_, row) => {
+          if (!row || !row.select) return
+
+          row?.select()
+        },
         rowSelectionChanged: ([accompaniment]: Accompaniment[]) => {
           onSelectionChange(accompaniment)
         },
         rowDblClick: (_, row) => {
-          row.select()
+          if (!row || !row.select) return
+
+          row?.select()
 
           openAccompanimentDetails(row.getData())
         },

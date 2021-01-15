@@ -1,9 +1,9 @@
 {
   "name": "@clients/accompaniments",
   "private": true,
-  "description": "My application description",
-  "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "description": "Acompanhamento dos pedidos de compra",
+  "version": "0.0.3",
+  "author": "Dantas Distribuidora <dantas@dantasdistribuidora.com.br>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",

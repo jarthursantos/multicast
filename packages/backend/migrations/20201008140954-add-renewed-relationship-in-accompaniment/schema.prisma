@@ -1,0 +1,286 @@
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum Charge {
+  BEAT
+  VOLUME
+  PIPE
+}
+
+enum Receipt {
+  MONEY
+  DEPOSIT
+  PENDING
+}
+
+enum Freight {
+  CIF
+  FOB
+}
+
+enum Vehicle {
+  EXTERNAL
+  INTERNAL
+}
+
+enum Divergence {
+  ADDED
+  RECEIVED
+  NOT_RECEIVED
+  RESCHEDULED
+}
+
+enum InvoiceOrigin {
+  SCHEDULE
+  FOLLOWUP
+}
+
+model Users {
+  @@map(name: "users")
+
+  id            String    @id
+  email         String    @unique
+  name          String
+  password      String
+  role          Role      @default(USER)
+  permissionsId String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  disabledAt    DateTime?
+
+  permissions  Permissions?               @relation(fields: [permissionsId], references: [id])
+  annotations  AccompanimentAnnotations[]
+  cancelations Cancelations[]
+}
+
+model Permissions {
+  @@map(name: "permissions")
+
+  id                        String    @id
+  title                     String    @unique
+
+  accessSchedules           Boolean   @default(false)
+  createRequest             Boolean   @default(false)
+  createSchedule            Boolean   @default(false)
+  closeSchedule             Boolean   @default(false)
+  manageInvoicesInSchedule  Boolean   @default(false)
+  addExtraScheduledInvoices Boolean   @default(false)
+  receiveSchedule           Boolean   @default(false)
+  cancelSchedule            Boolean   @default(false)
+  rescheduleSchedule        Boolean   @default(false)
+
+  accessAccompaniments      Boolean   @default(false)
+  manageAccompaniments      Boolean   @default(false)
+  accessRepresentatives     Boolean   @default(false)
+
+  viewValues                Boolean   @default(false)
+
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  users Users[]
+}
+
+model Accompaniments {
+  @@map(name: "accompaniments")
+
+  id                String    @id
+  number            Int
+  sendedAt          DateTime?
+  reviewedAt        DateTime?
+  releasedAt        DateTime?
+  expectedBillingAt DateTime?
+  billingAt         DateTime?
+  freeOnBoardAt     DateTime?
+  schedulingAt      DateTime?
+
+  renewedAt         DateTime?
+  valueDelivered    Float?    @default(0.0)
+
+  invoiceId         String?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  renewedTo         Accompaniments? @relation(name: "renewed")
+  renewedFrom       Accompaniments? @relation(name: "renewed")
+
+  annotations AccompanimentAnnotations[]
+  cancelation Cancelations?
+  invoice     Invoices?                  @relation(fields: [invoiceId], references: [id])
+}
+
+model AccompanimentAnnotations {
+  @@map(name: "accompanimentAnnotations")
+
+  id              String   @id
+  content         String
+
+  createdAt       DateTime @default(now())
+  userId          String
+  accompanimentId String
+
+  user          Users          @relation(fields: [userId], references: [id])
+  accompaniment Accompaniments @relation(fields: [accompanimentId], references: [id])
+}
+
+model Cancelations {
+  @@map(name: "cancelations")
+
+  accompanimentId String   @id
+  motive          String
+  userId          String
+  createdAt       DateTime @default(now())
+
+  accompaniment Accompaniments @relation(fields: [accompanimentId], references: [id])
+  user          Users          @relation(fields: [userId], references: [id])
+}
+
+model Schedules {
+  @@map(name: "schedules")
+
+  id                String    @id
+  dischargeTableId  String
+  scheduleRequestId String?
+
+  scheduledAt       DateTime?
+  priority          Boolean   @default(false)
+  shippingName      String?
+
+  freightType       Freight?
+  vehicleType       Vehicle?
+
+  lecturer          String?
+  driver            String?
+  vehicleSize       Size?
+  chargeType        Charge?
+  palletized        Boolean?
+  assistant         Boolean?
+  pipeSize          Size?
+  receiptPerInvoice Boolean?
+
+  dischargeValue    Float?
+  receiptValue      Float?
+  paymentMethod     Receipt?
+
+  closedAt          DateTime?
+  receivedAt        DateTime?
+
+  rescheduledAt     DateTime?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  canceledAt        DateTime?
+  motive            String?
+
+  invoices Invoices[]
+
+  rescheduledTo     Schedules? @relation(name: "reschedule")
+  rescheduledFrom   Schedules? @relation(name: "reschedule")
+  dischargeTable    DischargeTable @relation(fields: [dischargeTableId], references: [id])
+  scheduleRequest   ScheduleRequests? @relation(fields: [scheduleRequestId], references: [id])
+}
+
+model ScheduleRequests {
+  @@map(name: "scheduleRequests")
+
+  id            String    @id
+  requestedDate DateTime?
+  providerCode  Int?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  schedule Schedules?
+}
+
+model Invoices {
+  @@map(name: "invoices")
+
+  id                 String        @id
+  origin             InvoiceOrigin
+
+  providerCode       Int
+  number             Int
+  value              Float?
+
+  emittedAt          DateTime?
+
+  key                String?
+  weight             Float?
+  volume             Float?
+
+  cteNumber          Int?
+  cteKey             String?
+
+  dischargeValue     Float?
+  receiptValue       Float?
+
+  divergence         Divergence?
+
+  scheduleId         String?
+  invoiceFileId      String?
+  cteFileId          String?
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  canceledAt         DateTime?
+
+  accompaniment  Accompaniments?
+  schedule       Schedules?      @relation(fields: [scheduleId], references: [id])
+  invoiceFile    Files?          @relation(name: "invoice_invoice_file", fields: [invoiceFileId], references: [id])
+  cteFile        Files?          @relation(name: "invoice_cte_file", fields: [cteFileId], references: [id])
+}
+
+model Files {
+  @@map(name: "files")
+
+  id           String @id
+  filename     String
+  originalname String
+
+  invoices Invoices[] @relation(name: "invoice_invoice_file")
+  ctes     Invoices[] @relation(name: "invoice_cte_file")
+}
+
+model DischargeTable {
+  @@map(name: "dischargeTable")
+
+  id String @id
+
+  smallPipe  Float
+  mediumPipe Float
+  largePipe  Float
+
+  beatPalletizedWithAssistant       Float
+  beatPalletizedWithoutAssistant    Float
+  beatNonPalletizedWithAssistant    Float
+  beatNonPalletizedWithoutAssistant Float
+
+  volumePalletizedWithAssistant       Float
+  volumePalletizedWithoutAssistant    Float
+  volumeNonPalletizedWithAssistant    Float
+  volumeNonPalletizedWithoutAssistant Float
+
+  createdAt DateTime @default(now())
+
+  schedules Schedules[]
+}

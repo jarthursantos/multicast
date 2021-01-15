@@ -218,7 +218,7 @@ export default function accompaniments(
         break
       }
 
-      case Types.FILTER_ACCOMPANIMENT_REQUEST: {
+      case Types.APPLY_ACCOMPANIMENTS_FILTERS: {
         const { filter } = action.payload
 
         draft.filters = filter
@@ -226,7 +226,7 @@ export default function accompaniments(
         break
       }
 
-      case Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST: {
+      case Types.CLEAR_ACCOMPANIMENTS_FILTERS: {
         draft.filters = {}
 
         break

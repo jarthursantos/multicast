@@ -31,10 +31,10 @@ export async function registerWindows() {
 
   mainWindow.removeMenu()
   mainWindow.loadURL(resolvePath('auth'))
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   registerOpenAccompanimentDetails()
-  registerOpenAccompanimentFilters(mainWindow)
+  registerOpenAccompanimentFilters()
 
   registerOpenBuyerFinderWindow(resolvePath('buyersFinder'))
   registerOpenProviderFinderWindow(resolvePath('providersFinder'))

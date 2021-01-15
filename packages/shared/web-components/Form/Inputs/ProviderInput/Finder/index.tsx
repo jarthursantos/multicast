@@ -151,6 +151,8 @@ const ProviderFinderScreen: React.VFC = () => {
             options={{
               data: filteredProviders,
               rowDblClick: (_, row) => {
+                if (!row || !row.select) return
+
                 row.select()
 
                 const data: IProvider = row.getData()

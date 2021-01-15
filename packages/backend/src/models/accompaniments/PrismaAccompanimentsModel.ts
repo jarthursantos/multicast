@@ -8,18 +8,18 @@ import { IPurchaseOrder } from '~/domain/IPurchaseOrder'
 import { IUser } from '~/domain/IUser'
 import { IAccompanimentDelayProvider } from '~/providers/accompaniment-delay/IAccompanimentDelayProvider'
 
+import { IAccompanimentScheduleModel } from '../accompaniment-schedule/IAccompanimentScheduleModel'
 import { IAnnotationsModel } from '../annotations/IAnnotationsModel'
 import { IInvoicesWithoutAccompanimentsModel } from '../invoices-without-accompaniments/IInvoicesWithoutAccompanimentsModel'
-import { IInvoicesModel } from '../invoices/IInvoicesModel'
 import { IPurchaseOrderModel } from '../purchase-orders/IPurchaseOrderModel'
 import { IAccompanimentsModel, Data } from './IAccompanimentsModel'
 
 export function createPrismaAccompanimentsModel(
   purchaseOrderModel: IPurchaseOrderModel,
   annotationsModel: IAnnotationsModel,
-  invoicesModel: IInvoicesModel,
   invoicesWithoutAccompanimentsModel: IInvoicesWithoutAccompanimentsModel,
-  accompanimentDelayProvider: IAccompanimentDelayProvider
+  accompanimentDelayProvider: IAccompanimentDelayProvider,
+  accompanimentScheduleModel: IAccompanimentScheduleModel
 ): IAccompanimentsModel {
   const prisma = new PrismaClient()
 
@@ -55,6 +55,7 @@ export function createPrismaAccompanimentsModel(
             'emittedAt',
             'isOutstanding',
             'delay',
+            'schedule',
             'criticalLevel'
           ),
           number: accompaniment.purchaseOrder.number
@@ -80,7 +81,7 @@ export function createPrismaAccompanimentsModel(
     },
 
     async findById(id: string): Promise<IAccompaniment | undefined> {
-      const accompaniment = await prisma.accompaniments.findOne({
+      const accompaniment = await prisma.accompaniments.findUnique({
         where: { id },
         include: { renewedFrom: true }
       })
@@ -114,10 +115,6 @@ export function createPrismaAccompanimentsModel(
         }
       }
 
-      const invoice = accompaniment.invoiceId
-        ? await invoicesModel.findById(accompaniment.invoiceId)
-        : undefined
-
       const { count, criticalLevel } = accompanimentDelayProvider.calculate({
         billingAt: accompaniment.billingAt || undefined,
         expectedBillingAt: accompaniment.expectedBillingAt || undefined,
@@ -128,6 +125,12 @@ export function createPrismaAccompanimentsModel(
         sendedAt: accompaniment.sendedAt || undefined,
         purchaseOrder,
         annotations
+      })
+
+      const schedule = await accompanimentScheduleModel.find({
+        invoiceNumber: accompaniment.invoiceNumber,
+        invoiceProvider: accompaniment.invoiceProvider,
+        schedulingAt: accompaniment.schedulingAt
       })
 
       return createAccompaniment(
@@ -148,7 +151,7 @@ export function createPrismaAccompanimentsModel(
           delay: count,
           criticalLevel,
           annotations,
-          invoice,
+          schedule,
           transactionNumber,
           isOutstanding: !!accompaniment.renewedFrom
         },
@@ -195,9 +198,11 @@ export function createPrismaAccompanimentsModel(
           }
         }
 
-        const invoice = accompaniment.invoiceId
-          ? await invoicesModel.findById(accompaniment.invoiceId)
-          : undefined
+        const schedule = await accompanimentScheduleModel.find({
+          invoiceNumber: accompaniment.invoiceNumber,
+          invoiceProvider: accompaniment.invoiceProvider,
+          schedulingAt: accompaniment.schedulingAt
+        })
 
         const { count, criticalLevel } = accompanimentDelayProvider.calculate({
           billingAt: accompaniment.billingAt || undefined,
@@ -230,7 +235,7 @@ export function createPrismaAccompanimentsModel(
               criticalLevel,
               purchaseOrder,
               annotations,
-              invoice,
+              schedule,
               transactionNumber: transactionNumber || undefined,
               isOutstanding: !!accompaniment.renewedFrom
             },
@@ -259,13 +264,11 @@ export function createPrismaAccompanimentsModel(
             'emittedAt',
             'isOutstanding',
             'delay',
+            'schedule',
             'criticalLevel',
             'updatedAt',
             'createdAt'
-          ),
-          invoice: accompaniment.invoice
-            ? { connect: { id: accompaniment.invoice.id } }
-            : undefined
+          )
         }
       })
 
@@ -288,9 +291,11 @@ export function createPrismaAccompanimentsModel(
         }
       }
 
-      const invoice = updatedData.invoiceId
-        ? await invoicesModel.findById(updatedData.invoiceId)
-        : undefined
+      const schedule = await accompanimentScheduleModel.find({
+        invoiceNumber: accompaniment.invoiceNumber,
+        invoiceProvider: accompaniment.invoiceProvider,
+        schedulingAt: accompaniment.schedulingAt
+      })
 
       const purchaseOrder = await purchaseOrderModel.findByNumber(
         updatedData.number
@@ -330,7 +335,7 @@ export function createPrismaAccompanimentsModel(
           delay: count,
           criticalLevel,
           annotations,
-          invoice,
+          schedule,
           transactionNumber: transactionNumber || undefined,
           isOutstanding: !!updatedData.renewedFrom
         },

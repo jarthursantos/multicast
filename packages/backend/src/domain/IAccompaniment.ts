@@ -1,10 +1,9 @@
 import { v4 as uuid } from 'uuid'
 
 import { CriticalLevel } from './CriticalLevel'
+import { IAccompanimentSchedule } from './IAccompanimentSchedule'
 import { IAnnotation } from './IAnnotation'
-import { IInvoice } from './IInvoice'
 import { IPurchaseOrder } from './IPurchaseOrder'
-import { ISchedule } from './ISchedule'
 
 export interface IAccompaniment {
   readonly id: string
@@ -25,8 +24,6 @@ export interface IAccompaniment {
 
   renewedAt?: Date
 
-  invoice?: IInvoice
-
   annotations: IAnnotation[]
 
   delay: number
@@ -37,7 +34,7 @@ export interface IAccompaniment {
 
   isOutstanding: boolean
 
-  schedule?: ISchedule
+  schedule?: IAccompanimentSchedule
 }
 
 export function createAccompaniment(
@@ -57,7 +54,6 @@ export function createAccompaniment(
     invoiceNumber: props.invoiceNumber,
     invoiceProvider: props.invoiceProvider,
     renewedAt: props.renewedAt,
-    invoice: props.invoice,
     annotations: props.annotations,
     isOutstanding: props.isOutstanding,
     delay: props.delay,

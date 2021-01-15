@@ -90,7 +90,7 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
         }
       }
 
-      if (providers?.length !== 0) {
+      if (providers && providers.length !== 0) {
         let invoicesOfProvider: IInvoice[] = []
 
         for (let i = 0; i < providers.length; i++) {

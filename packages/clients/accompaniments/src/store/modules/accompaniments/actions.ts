@@ -27,9 +27,9 @@ import {
   CancelAccompanimentFailureAction,
   CancelAccompanimentRequestAction,
   CancelAccompanimentSuccessAction,
-  FilterAccompanimentRequestAction,
-  AccompanimentFilters,
-  ClearFilterAccompanimentRequestAction
+  ApplyAccompanimentFilterAction,
+  IAccompanimentFilters,
+  ClearAccompanimentFilterAction
 } from './types'
 
 export function loadAccompanimentsRequest(): LoadAccompanimentsRequestAction {
@@ -259,17 +259,19 @@ export function markAccompanimentAsReleasedFailure(
   }
 }
 
-export function filterAccompanimentRequest(
-  filter: AccompanimentFilters
-): FilterAccompanimentRequestAction {
+export function applyAccompanimentsFilters(
+  filter: IAccompanimentFilters
+): ApplyAccompanimentFilterAction {
   return {
-    type: Types.FILTER_ACCOMPANIMENT_REQUEST,
+    propagate: true,
+    type: Types.APPLY_ACCOMPANIMENTS_FILTERS,
     payload: { filter }
   }
 }
 
-export function clearFilterAccompanimentRequest(): ClearFilterAccompanimentRequestAction {
+export function clearAccompanimentsFilters(): ClearAccompanimentFilterAction {
   return {
-    type: Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
+    propagate: true,
+    type: Types.CLEAR_ACCOMPANIMENTS_FILTERS
   }
 }

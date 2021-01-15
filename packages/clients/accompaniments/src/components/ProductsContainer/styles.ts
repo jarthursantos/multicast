@@ -18,12 +18,10 @@ export const Container = styled.div`
 
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 88px calc(100vh - 88px - 30px - 125px);
+  grid-template-rows: 88px calc(100vh - 88px - 243px);
   grid-template-areas:
     'HEADER'
     'CONTENT';
-
-  height: 100%;
 
   .products-tabulador {
     grid-area: CONTENT;

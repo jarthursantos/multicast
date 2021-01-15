@@ -1,12 +1,11 @@
 import { createWinThorAccompanimentProductsModel } from '~/models/accompaniment-products/WinThorAccompanimentProductsModel'
 import { createWinThorAccompanimentReportDeadlineModel } from '~/models/accompaniment-report-deadline/WinThorAccompanimentReportDeadlineModel'
 import { createWinThorAccompanimentReportHeaderModel } from '~/models/accompaniment-report-header/WinThorAccompanimentReportHeaderModel'
+import { createPrismaAccompanimentScheduleModel } from '~/models/accompaniment-schedule/PrismaAccompanimentScheduleModel'
 import { createPrismaAccompanimentsModel } from '~/models/accompaniments/PrismaAccompanimentsModel'
 import { createPrismaAnnotationsModel } from '~/models/annotations/PrismaAnnotationsModel'
 import { createPrismaFilesModel } from '~/models/files/PrismaFilesModel'
-import { createWinThorInvoiceSituationsModel } from '~/models/invoice-situations/WinThorInvoiceSituationsModel'
 import { createWinThorInvoicesWithoutAccompanimentsModel } from '~/models/invoices-without-accompaniments/WinThorInvoicesWithoutAccompanimentsModel'
-import { createPrismaInvoicesModel } from '~/models/invoices/PrismaInvoicesModel'
 import { createWinThorProvidersModel } from '~/models/providers/WinThorProvidersModel'
 import { createWinThorPurchaseOrdersModel } from '~/models/purchase-orders/WinThorPurchaseOrdersModel'
 import { createPrismaRenewAccompanimentsModel } from '~/models/renew-accompaniments/PrismaRenewAccompanimentsModel'
@@ -35,23 +34,21 @@ const lastPurchaseOrderProvider = createPrismaLastPurchaseOrderProvider()
 const usersModel = createPrismaUsersModel()
 const annotationsModel = createPrismaAnnotationsModel(usersModel)
 const providersModel = createWinThorProvidersModel()
-const invoiceSituationsModel = createWinThorInvoiceSituationsModel()
 const accompanimentDelayProvider = createManualAccompanimentDelayProvider()
 const invoicesWithoutAccompanimentsModel = createWinThorInvoicesWithoutAccompanimentsModel()
 const accompanimentProductsModel = createWinThorAccompanimentProductsModel()
 const purchaseOrdersModel = createWinThorPurchaseOrdersModel(
   lastPurchaseOrderProvider
 )
-const invoicesModel = createPrismaInvoicesModel(
-  providersModel,
-  invoiceSituationsModel
+const accompanimentScheduleModel = createPrismaAccompanimentScheduleModel(
+  providersModel
 )
 const accompanimentsModel = createPrismaAccompanimentsModel(
   purchaseOrdersModel,
   annotationsModel,
-  invoicesModel,
   invoicesWithoutAccompanimentsModel,
-  accompanimentDelayProvider
+  accompanimentDelayProvider,
+  accompanimentScheduleModel
 )
 const accompanimentReportHeaderModel = createWinThorAccompanimentReportHeaderModel()
 const accompanimentReportDeadlineModel = createWinThorAccompanimentReportDeadlineModel()

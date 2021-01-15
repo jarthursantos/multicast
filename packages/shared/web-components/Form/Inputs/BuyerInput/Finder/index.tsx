@@ -118,7 +118,9 @@ const BuyerFinderScreen: React.VFC = () => {
             options={{
               data: filteredBuyers,
               rowDblClick: (_, row) => {
-                row.select()
+                if (!row || !row.select) return
+
+                row?.select()
 
                 const data: IBuyer = row.getData()
 

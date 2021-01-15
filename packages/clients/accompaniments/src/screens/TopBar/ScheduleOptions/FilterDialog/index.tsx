@@ -23,11 +23,11 @@ import {
 import { Modal } from '~/components/Modal'
 import { useTypedSelector } from '~/store'
 import {
-  clearFilterAccompanimentRequest,
-  filterAccompanimentRequest
+  clearAccompanimentsFilters,
+  applyAccompanimentsFilters
 } from '~/store/modules/accompaniments/actions'
 import {
-  AccompanimentFilters,
+  IAccompanimentFilters,
   Types
 } from '~/store/modules/accompaniments/types'
 
@@ -60,12 +60,12 @@ const ScheduleFilterComponent: React.ForwardRefRenderFunction<ScheduleFilterHand
   const close = useCallback(() => setOpened(false), [])
 
   const handleClearFilter = useCallback(
-    () => dispatch(clearFilterAccompanimentRequest()),
+    () => dispatch(clearAccompanimentsFilters()),
     [dispatch]
   )
 
   const handleApplyFilter = useCallback(
-    (data: AccompanimentFilters) => dispatch(filterAccompanimentRequest(data)),
+    (data: IAccompanimentFilters) => dispatch(applyAccompanimentsFilters(data)),
     [dispatch]
   )
 
@@ -75,10 +75,7 @@ const ScheduleFilterComponent: React.ForwardRefRenderFunction<ScheduleFilterHand
 
   useWatchAction(
     close,
-    [
-      Types.FILTER_ACCOMPANIMENT_REQUEST,
-      Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
-    ],
+    [Types.APPLY_ACCOMPANIMENTS_FILTERS, Types.CLEAR_ACCOMPANIMENTS_FILTERS],
     [close]
   )
 

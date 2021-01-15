@@ -1,3 +1,4 @@
+import { IProvider, IBuyer } from '@shared/web-components'
 import { User } from '@shared/web-pages'
 
 import { BaseAction } from '../types'
@@ -35,9 +36,8 @@ export enum Types {
   MARK_ACCOMPANIMENT_RELEASED_SUCCESS = '@accompaniments/MARK_ACCOMPANIMENT_RELEASED_SUCCESS',
   MARK_ACCOMPANIMENT_RELEASED_FAILURE = '@accompaniments/MARK_ACCOMPANIMENT_RELEASED_FAILURE',
 
-  FILTER_ACCOMPANIMENT_REQUEST = '@accompaniments/FILTER_ACCOMPANIMENT_REQUEST',
-
-  CLEAR_FILTER_ACCOMPANIMENT_REQUEST = '@accompaniments/CLEAR_FILTER_ACCOMPANIMENT_REQUEST'
+  APPLY_ACCOMPANIMENTS_FILTERS = '@accompaniments/APPLY_ACCOMPANIMENTS_FILTERS',
+  CLEAR_ACCOMPANIMENTS_FILTERS = '@accompaniments/CLEAR_ACCOMPANIMENTS_FILTERS'
 }
 
 export interface LoadAccompanimentsRequestAction extends BaseAction {
@@ -210,15 +210,15 @@ export interface MarkAccompanimentAsReleasedFailureAction extends BaseAction {
   }
 }
 
-export interface FilterAccompanimentRequestAction extends BaseAction {
-  type: typeof Types.FILTER_ACCOMPANIMENT_REQUEST
+export interface ApplyAccompanimentFilterAction extends BaseAction {
+  type: typeof Types.APPLY_ACCOMPANIMENTS_FILTERS
   payload: {
-    filter: AccompanimentFilters
+    filter: IAccompanimentFilters
   }
 }
 
-export interface ClearFilterAccompanimentRequestAction extends BaseAction {
-  type: typeof Types.CLEAR_FILTER_ACCOMPANIMENT_REQUEST
+export interface ClearAccompanimentFilterAction extends BaseAction {
+  type: typeof Types.CLEAR_ACCOMPANIMENTS_FILTERS
 }
 
 export type AccompanimentsActionTypes =
@@ -246,8 +246,8 @@ export type AccompanimentsActionTypes =
   | MarkAccompanimentAsReleasedRequestAction
   | MarkAccompanimentAsReleasedSuccessAction
   | MarkAccompanimentAsReleasedFailureAction
-  | FilterAccompanimentRequestAction
-  | ClearFilterAccompanimentRequestAction
+  | ApplyAccompanimentFilterAction
+  | ClearAccompanimentFilterAction
 
 export interface AccompanimentsState {
   loading: boolean
@@ -262,7 +262,7 @@ export interface AccompanimentsState {
   markingAsReviewed: boolean
   markingAsReleased: boolean
 
-  filters: AccompanimentFilters
+  filters: IAccompanimentFilters
 }
 
 export interface Accompaniment {
@@ -279,7 +279,6 @@ export interface Accompaniment {
   isOutstanding: boolean
 
   invoiceId: string
-  invoice?: Invoice
   invoiceNumber?: number
 
   transactionNumber?: number
@@ -293,16 +292,16 @@ export interface Accompaniment {
   annotations: Annotation[]
 
   purchaseOrder: PurchaseOrder
-  schedule: Schedule
+  schedule?: Schedule
 }
 
-export interface AccompanimentFilters {
+export interface IAccompanimentFilters {
   numberFrom?: number
   numberTo?: number
-  buyerCode?: number
-  providerCode?: number
-  emittedFrom?: number
-  emittedTo?: number
+  buyers?: IBuyer[]
+  providers?: IProvider[]
+  periodFrom?: number
+  periodTo?: number
 }
 
 export enum CriticalLevel {
@@ -314,6 +313,10 @@ export enum CriticalLevel {
 export interface Schedule {
   scheduledAt: Date
   shippingName: string
+  closedAt?: Date
+  receivedAt?: Date
+  downloadedAt?: Date
+  unlockedAt?: Date
 }
 
 export interface Invoice {

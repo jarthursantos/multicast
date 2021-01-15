@@ -119,7 +119,7 @@ const ProductsContainer: React.VFC<ProductsContainerProps> = ({
                 hozAlign: 'right',
                 headerHozAlign: 'center',
                 width: 60,
-                bottomCalc: 'count',
+                bottomCalc: 'sum',
                 headerSort: false
               }
             ]

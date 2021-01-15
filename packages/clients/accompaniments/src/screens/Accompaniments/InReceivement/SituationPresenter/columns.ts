@@ -62,14 +62,6 @@ export const allColumns: ColumnDefinition[] = [
     headerContextMenu: contextMenu
   },
   {
-    title: 'Atraso (Dias)',
-    field: 'delay',
-    sorter: 'number',
-    width: 120,
-    hozAlign: 'right',
-    headerContextMenu: contextMenu
-  },
-  {
     title: 'Marca',
     field: 'purchaseOrder.provider.fantasy',
     sorter: 'string',

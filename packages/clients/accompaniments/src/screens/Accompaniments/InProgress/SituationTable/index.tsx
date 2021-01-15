@@ -29,12 +29,18 @@ const InProgressSituationTableComponent: React.VFC<InProgressSituationTableProps
           columns: true,
           sort: true
         },
-        rowClick: (_, row) => row.select(),
+        rowClick: (_, row) => {
+          if (!row || !row.select) return
+
+          row?.select()
+        },
         rowSelectionChanged: ([accompaniment]: Accompaniment[]) => {
           onSelectionChange(accompaniment)
         },
         rowDblClick: (_, row) => {
-          row.select()
+          if (!row || !row.select) return
+
+          row?.select()
 
           openAccompanimentDetails(row.getData())
         },

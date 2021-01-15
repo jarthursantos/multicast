@@ -9,7 +9,7 @@ export function createPrismaPermissionsModel(): IPermissionsModel {
 
   return {
     findByTitle: async (title: string) => {
-      const permissions = await prisma.permissions.findOne({
+      const permissions = await prisma.permissions.findUnique({
         where: { title }
       })
 
@@ -39,7 +39,7 @@ export function createPrismaPermissionsModel(): IPermissionsModel {
     },
 
     findById: async (id: string): Promise<IPermissions | undefined> => {
-      const permissions = await prisma.permissions.findOne({ where: { id } })
+      const permissions = await prisma.permissions.findUnique({ where: { id } })
 
       if (!permissions) {
         return undefined

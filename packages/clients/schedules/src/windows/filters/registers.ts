@@ -19,7 +19,7 @@ export function registerOpenFiltersWindow() {
       minimizable: false,
       maximizable: false,
       resizable: false,
-      height: 530,
+      height: 410,
       width: 450,
       webPreferences: {
         nodeIntegration: true,

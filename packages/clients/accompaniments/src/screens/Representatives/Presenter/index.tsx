@@ -30,8 +30,15 @@ const RepresentativesPresenter: React.VFC<StockNotificationsPresenterProps> = ({
             layout: 'fitColumns',
             data: groupData,
             columns: groupColumns,
-            rowSelected: row => onGroupSelectionChange(row.getData()),
-            rowDeselected: () => onGroupSelectionChange(undefined)
+
+            rowClick: (_, row) => {
+              if (!row || !row.select) return
+
+              row?.select()
+            },
+            rowSelectionChanged: ([data]: any[]) => {
+              onGroupSelectionChange(data)
+            }
           }}
         />
       </GroupWrapper>

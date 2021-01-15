@@ -34,72 +34,82 @@ export function delayComparer(
     return 1
   }
 }
+
 export const StoreContextProvider: React.FC = ({ children }) => {
   const { accompaniments, filters } = useTypedSelector(
     state => state.accompaniments
   )
+  const filteredAccompaniments = useMemo(() => {
+    console.log({ filters })
 
-  const filteredAccompaniments = useMemo(
-    () =>
-      accompaniments
-        .filter(accompaniment => {
-          if (
-            filters.emittedFrom &&
-            isBefore(
-              typeof accompaniment.purchaseOrder.emittedAt === 'string'
-                ? parseISO(accompaniment.purchaseOrder.emittedAt)
-                : accompaniment.purchaseOrder.emittedAt,
-              filters.emittedFrom
-            )
-          ) {
-            return false
+    return accompaniments
+      .filter(accompaniment => {
+        if (
+          filters.periodFrom &&
+          isBefore(
+            typeof accompaniment.purchaseOrder.emittedAt === 'string'
+              ? parseISO(accompaniment.purchaseOrder.emittedAt)
+              : accompaniment.purchaseOrder.emittedAt,
+            filters.periodFrom
+          )
+        ) {
+          return false
+        }
+
+        if (
+          filters.periodTo &&
+          isAfter(
+            typeof accompaniment.purchaseOrder.emittedAt === 'string'
+              ? parseISO(accompaniment.purchaseOrder.emittedAt)
+              : accompaniment.purchaseOrder.emittedAt,
+            filters.periodTo
+          )
+        ) {
+          return false
+        }
+
+        if (
+          filters.numberFrom &&
+          accompaniment.purchaseOrder.number < filters.numberFrom
+        ) {
+          return false
+        }
+
+        if (
+          filters.numberTo &&
+          accompaniment.purchaseOrder.number > filters.numberTo
+        ) {
+          return false
+        }
+
+        if (filters.providers && filters.providers.length !== 0) {
+          for (let i = 0; i < filters.providers.length; i++) {
+            const provider = filters.providers[i]
+
+            if (provider.code === accompaniment.purchaseOrder.provider?.code) {
+              return true
+            }
           }
 
-          if (
-            filters.emittedTo &&
-            isAfter(
-              typeof accompaniment.purchaseOrder.emittedAt === 'string'
-                ? parseISO(accompaniment.purchaseOrder.emittedAt)
-                : accompaniment.purchaseOrder.emittedAt,
-              filters.emittedTo
-            )
-          ) {
-            return false
+          return false
+        }
+
+        if (filters.buyers && filters.buyers.length !== 0) {
+          for (let i = 0; i < filters.buyers.length; i++) {
+            const provider = filters.buyers[i]
+
+            if (provider.code === accompaniment.purchaseOrder.buyer?.code) {
+              return true
+            }
           }
 
-          if (
-            filters.numberFrom &&
-            accompaniment.purchaseOrder.number < filters.numberFrom
-          ) {
-            return false
-          }
+          return false
+        }
 
-          if (
-            filters.numberTo &&
-            accompaniment.purchaseOrder.number > filters.numberTo
-          ) {
-            return false
-          }
-
-          if (
-            filters.providerCode &&
-            accompaniment.purchaseOrder.provider.code !== filters.providerCode
-          ) {
-            return false
-          }
-
-          if (
-            filters.buyerCode &&
-            accompaniment.purchaseOrder.buyer.code !== filters.buyerCode
-          ) {
-            return false
-          }
-
-          return true
-        })
-        .sort(delayComparer),
-    [accompaniments, filters]
-  )
+        return true
+      })
+      .sort(delayComparer)
+  }, [accompaniments, filters])
 
   return (
     <StoreContext.Provider value={{ accompaniments: filteredAccompaniments }}>
@@ -194,6 +204,7 @@ export function useNonSchedulingAccompaniments() {
     ) {
       return true
     }
+
     return false
   })
 }
@@ -201,14 +212,18 @@ export function useNonSchedulingAccompaniments() {
 export function useNonScheduledAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
-  return accompaniments.filter(accompaniment => accompaniment.schedulingAt)
+  return accompaniments.filter(
+    accompaniment =>
+      accompaniment.schedulingAt && accompaniment.schedule === undefined
+  )
 }
 
 export function useScheduledAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment => accompaniment.schedule !== undefined
+    accompaniment =>
+      accompaniment.schedule !== undefined && !accompaniment.schedule.receivedAt
   )
 }
 
@@ -217,7 +232,9 @@ export function useReceivingAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt && accompaniment.schedule !== undefined
+      accompaniment.schedule !== undefined &&
+      accompaniment.schedule.receivedAt &&
+      accompaniment.schedule.downloadedAt === undefined
   )
 }
 
@@ -226,7 +243,9 @@ export function useDownloadedAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt && accompaniment.schedule !== undefined
+      accompaniment.schedule !== undefined &&
+      accompaniment.schedule.downloadedAt &&
+      accompaniment.schedule.unlockedAt === undefined
   )
 }
 
@@ -235,6 +254,53 @@ export function useUnlockedAccompaniments() {
 
   return accompaniments.filter(
     accompaniment =>
-      accompaniment.schedulingAt && accompaniment.schedule !== undefined
+      accompaniment.schedule !== undefined && accompaniment.schedule.unlockedAt
   )
 }
+
+// if (filters) {
+//   const {
+//     periodFrom,
+//     periodTo,
+//     numberFrom,
+//     numberTo,
+//     providers,
+//     buyers
+//   } = filters
+
+//   result = accompaniments.filter(accompaniment => {
+//     if (
+//       periodFrom &&
+//       isBefore(
+//         typeof accompaniment.purchaseOrder.emittedAt === 'string'
+//           ? parseISO(accompaniment.purchaseOrder.emittedAt)
+//           : accompaniment.purchaseOrder.emittedAt,
+//         periodFrom
+//       )
+//     ) {
+//       return false
+//     }
+
+//     if (
+//       periodTo &&
+//       isAfter(
+//         typeof accompaniment.purchaseOrder.emittedAt === 'string'
+//           ? parseISO(accompaniment.purchaseOrder.emittedAt)
+//           : accompaniment.purchaseOrder.emittedAt,
+//         periodTo
+//       )
+//     ) {
+//       return false
+//     }
+
+//     if (numberFrom && accompaniment.purchaseOrder.number < numberFrom) {
+//       return false
+//     }
+
+//     if (numberTo && accompaniment.purchaseOrder.number > numberTo) {
+//       return false
+//     }
+
+//     return true
+//   })
+// }

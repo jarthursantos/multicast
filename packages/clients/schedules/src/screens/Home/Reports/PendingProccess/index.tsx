@@ -109,6 +109,8 @@ const PendingProccessReport: React.VFC = () => {
             height: '100%',
             data: pendingProccess,
             rowClick: (_, row) => {
+              if (!row || !row.select) return
+
               row?.select()
             },
             rowSelectionChanged: ([schedule]: ISchedule[]) =>

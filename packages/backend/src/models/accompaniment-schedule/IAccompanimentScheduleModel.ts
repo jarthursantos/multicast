@@ -1,6 +1,13 @@
-import { IAccompaniment } from '~/domain/IAccompaniment'
-import { ISchedule } from '~/domain/ISchedule'
+import { IAccompanimentSchedule } from '~/domain/IAccompanimentSchedule'
+
+export interface IAccompanimentScheduleOptions {
+  invoiceNumber: number | undefined | null
+  invoiceProvider: number | undefined | null
+  schedulingAt: Date | undefined | null
+}
 
 export interface IAccompanimentScheduleModel {
-  find(accompaniment: IAccompaniment): Promise<ISchedule | undefined>
+  find(
+    options: IAccompanimentScheduleOptions
+  ): Promise<IAccompanimentSchedule | undefined>
 }

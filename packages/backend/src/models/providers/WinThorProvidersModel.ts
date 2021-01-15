@@ -133,6 +133,38 @@ export function createWinThorProvidersModel(): IProvidersModel {
       result.sort((p, o) => p.code - o.code)
 
       return providers
+    },
+
+    async findManyByPrincipalId(id: number): Promise<IDetailedProvider[]> {
+      const result = await winthor.raw<IRawProvider[]>(`
+        SELECT PCFORNEC.CODFORNEC AS "code",
+          FORNECEDOR as "name",
+          FANTASIA as "fantasy",
+          CODFORNECPRINC as "principalCode",
+          CGC as "cnpj",
+          IE as "ie",
+          TELFAB as "phone",
+          PCFORNEC.EMAIL as "mail",
+          PRAZOENTREGA as "deliveryTime",
+          PCFORNEC.CIDADE as "city",
+          PCFORNEC.ESTADO as "state",
+          REPRES as "representativeName",
+          TELREP as "representativePhone",
+          REP_EMAIL as "representativeMail",
+          CODCOMPRADOR as "buyerCode",
+          NOME as "buyerName"
+        FROM PCFORNEC LEFT JOIN PCEMPR ON CODCOMPRADOR = MATRICULA
+        WHERE PCFORNEC.CODFORNECPRINC = ${id}
+        ORDER BY FORNECEDOR
+      `)
+
+      const providers: IDetailedProvider[] = []
+
+      result.forEach(provider => providers.push(parseRawProvider(provider)))
+
+      result.sort((p, o) => p.code - o.code)
+
+      return providers
     }
   }
 }

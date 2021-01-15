@@ -21,7 +21,7 @@ export function createPrismaScheduleRequestsModel(
     },
 
     async findById(id: string): Promise<IScheduleRequest | undefined> {
-      const request = await prisma.scheduleRequests.findOne({
+      const request = await prisma.scheduleRequests.findUnique({
         where: { id }
       })
 

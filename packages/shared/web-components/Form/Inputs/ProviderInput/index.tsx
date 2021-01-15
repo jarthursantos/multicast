@@ -48,7 +48,7 @@ const ProviderInput: React.VFC<IProviderInputProps> = ({
         setProviderCode(String(provider.code))
         setProviderName(provider.name)
       } else {
-        setProviderCode('MULTI.')
+        setProviderCode('MULTI')
         setProviderName(result.map(({ name }) => name).join(', '))
       }
     }
@@ -102,7 +102,7 @@ const ProviderInput: React.VFC<IProviderInputProps> = ({
         setProviderCode(String(provider.code))
         setProviderName(provider.name)
       } else {
-        setProviderCode('MULTI.')
+        setProviderCode('MULTI')
         setProviderName(value.map(({ name }) => name).join(', '))
       }
     }

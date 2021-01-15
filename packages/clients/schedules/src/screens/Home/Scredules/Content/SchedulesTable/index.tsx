@@ -54,9 +54,13 @@ const SchedulesTable: React.VFC = () => {
         height: '100%',
         selectable: 1,
         rowClick: (_, row) => {
+          if (!row || !row.select) return
+
           row?.select()
         },
         rowDblClick: (_, row) => {
+          if (!row || !row.select) return
+
           row?.select()
 
           const schedule: ISchedule = row.getData()

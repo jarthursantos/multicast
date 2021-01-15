@@ -30,7 +30,6 @@ export function createWinThorBuyersModel(): IBuyersModel {
                NOME      AS "name"
         FROM PCEMPR
         WHERE CODSETOR IN (SELECT CODSETORCOMPRADOR FROM PCCONSUM)
-          AND ROWNUM <= 10
           ${formatQuery(query)}
         ORDER BY NOME
       `)

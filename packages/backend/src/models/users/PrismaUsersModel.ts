@@ -11,7 +11,7 @@ export function createPrismaUsersModel(): IUsersModel {
 
   return {
     async findByEmail(email: string): Promise<IUser | undefined> {
-      const user = await prisma.users.findOne({ where: { email } })
+      const user = await prisma.users.findUnique({ where: { email } })
 
       if (!user) {
         return undefined
@@ -46,7 +46,7 @@ export function createPrismaUsersModel(): IUsersModel {
     },
 
     async findById(id: string): Promise<IUser | undefined> {
-      const user = await prisma.users.findOne({
+      const user = await prisma.users.findUnique({
         where: { id },
         include: { permissions: true }
       })

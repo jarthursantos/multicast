@@ -48,7 +48,7 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
         setBuyerCode(String(provider.code))
         setBuyerName(provider.name)
       } else {
-        setBuyerCode('MULTI.')
+        setBuyerCode('MULTI')
         setBuyerName(result.map(({ name }) => name).join(', '))
       }
     }
@@ -102,7 +102,7 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
         setBuyerCode(String(provider.code))
         setBuyerName(provider.name)
       } else {
-        setBuyerCode('MULTI.')
+        setBuyerCode('MULTI')
         setBuyerName(value.map(({ name }) => name).join(', '))
       }
     }
