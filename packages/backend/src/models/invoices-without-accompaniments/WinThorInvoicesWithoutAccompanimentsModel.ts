@@ -23,30 +23,30 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
       )
 
       const normalEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
-                      PCMOV.NUMNOTA     "number",
-                      PCMOV.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL   "amountValue",
-                      PCNFENT.DTEMISSAO "emittedAt"
-      FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
-      WHERE NUMPED = ${number}
-            AND PCMOV.DTCANCEL IS NULL
-            AND PCMOV.NUMTRANSENT IS NOT NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
+                        PCMOV.NUMNOTA     "number",
+                        PCMOV.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL   "amountValue",
+                        PCNFENT.DTEMISSAO "emittedAt"
+        FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
+        WHERE NUMPED = ${number}
+              AND PCMOV.DTCANCEL IS NULL
+              AND PCMOV.NUMTRANSENT IS NOT NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       const preEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
-                      PCMOVPREENT.NUMNOTA     "number",
-                      PCMOVPREENT.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL         "amountValue",
-                      PCNFENT.DTEMISSAO       "emittedAt"
-      FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
-      WHERE NUMPED = ${number}
-            AND PCMOVPREENT.DTCANCEL IS NULL
-            AND PCMOVPREENT.NUMTRANSENT IS NOT NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
+                        PCMOVPREENT.NUMNOTA     "number",
+                        PCMOVPREENT.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL         "amountValue",
+                        PCNFENT.DTEMISSAO       "emittedAt"
+        FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
+        WHERE NUMPED = ${number}
+              AND PCMOVPREENT.DTCANCEL IS NULL
+              AND PCMOVPREENT.NUMTRANSENT IS NOT NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       const result: IInvoiceBase[] = normalEntry
 
