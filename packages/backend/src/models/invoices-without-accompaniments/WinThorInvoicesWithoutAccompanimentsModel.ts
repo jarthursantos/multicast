@@ -76,32 +76,32 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
 
     async findByTransaction(transaction: number): Promise<IInvoiceBase> {
       const normalEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
-                      PCMOV.NUMNOTA     "number",
-                      PCMOV.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL   "amountValue",
-                      PCNFENT.DTEMISSAO "emittedAt"
-      FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
-      WHERE PCMOV.NUMTRANSENT = ${transaction}
-            AND PCMOV.DTCANCEL IS NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
+                        PCMOV.NUMNOTA     "number",
+                        PCMOV.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL   "amountValue",
+                        PCNFENT.DTEMISSAO "emittedAt"
+        FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
+        WHERE PCMOV.NUMTRANSENT = ${transaction}
+              AND PCMOV.DTCANCEL IS NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       if (normalEntry.length !== 0) {
         return normalEntry[0]
       }
 
       const preEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
-                      PCMOVPREENT.NUMNOTA     "number",
-                      PCMOVPREENT.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL         "amountValue",
-                      PCNFENT.DTEMISSAO       "emittedAt"
-      FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
-      WHERE PCMOVPREENT.NUMTRANSENT = ${transaction}
-            AND PCMOVPREENT.DTCANCEL IS NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
+                        PCMOVPREENT.NUMNOTA     "number",
+                        PCMOVPREENT.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL         "amountValue",
+                        PCNFENT.DTEMISSAO       "emittedAt"
+        FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
+        WHERE PCMOVPREENT.NUMTRANSENT = ${transaction}
+              AND PCMOVPREENT.DTCANCEL IS NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       return preEntry[0]
     },
@@ -111,34 +111,34 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
       providerCode: number
     ): Promise<IInvoiceBase> {
       const normalEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
-                      PCMOV.NUMNOTA     "number",
-                      PCMOV.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL   "amountValue",
-                      PCNFENT.DTEMISSAO "emittedAt"
-      FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
-      WHERE PCMOV.CODFORNEC = ${providerCode}
-            AND PCMOV.NUMNOTA = ${number}
-            AND PCMOV.DTCANCEL IS NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOV.NUMTRANSENT "transactionNumber",
+                        PCMOV.NUMNOTA     "number",
+                        PCMOV.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL   "amountValue",
+                        PCNFENT.DTEMISSAO "emittedAt"
+        FROM PCMOV LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOV.NUMTRANSENT
+        WHERE PCMOV.CODFORNEC = ${providerCode}
+              AND PCMOV.NUMNOTA = ${number}
+              AND PCMOV.DTCANCEL IS NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       if (normalEntry.length !== 0) {
         return normalEntry[0]
       }
 
       const preEntry = await winthor.raw<IInvoiceBase[]>(`
-      SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
-                      PCMOVPREENT.NUMNOTA     "number",
-                      PCMOVPREENT.CODFORNEC   "providerCode",
-                      PCNFENT.VLTOTAL         "amountValue",
-                      PCNFENT.DTEMISSAO       "emittedAt"
-      FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
-      WHERE PCMOVPREENT.CODFORNEC = ${providerCode}
-            AND PCMOVPREENT.NUMNOTA = ${number}
-            AND PCMOVPREENT.DTCANCEL IS NULL
-            AND PCNFENT.ESPECIE = 'NF'
-    `)
+        SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
+                        PCMOVPREENT.NUMNOTA     "number",
+                        PCMOVPREENT.CODFORNEC   "providerCode",
+                        PCNFENT.VLTOTAL         "amountValue",
+                        PCNFENT.DTEMISSAO       "emittedAt"
+        FROM PCMOVPREENT LEFT JOIN PCNFENT ON PCNFENT.NUMTRANSENT = PCMOVPREENT.NUMTRANSENT
+        WHERE PCMOVPREENT.CODFORNEC = ${providerCode}
+              AND PCMOVPREENT.NUMNOTA = ${number}
+              AND PCMOVPREENT.DTCANCEL IS NULL
+      `)
+      // AND PCNFENT.ESPECIE = 'NF'
 
       return preEntry[0]
     }
