@@ -86,6 +86,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
       createMailModal(
         { ...data, attachments: [data.file?.url], bodyType: 'html' },
+        `${accompaniment.purchaseOrder.number}`,
         () => {
           setSendingMail(false)
 

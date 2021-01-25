@@ -33,7 +33,6 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
               AND PCMOV.DTCANCEL IS NULL
               AND PCMOV.NUMTRANSENT IS NOT NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
       const preEntry = await winthor.raw<IInvoiceBase[]>(`
         SELECT DISTINCT PCMOVPREENT.NUMTRANSENT "transactionNumber",
@@ -46,7 +45,6 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
               AND PCMOVPREENT.DTCANCEL IS NULL
               AND PCMOVPREENT.NUMTRANSENT IS NOT NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
       const result: IInvoiceBase[] = normalEntry
 
@@ -85,9 +83,8 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
         WHERE PCMOV.NUMTRANSENT = ${transaction}
               AND PCMOV.DTCANCEL IS NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
-      if (normalEntry.length !== 0) {
+      if (normalEntry.length !== 0 && normalEntry[0].transactionNumber) {
         return normalEntry[0]
       }
 
@@ -101,7 +98,6 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
         WHERE PCMOVPREENT.NUMTRANSENT = ${transaction}
               AND PCMOVPREENT.DTCANCEL IS NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
       return preEntry[0]
     },
@@ -121,9 +117,8 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
               AND PCMOV.NUMNOTA = ${number}
               AND PCMOV.DTCANCEL IS NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
-      if (normalEntry.length !== 0) {
+      if (normalEntry.length !== 0 && normalEntry[0].transactionNumber) {
         return normalEntry[0]
       }
 
@@ -138,7 +133,6 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
               AND PCMOVPREENT.NUMNOTA = ${number}
               AND PCMOVPREENT.DTCANCEL IS NULL
       `)
-      // AND PCNFENT.ESPECIE = 'NF'
 
       return preEntry[0]
     }

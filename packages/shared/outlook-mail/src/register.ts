@@ -14,7 +14,11 @@ import {
 export function registerCreateMailModal() {
   ipcMain.on(
     CREATE_EMAIL_MODAL_CHANNEL,
-    async (event: IpcMainEvent, mail: IEmailOptions) => {
+    async (
+      event: IpcMainEvent,
+      mail: IEmailOptions,
+      filename: string = randomString()
+    ) => {
       const resolvedAttachs: string[] = []
       const downloadedFiles: string[] = []
 
@@ -24,7 +28,7 @@ export function registerCreateMailModal() {
         const attachment = attachments[i]
 
         if (isURL(attachment)) {
-          const pdfPath = path.join(os.tmpdir(), `${randomString()}.pdf`)
+          const pdfPath = path.join(os.tmpdir(), `${filename}.pdf`)
           const downloadedPath = await downloadPDF(attachment, pdfPath)
 
           resolvedAttachs.push(downloadedPath)

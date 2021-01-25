@@ -15,6 +15,7 @@ import {
 import { MdFilter } from '~/components/Icons'
 import { HomeScreenContext } from '~/screens/context'
 import { HomeScreenTabs, ScheduleTabs } from '~/screens/types'
+import { openCreateSchedule } from '~/windows/CreateSchedule/action'
 
 import { ScheduleFilter, ScheduleFilterHandles } from './FilterDialog'
 
@@ -50,13 +51,20 @@ const HomeScreenTopBarScheduleOptions: React.FC = () => {
             icon={<MdViewWeek />}
             width={80}
           />
+
+          <ButtonGroup.Button
+            name={ScheduleTabs.MONTH}
+            label="Mês"
+            icon={<MdViewWeek />}
+            width={80}
+          />
         </ButtonGroup>
 
         <TabOptions.Content.Separator />
 
         <ActionIconButton
           icon={<MdAddCircleOutline />}
-          onClick={console.log}
+          onClick={openCreateSchedule}
           width={80}
           label="Adicionar"
         />

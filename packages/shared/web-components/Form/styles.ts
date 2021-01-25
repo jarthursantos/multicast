@@ -3,7 +3,9 @@ import { memo } from 'react'
 import { Form as Unform } from '@unform/web'
 import styled, { css } from 'styled-components'
 
-const FormComponent = styled(Unform)`
+const FormComponent = styled(Unform).attrs({
+  noValidate: true
+})`
   & > * + * {
     margin-top: 16px;
   }

@@ -41,7 +41,7 @@ const Next = () => {
       </Head>
 
       <AuthPage
-        icon="/images/logo.png"
+        icon="/images/logo.jpeg"
         title="FollowUP Compras"
         version={version}
         onLogInSuccess={handleLoginSuccess}

@@ -62,9 +62,21 @@ const ScredulesScreen: React.FC = () => {
       components={{ toolbar: Toolbar }}
       min={new Date(0, 0, 0, 7, 0, 0)}
       max={new Date(0, 0, 0, 18, 0, 0)}
-      view={currentScheduleTab === ScheduleTabs.DAY ? 'day' : 'work_week'}
+      view={
+        currentScheduleTab === ScheduleTabs.DAY
+          ? 'day'
+          : currentScheduleTab === ScheduleTabs.WEEK
+          ? 'work_week'
+          : 'month'
+      }
       onView={view =>
-        changeScheduleTab(view === 'day' ? ScheduleTabs.DAY : ScheduleTabs.WEEK)
+        changeScheduleTab(
+          view === 'day'
+            ? ScheduleTabs.DAY
+            : view === 'work_week'
+            ? ScheduleTabs.WEEK
+            : ScheduleTabs.MONTH
+        )
       }
     />
   )

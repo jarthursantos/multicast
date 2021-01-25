@@ -110,6 +110,8 @@ export function createPrismaAccompanimentsModel(
           invoiceProvider
         )
 
+        console.log({ transaction })
+
         if (transaction) {
           transactionNumber = transaction.transactionNumber
         }
@@ -285,6 +287,8 @@ export function createPrismaAccompanimentsModel(
           invoiceNumber,
           invoiceProvider
         )
+
+        console.log({ transaction })
 
         if (transaction) {
           transactionNumber = transaction.transactionNumber

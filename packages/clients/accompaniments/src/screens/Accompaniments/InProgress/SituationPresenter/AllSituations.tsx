@@ -3,10 +3,10 @@ import React from 'react'
 import { allColumns } from '~/screens/Accompaniments/InProgress/SituationPresenter/columns'
 import { Presenter } from '~/screens/Accompaniments/InProgress/SituationPresenter/Presenter'
 import { InProgressTabs } from '~/screens/Accompaniments/InProgress/types'
-import { useAccompaniments } from '~/store/context'
+import { useInProgressAccompaniments } from '~/store/context'
 
 const AllSituationsPresenter: React.VFC = () => {
-  const accompaniments = useAccompaniments()
+  const accompaniments = useInProgressAccompaniments()
 
   return (
     <Presenter

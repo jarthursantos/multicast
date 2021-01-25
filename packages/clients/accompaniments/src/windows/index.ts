@@ -6,6 +6,7 @@ import { registerOpenProviderFinderWindow } from '@shared/web-components/Form/In
 
 import { registerOpenAccompanimentDetails } from './AccompanimentDetails/registers'
 import { registerOpenAccompanimentFilters } from './AccompanimentFilters/register'
+import { registerOpenCreateSchedule } from './CreateSchedule/register'
 
 export function resolvePath(path: string) {
   if (isDevelopment) {
@@ -35,6 +36,8 @@ export async function registerWindows() {
 
   registerOpenAccompanimentDetails()
   registerOpenAccompanimentFilters()
+
+  registerOpenCreateSchedule()
 
   registerOpenBuyerFinderWindow(resolvePath('buyersFinder'))
   registerOpenProviderFinderWindow(resolvePath('providersFinder'))

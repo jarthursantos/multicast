@@ -14,7 +14,7 @@ import { SituationGroupButton } from '~/screens/Accompaniments/InProgress/Situat
 import { Wrapper } from '~/screens/Accompaniments/InProgress/SituationGroup/styles'
 import { InProgressTabs } from '~/screens/Accompaniments/InProgress/types'
 import {
-  useAccompaniments,
+  useInProgressAccompaniments,
   useNonSendedAccompaniments,
   useNonRevisedAccompaniments,
   useNonReleasedAccompaniments,
@@ -37,7 +37,7 @@ function calcDelay(currentCount: number, accompaniment: Accompaniment) {
 }
 
 const InProgressSituationGroup: React.FC = () => {
-  const allAccompaniment = useAccompaniments()
+  const inProgressAccompaniment = useInProgressAccompaniments()
   const nonSendedAccompaniment = useNonSendedAccompaniments()
   const nonReviewedAccompaniment = useNonRevisedAccompaniments()
   const nonReleasedAccompaniment = useNonReleasedAccompaniments()
@@ -52,8 +52,8 @@ const InProgressSituationGroup: React.FC = () => {
         situation={InProgressTabs.ALL}
         label="Todos"
         icon={<MdApps />}
-        delayCount={allAccompaniment.reduce(calcDelay, 0)}
-        accompanimentCount={allAccompaniment.length}
+        delayCount={inProgressAccompaniment.reduce(calcDelay, 0)}
+        accompanimentCount={inProgressAccompaniment.length}
       />
       <SituationGroupButton
         situation={InProgressTabs.NON_SENDED}

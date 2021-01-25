@@ -39,6 +39,7 @@ export const StoreContextProvider: React.FC = ({ children }) => {
   const { accompaniments, filters } = useTypedSelector(
     state => state.accompaniments
   )
+
   const filteredAccompaniments = useMemo(() => {
     console.log({ filters })
 
@@ -125,9 +126,23 @@ export function useAccompaniments() {
 }
 
 export function useInProgressAccompaniments() {
-  const { accompaniments } = useContext(StoreContext)
+  const nonSended = useNonSendedAccompaniments()
+  const nonRevised = useNonRevisedAccompaniments()
+  const nonReleased = useNonReleasedAccompaniments()
+  const nonExpectedBilling = useNonExpectedBillingAccompaniments()
+  const nonBilled = useNonBilledAccompaniments()
+  const nonFreeOnBoard = useNonFreeOnBoardAccompaniments()
+  const nonScheduling = useNonSchedulingAccompaniments()
 
-  return accompaniments.filter(accompaniment => !accompaniment.schedulingAt)
+  return [
+    ...nonSended,
+    ...nonRevised,
+    ...nonReleased,
+    ...nonExpectedBilling,
+    ...nonBilled,
+    ...nonFreeOnBoard,
+    ...nonScheduling
+  ]
 }
 
 export function useNonSendedAccompaniments() {

@@ -12,11 +12,12 @@ const noop = () => {
 
 export function createMailModal(
   mail: IEmailOptions,
+  filename?: string,
   onClose: () => void = noop
 ): () => void {
   ipcRenderer.once(CREATE_EMAIL_MODAL_CHANNEL_CLOSED, onClose)
 
-  ipcRenderer.send(CREATE_EMAIL_MODAL_CHANNEL, mail)
+  ipcRenderer.send(CREATE_EMAIL_MODAL_CHANNEL, mail, filename)
 
   return () => {
     ipcRenderer.removeListener(CREATE_EMAIL_MODAL_CHANNEL_CLOSED, onClose)

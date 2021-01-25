@@ -55,7 +55,7 @@ const ProviderInput: React.VFC<IProviderInputProps> = ({
   }, [single])
 
   const handleSearchByCode = useCallback(async () => {
-    if (providerCode.length === 0) {
+    if (providerCode.length === 0 || providerCode === 'MULTI') {
       return
     }
 

@@ -34,7 +34,8 @@ export enum AccompanimentTabs {
 
 export enum ScheduleTabs {
   DAY = 'DAY',
-  WEEK = 'WEEK'
+  WEEK = 'WEEK',
+  MONTH = 'MONTH'
 }
 
 export enum StockNotificationTabs {
