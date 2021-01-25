@@ -36,6 +36,10 @@ export enum Types {
   MARK_ACCOMPANIMENT_RELEASED_SUCCESS = '@accompaniments/MARK_ACCOMPANIMENT_RELEASED_SUCCESS',
   MARK_ACCOMPANIMENT_RELEASED_FAILURE = '@accompaniments/MARK_ACCOMPANIMENT_RELEASED_FAILURE',
 
+  MARK_ACCOMPANIMENT_FINISHED_REQUEST = '@accompaniments/MARK_ACCOMPANIMENT_FINISHED_REQUEST',
+  MARK_ACCOMPANIMENT_FINISHED_SUCCESS = '@accompaniments/MARK_ACCOMPANIMENT_FINISHED_SUCCESS',
+  MARK_ACCOMPANIMENT_FINISHED_FAILURE = '@accompaniments/MARK_ACCOMPANIMENT_FINISHED_FAILURE',
+
   APPLY_ACCOMPANIMENTS_FILTERS = '@accompaniments/APPLY_ACCOMPANIMENTS_FILTERS',
   CLEAR_ACCOMPANIMENTS_FILTERS = '@accompaniments/CLEAR_ACCOMPANIMENTS_FILTERS'
 }
@@ -210,6 +214,27 @@ export interface MarkAccompanimentAsReleasedFailureAction extends BaseAction {
   }
 }
 
+export interface MarkAccompanimentAsFinishedRequestAction extends BaseAction {
+  type: typeof Types.MARK_ACCOMPANIMENT_FINISHED_REQUEST
+  payload: {
+    id: string
+  }
+}
+
+export interface MarkAccompanimentAsFinishedSuccessAction extends BaseAction {
+  type: typeof Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS
+  payload: {
+    accompaniment: Accompaniment
+  }
+}
+
+export interface MarkAccompanimentAsFinishedFailureAction extends BaseAction {
+  type: typeof Types.MARK_ACCOMPANIMENT_FINISHED_FAILURE
+  payload: {
+    message: string
+  }
+}
+
 export interface ApplyAccompanimentFilterAction extends BaseAction {
   type: typeof Types.APPLY_ACCOMPANIMENTS_FILTERS
   payload: {
@@ -246,6 +271,9 @@ export type AccompanimentsActionTypes =
   | MarkAccompanimentAsReleasedRequestAction
   | MarkAccompanimentAsReleasedSuccessAction
   | MarkAccompanimentAsReleasedFailureAction
+  | MarkAccompanimentAsFinishedRequestAction
+  | MarkAccompanimentAsFinishedSuccessAction
+  | MarkAccompanimentAsFinishedFailureAction
   | ApplyAccompanimentFilterAction
   | ClearAccompanimentFilterAction
 
@@ -261,6 +289,7 @@ export interface AccompanimentsState {
   markingAsSended: boolean
   markingAsReviewed: boolean
   markingAsReleased: boolean
+  markingAsFinished: boolean
 
   filters: IAccompanimentFilters
 }
@@ -274,6 +303,7 @@ export interface Accompaniment {
   billingAt?: Date
   freeOnBoardAt?: Date
   schedulingAt?: Date
+  finishedAt?: Date
   renewedAt?: Date
   valueDelivered: number
   isOutstanding: boolean

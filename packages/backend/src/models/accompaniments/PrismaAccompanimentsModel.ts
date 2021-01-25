@@ -165,7 +165,7 @@ export function createPrismaAccompanimentsModel(
       const result: IAccompaniment[] = []
 
       const accompaniments = await prisma.accompaniments.findMany({
-        where: { cancelation: null },
+        where: { cancelation: null, finishedAt: null },
         include: { renewedFrom: true },
         orderBy: { number: 'asc' }
       })

@@ -16,6 +16,9 @@ import {
   MarkAccompanimentAsReleasedSuccessAction,
   MarkAccompanimentAsReviewedSuccessAction,
   MarkAccompanimentAsReviewedFailureAction,
+  MarkAccompanimentAsFinishedFailureAction,
+  MarkAccompanimentAsFinishedRequestAction,
+  MarkAccompanimentAsFinishedSuccessAction,
   UpdateAccompanimentRequestAction,
   UpdateAccompanimentSuccessAction,
   UpdateAccompanimentFailureAction,
@@ -255,6 +258,34 @@ export function markAccompanimentAsReleasedFailure(
 ): MarkAccompanimentAsReleasedFailureAction {
   return {
     type: Types.MARK_ACCOMPANIMENT_RELEASED_FAILURE,
+    payload: { message }
+  }
+}
+
+export function markAccompanimentAsFinishedRequest(
+  id: string
+): MarkAccompanimentAsFinishedRequestAction {
+  return {
+    type: Types.MARK_ACCOMPANIMENT_FINISHED_REQUEST,
+    payload: { id }
+  }
+}
+
+export function markAccompanimentAsFinishedSuccess(
+  accompaniment: Accompaniment
+): MarkAccompanimentAsFinishedSuccessAction {
+  return {
+    propagate: true,
+    type: Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS,
+    payload: { accompaniment }
+  }
+}
+
+export function markAccompanimentAsFinishedFailure(
+  message: string
+): MarkAccompanimentAsFinishedFailureAction {
+  return {
+    type: Types.MARK_ACCOMPANIMENT_FINISHED_FAILURE,
     payload: { message }
   }
 }

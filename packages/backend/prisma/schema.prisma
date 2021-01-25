@@ -50,17 +50,18 @@ model Permissions {
 model Accompaniments {
   id                String                     @id
   number            Int
+  sendedAt          DateTime?
+  reviewedAt        DateTime?
   releasedAt        DateTime?
   expectedBillingAt DateTime?
   billingAt         DateTime?
   freeOnBoardAt     DateTime?
   schedulingAt      DateTime?
+  finishedAt        DateTime?
   valueDelivered    Float?                     @default(0.0)
   invoiceId         String?                    @unique
   createdAt         DateTime                   @default(now())
   updatedAt         DateTime                   @updatedAt
-  sendedAt          DateTime?
-  reviewedAt        DateTime?
   renewedAt         DateTime?
   accompanimentsId  String?                    @unique
   invoiceNumber     Int?

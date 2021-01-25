@@ -8,6 +8,7 @@ import {
   handleFindAccompanimentUntrackedInvoices,
   handleFindAllAccompaniments,
   handleGenerateAccompanimentPDFReport,
+  handleMarkAccompanimentAsFinished,
   handleMarkAccompanimentAsReleased,
   handleMarkAccompanimentAsReviewed,
   handleMarkAccompanimentAsSended,
@@ -45,5 +46,6 @@ router.post('/:id/annotations', handleCreateAccompanimentAnnotations)
 router.post('/:id/markAsSended', handleMarkAccompanimentAsSended)
 router.post('/:id/markAsReviewed', handleMarkAccompanimentAsReviewed)
 router.post('/:id/markAsReleased', handleMarkAccompanimentAsReleased)
+router.post('/:id/markAsFinished', handleMarkAccompanimentAsFinished)
 
 export { router as accompanimentsRoutes }

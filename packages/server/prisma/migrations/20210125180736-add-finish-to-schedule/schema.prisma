@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -110,7 +110,6 @@ model Accompaniments {
   billingAt         DateTime?
   freeOnBoardAt     DateTime?
   schedulingAt      DateTime?
-  finishedAt        DateTime?
 
   invoiceNumber     Int?
   invoiceProvider   Int?
@@ -186,6 +185,7 @@ model Schedules {
 
   closedAt          DateTime?
   receivedAt        DateTime?
+  finishedAt        DateTime?
 
   rescheduledAt     DateTime?
 

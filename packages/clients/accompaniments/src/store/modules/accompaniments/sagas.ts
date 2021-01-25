@@ -20,6 +20,8 @@ import {
   markAccompanimentAsReviewedSuccess,
   markAccompanimentAsSendedFailure,
   markAccompanimentAsSendedSuccess,
+  markAccompanimentAsFinishedSuccess,
+  markAccompanimentAsFinishedFailure,
   renewAccompanimentFailure,
   renewAccompanimentSuccess,
   updateAccompanimentFailure,
@@ -30,6 +32,7 @@ import {
   AddAnnotationRequestAction,
   Annotation,
   CancelAccompanimentRequestAction,
+  MarkAccompanimentAsFinishedRequestAction,
   MarkAccompanimentAsReleasedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendedRequestAction,
@@ -194,6 +197,33 @@ export function* markAccompanimentAsSended({
   }
 }
 
+export function* markAccompanimentAsFinished({
+  payload
+}: MarkAccompanimentAsFinishedRequestAction) {
+  try {
+    const { id } = payload
+
+    const response = yield call(
+      api.post,
+      `/accompaniments/${id}/markAsFinished`
+    )
+
+    const accompaniment: Accompaniment = response.data
+
+    yield put(markAccompanimentAsFinishedSuccess(accompaniment))
+
+    toast.success('Acompanhamento Atualizado')
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    remote?.dialog.showErrorBox(
+      'Erro ao atualizar acompanhamento',
+      String(message)
+    )
+    yield put(markAccompanimentAsFinishedFailure(message))
+  }
+}
+
 export function* markAccompanimentAsReviewed({
   payload
 }: MarkAccompanimentAsReviewedRequestAction) {
@@ -272,5 +302,9 @@ export default all([
   takeLatest(
     Types.MARK_ACCOMPANIMENT_RELEASED_REQUEST,
     markAccompanimentAsReleased
+  ),
+  takeLatest(
+    Types.MARK_ACCOMPANIMENT_FINISHED_REQUEST,
+    markAccompanimentAsFinished
   )
 ])

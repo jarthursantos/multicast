@@ -24,6 +24,7 @@ import { useTypedSelector } from '~/store'
 import {
   markAccompanimentAsReleasedRequest,
   markAccompanimentAsReviewedRequest,
+  markAccompanimentAsFinishedRequest,
   renewAccompanimentRequest,
   updateAccompanimentRequest
 } from '~/store/modules/accompaniments/actions'
@@ -64,12 +65,18 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
     updatingAccompaniment,
     renewingAccompaniment,
     markingAsReviewed,
-    markingAsReleased
+    markingAsReleased,
+    markingAsFinished
   } = useTypedSelector(state => state.accompaniments)
 
   const sended = useMemo(() => !!accompaniment?.sendedAt, [accompaniment])
   const reviewed = useMemo(() => !!accompaniment?.reviewedAt, [accompaniment])
   const released = useMemo(() => !!accompaniment?.releasedAt, [accompaniment])
+  const scheduled = useMemo(() => !!accompaniment?.schedule, [accompaniment])
+  const unlocked = useMemo(() => !!accompaniment?.schedule?.unlockedAt, [
+    accompaniment
+  ])
+  const finished = useMemo(() => !!accompaniment?.finishedAt, [accompaniment])
 
   const openConfirmMail = useCallback(() => setConfirmMailOpen(true), [])
   const closeConfirmMail = useCallback(() => setConfirmMailOpen(false), [])
@@ -110,6 +117,10 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
   const handleMarkAsReleased = useCallback(() => {
     dispatch(markAccompanimentAsReleasedRequest(accompaniment.id))
+  }, [dispatch, accompaniment])
+
+  const handleMarkAsFinished = useCallback(() => {
+    dispatch(markAccompanimentAsFinishedRequest(accompaniment.id))
   }, [dispatch, accompaniment])
 
   const handleRenew = useCallback(() => {
@@ -194,7 +205,8 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
   useWatchAction(closeWindow, [
     Types.UPDATE_ACCOMPANIMENT_SUCCESS,
     Types.RENEW_ACCOMPANIMENT_SUCCESS,
-    Types.CANCEL_ACCOMPANIMENT_SUCCESS
+    Types.CANCEL_ACCOMPANIMENT_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS
   ])
 
   return (
@@ -213,7 +225,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
             <AccompanimentData
               options={invoices}
-              disabled={!sended || !reviewed || !released}
+              disabled={!sended || !reviewed || !released || finished}
               isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
             />
           </Form>
@@ -260,7 +272,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
             />
           )}
 
-          {released && reviewed && sended && (
+          {released && reviewed && sended && !scheduled && (
             <>
               {accompaniment.transactionNumber && !accompaniment.renewedAt && (
                 <Button
@@ -277,6 +289,14 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
                 onClick={handleSubmitForm}
               />
             </>
+          )}
+
+          {scheduled && unlocked && !finished && (
+            <Button
+              label="Confirmar Recebimento da Nota Original"
+              onClick={handleMarkAsFinished}
+              loading={markingAsFinished}
+            />
           )}
         </ActionsContainer>
       </Wrapper>

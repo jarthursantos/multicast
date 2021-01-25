@@ -17,6 +17,7 @@ export interface IAccompaniment {
   billingAt?: Date
   freeOnBoardAt?: Date
   schedulingAt?: Date
+  finishedAt?: Date
 
   transactionNumber?: number
   invoiceNumber?: number

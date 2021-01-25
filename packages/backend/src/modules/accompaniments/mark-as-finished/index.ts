@@ -2,7 +2,7 @@ import createHttpError from 'http-errors'
 
 import { IAccompanimentsModel } from '~/models/accompaniments/IAccompanimentsModel'
 
-export function createMarkAccompanimentAsReleasedModule(
+export function createMarkAccompanimentAsFinishedModule(
   accompanimentsModel: IAccompanimentsModel
 ) {
   return {
@@ -13,7 +13,7 @@ export function createMarkAccompanimentAsReleasedModule(
         throw new createHttpError.NotFound('Acompanhamento não encontrado')
       }
 
-      accompaniment.releasedAt = new Date()
+      accompaniment.finishedAt = new Date()
 
       return await accompanimentsModel.update(accompaniment)
     }

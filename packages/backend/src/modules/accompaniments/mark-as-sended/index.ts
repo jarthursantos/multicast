@@ -2,7 +2,7 @@ import createHttpError from 'http-errors'
 
 import { IAccompanimentsModel } from '~/models/accompaniments/IAccompanimentsModel'
 
-export function crateMarkAccompanimentAsSendedModule(
+export function createMarkAccompanimentAsSendedModule(
   accompanimentsModel: IAccompanimentsModel
 ) {
   return {

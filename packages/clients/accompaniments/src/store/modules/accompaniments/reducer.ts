@@ -15,6 +15,7 @@ const INITIAL_STATE: AccompanimentsState = {
   markingAsSended: false,
   markingAsReviewed: false,
   markingAsReleased: false,
+  markingAsFinished: false,
 
   filters: {}
 }
@@ -215,6 +216,29 @@ export default function accompaniments(
       }
       case Types.MARK_ACCOMPANIMENT_RELEASED_REQUEST: {
         draft.markingAsReleased = true
+        break
+      }
+
+      case Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS: {
+        const { accompaniment } = action.payload
+
+        const accompanimentIndex = draft.accompaniments.findIndex(
+          current => current.id === accompaniment.id
+        )
+
+        if (accompanimentIndex !== -1) {
+          draft.accompaniments.splice(accompanimentIndex, 1)
+        }
+
+        draft.markingAsFinished = false
+        break
+      }
+      case Types.MARK_ACCOMPANIMENT_FINISHED_FAILURE: {
+        draft.markingAsFinished = false
+        break
+      }
+      case Types.MARK_ACCOMPANIMENT_FINISHED_REQUEST: {
+        draft.markingAsFinished = true
         break
       }
 

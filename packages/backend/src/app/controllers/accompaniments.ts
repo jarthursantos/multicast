@@ -8,6 +8,7 @@ import {
   findAccompanimentsProductsModule,
   findAllAccompanimentsModule,
   generateAccompanimentsPDFModule,
+  markAccompanimentAsFinishedModule,
   markAccompanimentAsReleasedModule,
   markAccompanimentAsReviewedModule,
   markAccompanimentAsSendedModule,
@@ -115,6 +116,17 @@ export async function handleMarkAccompanimentAsSended(
   const { id } = req.params
 
   const result = await markAccompanimentAsSendedModule.execute(id)
+
+  res.json(result)
+}
+
+export async function handleMarkAccompanimentAsFinished(
+  req: Request,
+  res: Response
+) {
+  const { id } = req.params
+
+  const result = await markAccompanimentAsFinishedModule.execute(id)
 
   res.json(result)
 }

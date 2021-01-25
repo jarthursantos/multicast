@@ -22,9 +22,10 @@ import { createFindAllAccompanimentsModule } from './find-all'
 import { createFindAccompanimentByIdModule } from './find-by-id'
 import { createFindAccompanimentsProductsModule } from './find-products'
 import { createGenerateAccompanimentsPDFModule } from './generate-pdf'
-import { crateMarkAccompanimentAsReviewedModule } from './mark-as-released'
-import { crateMarkAccompanimentAsReleasedModule } from './mark-as-reviewed'
-import { crateMarkAccompanimentAsSendedModule } from './mark-as-sended'
+import { createMarkAccompanimentAsFinishedModule } from './mark-as-finished'
+import { createMarkAccompanimentAsReviewedModule } from './mark-as-released'
+import { createMarkAccompanimentAsReleasedModule } from './mark-as-reviewed'
+import { createMarkAccompanimentAsSendedModule } from './mark-as-sended'
 import { createRenewAccompanimentsModule } from './renew'
 import { createFindAccompanimentUntrackedInvoices } from './untracked-invoices'
 import { createUpdateAccompanimentsModule } from './update'
@@ -77,13 +78,16 @@ const findAccompanimentsProductsModule = createFindAccompanimentsProductsModule(
   accompanimentsModel,
   accompanimentProductsModel
 )
-const markAccompanimentAsSendedModule = crateMarkAccompanimentAsSendedModule(
+const markAccompanimentAsSendedModule = createMarkAccompanimentAsSendedModule(
   accompanimentsModel
 )
-const markAccompanimentAsReleasedModule = crateMarkAccompanimentAsReleasedModule(
+const markAccompanimentAsReleasedModule = createMarkAccompanimentAsReleasedModule(
   accompanimentsModel
 )
-const markAccompanimentAsReviewedModule = crateMarkAccompanimentAsReviewedModule(
+const markAccompanimentAsFinishedModule = createMarkAccompanimentAsFinishedModule(
+  accompanimentsModel
+)
+const markAccompanimentAsReviewedModule = createMarkAccompanimentAsReviewedModule(
   accompanimentsModel
 )
 const generateAccompanimentsPDFModule = createGenerateAccompanimentsPDFModule(
@@ -118,6 +122,7 @@ export {
   findAccompanimentByIdModule,
   findAccompanimentsProductsModule,
   findAccompanimentUntrackedInvoices,
+  markAccompanimentAsFinishedModule,
   markAccompanimentAsReviewedModule,
   markAccompanimentAsReleasedModule,
   markAccompanimentAsSendedModule,
