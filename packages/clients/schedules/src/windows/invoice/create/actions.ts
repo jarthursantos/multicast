@@ -11,8 +11,6 @@ import { OPEN_CREATE_INVOICE, OPEN_CREATE_INVOICE_PAYLOAD } from './types'
 export function openCreateInvoiceWindow(schedule: ISchedule) {
   const state = store.getState() as RootState
 
-  console.log({ token: state.auth.token })
-
   ipcRenderer.send(OPEN_CREATE_INVOICE, schedule, state.auth.token)
 }
 
@@ -23,8 +21,6 @@ export function useCreateInvoicePayload(): [ISchedule, string] {
   ipcRenderer.once(
     OPEN_CREATE_INVOICE_PAYLOAD,
     (_, schedule: ISchedule, token: string) => {
-      console.log({ schedule, token })
-
       setSchedule(schedule)
       setToken(token)
     }

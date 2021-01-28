@@ -16,7 +16,7 @@ import { HomeScreenTabs } from '~/screens/types'
 const HomeTopBar: React.VFC = () => {
   return (
     <>
-      <Ribbon.Bar initialTab={HomeScreenTabs.ACCOMPANIMENTS}>
+      <Ribbon.Bar initialTab={HomeScreenTabs.SCHEDULES}>
         <TabBar.Button name={HomeScreenTabs.ACCOMPANIMENTS} label="Pedidos" />
 
         <TabBar.Button name={HomeScreenTabs.SCHEDULES} label="Agenda" />

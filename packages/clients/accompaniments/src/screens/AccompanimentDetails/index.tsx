@@ -206,6 +206,8 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
     Types.UPDATE_ACCOMPANIMENT_SUCCESS,
     Types.RENEW_ACCOMPANIMENT_SUCCESS,
     Types.CANCEL_ACCOMPANIMENT_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS,
+    // Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS,
     Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS
   ])
 
@@ -272,7 +274,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
             />
           )}
 
-          {released && reviewed && sended && !scheduled && (
+          {released && reviewed && sended && (
             <>
               {accompaniment.transactionNumber && !accompaniment.renewedAt && (
                 <Button

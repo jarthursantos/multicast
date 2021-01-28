@@ -93,7 +93,7 @@ app.post('/', async (_, res) => {
       saldo_pendente: true,
       data_agendada: null
     })
-    .andWhere('numero_pedido', '>=', 15624)
+    .andWhere('numero_pedido', '=', 15931)
 
   const lastPurchaseOrderProvider = createPrismaLastPurchaseOrderProvider()
   const purchaseOrdersModel = createWinThorPurchaseOrdersModel(
@@ -131,6 +131,7 @@ app.post('/', async (_, res) => {
 
   await accompanimentsModel.registerPurchaseOrders(orders)
 
+  /*
   const accompaniments = await accompanimentsModel.findMany()
 
   for (let i = 0; i < accompaniments.length; i++) {
@@ -157,7 +158,7 @@ app.post('/', async (_, res) => {
 
       await accompanimentsModel.update(accompaniment)
     }
-  }
+  } */
 
   return res.json(orders)
 })

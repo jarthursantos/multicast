@@ -1,19 +1,26 @@
-import ScrollBar from 'react-perfect-scrollbar'
-
 import styled from 'styled-components'
 
-export const Wrapper = styled(ScrollBar)`
-  position: relative;
+export const Wrapper = styled.div`
+  display: grid;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  grid-template-columns: 300px calc(100vw - 300px);
+  grid-template-rows: calc(100vh - 154px);
+  grid-template-areas: 'DATEPICKER CALENDAR';
 
   height: 100%;
   width: 100%;
+
+  *.rbc-current-time-indicator,
+  *.rbc-allday-cell,
+  *.rbc-time-header {
+    display: none;
+  }
+
+  *.rbc-time-content {
+    border-top: none;
+  }
 `
 
 export const Container = styled.div`
-  width: 100%;
-  max-width: 1200px;
+  grid-area: DATEPICKER;
 `

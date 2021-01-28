@@ -1,84 +1,25 @@
-import React, { useContext, useState } from 'react'
-import { Calendar, dateFnsLocalizer, Event, Messages } from 'react-big-calendar'
+import React, { useState } from 'react'
 
-import { addHours, format, parse, startOfWeek, getDay } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ScheduleCalendar } from '@shared/web-components/ScheduleCalendar'
 
-import { HomeScreenContext } from '~/screens/context'
-
-import { ScheduleTabs } from '../types'
-import { Toolbar } from './Toolbar'
-
-const localizer = dateFnsLocalizer({
-  parse,
-  format,
-  getDay,
-  startOfWeek,
-  locales: { 'pt-BR': ptBR }
-})
-
-const messages: Messages = {
-  today: 'Hoje',
-  next: 'Próximo',
-  previous: 'Anterior',
-  month: 'Mês',
-  week: 'Semana',
-  day: 'Dia',
-  date: 'Data',
-  event: 'Evento',
-  time: 'Tempo',
-  tomorrow: 'Amanhã',
-  allDay: 'Dia todo',
-  yesterday: 'Ontem',
-  agenda: 'Agenda',
-  work_week: 'Semana de trabalho',
-  noEventsInRange: 'Sem eventos no intervalo',
-  showMore: count => `Mostrar mais ${count}`
-}
+import { Calendar } from './Calendar'
+import { Wrapper, Container } from './styles'
 
 const ScredulesScreen: React.FC = () => {
-  const [events] = useState<Event[]>([
-    // setEvents
-    {
-      title: 'Wesley',
-      start: new Date(),
-      end: addHours(new Date(), 2)
-    }
-  ])
-
-  const { currentScheduleTab, changeScheduleTab } = useContext(
-    HomeScreenContext
-  )
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      defaultView={'work_week'}
-      views={['month', 'work_week', 'day']}
-      culture={'pt-BR'}
-      messages={messages}
-      onSelectSlot={console.log}
-      components={{ toolbar: Toolbar }}
-      min={new Date(0, 0, 0, 7, 0, 0)}
-      max={new Date(0, 0, 0, 18, 0, 0)}
-      view={
-        currentScheduleTab === ScheduleTabs.DAY
-          ? 'day'
-          : currentScheduleTab === ScheduleTabs.WEEK
-          ? 'work_week'
-          : 'month'
-      }
-      onView={view =>
-        changeScheduleTab(
-          view === 'day'
-            ? ScheduleTabs.DAY
-            : view === 'work_week'
-            ? ScheduleTabs.WEEK
-            : ScheduleTabs.MONTH
-        )
-      }
-    />
+    <Wrapper>
+      <Container>
+        <ScheduleCalendar
+          daysWithSchedules={[]}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+      </Container>
+
+      <Calendar />
+    </Wrapper>
   )
 }
 

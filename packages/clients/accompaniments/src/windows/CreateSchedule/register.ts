@@ -9,7 +9,7 @@ export function registerOpenCreateSchedule() {
     const window = new BrowserWindow({
       minimizable: false,
       maximizable: false,
-      width: 300,
+      width: 400,
       height: 470,
       resizable: false,
       webPreferences: {

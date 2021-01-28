@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import {
   HomeScreenContextHandles,
   AccompanimentTabs,
-  ScheduleTabs,
   StockNotificationTabs,
   RepresentativeTabs
 } from '~/screens/types'
@@ -21,10 +20,6 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
   const [currentAccompanimentTab, changeAccompanimentTab] = useState<
     AccompanimentTabs
   >(AccompanimentTabs.GENERAL_RESUME)
-
-  const [currentScheduleTab, changeScheduleTab] = useState<ScheduleTabs>(
-    ScheduleTabs.DAY
-  )
 
   const [currentStockNotificationTab, changeStockNotificationTab] = useState<
     StockNotificationTabs
@@ -46,8 +41,6 @@ const HomeScreenContextProvider: React.FC = ({ children }) => {
         isLoading: loading,
         currentAccompanimentTab,
         changeAccompanimentTab,
-        currentScheduleTab,
-        changeScheduleTab,
         currentStockNotificationTab,
         changeStockNotificationTab,
         currentRepresentativeTab,

@@ -169,8 +169,6 @@ export function* receiveSchedule({ payload }: IReceiveScheduleRequestAction) {
   try {
     const { schedule, data } = payload
 
-    console.log({ schedule, data })
-
     const response: AxiosResponse<ISchedule> = yield call(
       api.put,
       `/schedules/${schedule.id}/receive`,
@@ -192,13 +190,9 @@ function* loadSchedules() {
       'schedules'
     )
 
-    console.log({ data })
-
     yield put(loadSchedulesSuccess(data))
   } catch (error) {
     const message = extractErrorMessage(error)
-
-    console.log({ message })
 
     yield put(loadSchedulesFailure(message))
   }

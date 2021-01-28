@@ -63,9 +63,7 @@ const EditInvoiceScreen: React.VFC<IEditInvoiceScreenProps> = ({
 
   const handleSubmit = useCallback(
     async (data: IRawScheduleInvoice) => {
-      const { success, errors } = await validateForm()
-
-      console.log(data, { errors }, data.providers.length)
+      const { success } = await validateForm()
 
       if (!success || data.providers.length === 0) return
 

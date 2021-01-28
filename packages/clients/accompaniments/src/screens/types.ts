@@ -4,9 +4,6 @@ export interface HomeScreenContextHandles {
   currentAccompanimentTab: AccompanimentTabs
   changeAccompanimentTab(tab: AccompanimentTabs): void
 
-  currentScheduleTab: ScheduleTabs
-  changeScheduleTab(tab: ScheduleTabs): void
-
   currentStockNotificationTab: StockNotificationTabs
   changeStockNotificationTab(tab: StockNotificationTabs): void
 
@@ -30,12 +27,6 @@ export enum AccompanimentTabs {
   GENERAL_RESUME = 'GENERAL_RESUME',
   IN_PROGRESS = 'IN_PROGRESS',
   IN_RECEIVEMENT = 'IN_RECEIVEMENT'
-}
-
-export enum ScheduleTabs {
-  DAY = 'DAY',
-  WEEK = 'WEEK',
-  MONTH = 'MONTH'
 }
 
 export enum StockNotificationTabs {

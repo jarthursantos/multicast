@@ -13,6 +13,8 @@ export const Wrapper = styled.div`
   form {
     width: 300px;
   }
+
+  border-left: 1px solid ${({ theme }) => theme.colors.border.secondary};
 `
 
 export const Header = styled.div`

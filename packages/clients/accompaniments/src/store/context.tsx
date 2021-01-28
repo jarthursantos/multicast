@@ -41,8 +41,6 @@ export const StoreContextProvider: React.FC = ({ children }) => {
   )
 
   const filteredAccompaniments = useMemo(() => {
-    console.log({ filters })
-
     return accompaniments
       .filter(accompaniment => {
         if (

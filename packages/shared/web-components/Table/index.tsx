@@ -38,7 +38,6 @@ const Table: React.VFC<TableProps> = ({
 
     if (!tabulator.current) {
       tabulator.current = new Tabulator(ref.current, someOptions)
-      console.log('tabulator:createInstance')
     }
   }, [someOptions])
 
@@ -55,7 +54,6 @@ const Table: React.VFC<TableProps> = ({
 
     if (!isEqual(sortBy(currentData, dataKey), sortBy(data, dataKey))) {
       tabulator.current.setData(data)
-      console.log('tabulator:updateData', dataKey)
     }
   }, [data, dataKey])
 
@@ -66,7 +64,6 @@ const Table: React.VFC<TableProps> = ({
 
     if (!isEqual(sortBy(currentColumns, 'field'), sortBy(columns, 'field'))) {
       tabulator.current.setColumns(columns)
-      console.log('tabulator:updateColumns')
     }
   }, [columns])
 

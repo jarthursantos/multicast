@@ -32,8 +32,6 @@ export function createWinThorAccompanimentProductsModel(): IAccompanimentProduct
     ): Promise<IProduct[]> {
       const { purchaseOrder } = accompaniment
 
-      console.log('options', { options })
-
       const products = await winthor()
         .with('products', builder => {
           builder

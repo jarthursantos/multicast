@@ -1,7 +1,7 @@
 import 'chart.js'
 import 'chartjs-plugin-labels'
 
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+// import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 
 import '../public/styles/calendar.css'
 import '../public/styles/resizable.css'
