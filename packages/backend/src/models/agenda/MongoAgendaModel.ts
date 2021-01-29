@@ -1,3 +1,4 @@
+import { startOfDay, endOfDay } from 'date-fns'
 import createHttpError from 'http-errors'
 
 import { IAgenda } from '~/domain/IAgenda'
@@ -51,7 +52,10 @@ export function createMongoAgendaModel(
         id: agenda._id,
         buyer,
         createdBy,
-        date: agenda.date,
+        date: {
+          from: agenda.from,
+          to: agenda.to
+        },
         providers
       })
     }
@@ -64,7 +68,8 @@ export function createMongoAgendaModel(
       const result = await AgendaSchema.create({
         buyer: agenda.buyer.code,
         createdBy: agenda.createdBy.id,
-        date: agenda.date,
+        from: agenda.date.from,
+        to: agenda.date.to,
         providers: agenda.providers.map(provider => provider.code)
       })
 
@@ -80,6 +85,18 @@ export function createMongoAgendaModel(
     async findByBuyer(buyer: IBuyer): Promise<IAgenda[]> {
       const allAgenda = await AgendaSchema.find({
         buyer: buyer.code
+      })
+
+      return await parseAgenda(allAgenda)
+    },
+
+    async findByDatePerBuyer(date: Date, buyer: IBuyer): Promise<IAgenda[]> {
+      const allAgenda = await AgendaSchema.find({
+        buyer: buyer.code,
+        from: {
+          $gte: startOfDay(date),
+          $lte: endOfDay(date)
+        }
       })
 
       return await parseAgenda(allAgenda)

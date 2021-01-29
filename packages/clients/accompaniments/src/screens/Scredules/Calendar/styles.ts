@@ -5,12 +5,11 @@ export const Wrapper = styled.div`
 
   display: grid;
   grid-template-columns: 60px 1fr;
-  grid-template-rows: 40px 1fr;
-  grid-template-areas:
-    '. HEADER'
-    'GUTTER TOPICS';
+  grid-template-rows: 1fr;
+  grid-template-areas: 'GUTTER TOPICS';
 
   border-left: 1px solid ${({ theme }) => theme.colors.border.primary};
+  overflow: hidden;
 `
 
 export const Container = styled.div`
@@ -19,9 +18,5 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: row;
-
-  & > * + * {
-    /* border-left: 1px solid ${({ theme }) =>
-      theme.colors.border.secondary}; */
-  }
+  overflow-x: scroll;
 `

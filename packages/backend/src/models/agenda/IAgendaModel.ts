@@ -6,6 +6,7 @@ export interface IAgendaModel {
   save(agenda: Omit<IAgenda, 'id'>): Promise<IAgenda>
   findMany(): Promise<IAgenda[]>
   findByBuyer(buyer: IBuyer): Promise<IAgenda[]>
+  findByDatePerBuyer(date: Date, buyer: IBuyer): Promise<IAgenda[]>
   findByProvider(provider: IProvider): Promise<IAgenda[]>
   update(agenda: IAgenda): Promise<void>
   delete(agenda: IAgenda): Promise<void>

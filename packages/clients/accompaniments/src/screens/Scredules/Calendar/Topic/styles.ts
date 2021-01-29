@@ -1,15 +1,21 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
-  position: relative;
+  min-width: 300px;
 
+  overflow-y: hidden;
+  min-height: 100%;
+  flex: 1;
+  border-right: 1px solid ${({ theme }) => theme.colors.border.secondary};
+`
+
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-
-  flex: 1;
+  min-height: calc(100% - 40px);
+  position: relative;
 
   & > * {
-    border-top: 1px dashed ${({ theme }) => theme.colors.border.secondary};
+    border-bottom: 1px dashed ${({ theme }) => theme.colors.border.secondary};
   }
 `

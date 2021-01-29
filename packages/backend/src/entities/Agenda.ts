@@ -2,10 +2,8 @@ import { Schema, Document, model } from 'mongoose'
 
 export interface IAgendaSchema extends Document {
   buyer: number
-  date: {
-    from: Date
-    to: Date
-  }
+  from: Date
+  to: Date
   providers: number[]
   createdBy: string
 }
@@ -16,15 +14,13 @@ const schema = new Schema(
       type: Number,
       required: true
     },
-    date: {
-      from: {
-        type: Date,
-        required: true
-      },
-      to: {
-        type: Date,
-        required: true
-      }
+    from: {
+      type: Date,
+      required: true
+    },
+    to: {
+      type: Date,
+      required: true
     },
     providers: {
       type: [Number],

@@ -7,11 +7,11 @@ export const createAgendaSchema = Yup.object().shape({
     .required('O código do comprador é obrigatório'),
 
   agendaFrom: Yup.date()
-    .typeError('O inicio do Agendamento é obrigatório')
+    .typeError('O inicio do Agendamento é inválido')
     .required('O inicio do Agendamento é obrigatório'),
 
   agendaTo: Yup.date()
-    .typeError('O fim do Agendamento é obrigatório')
+    .typeError('O fim do Agendamento é inválido')
     .required('O fim do Agendamento é obrigatório'),
 
   providers: Yup.array()

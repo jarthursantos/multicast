@@ -1,33 +1,26 @@
 import React from 'react'
 
 import { WORKING_HOURS } from '../index'
+import { Event } from './Event'
+import { Header } from './Header'
 import { Hour } from './Hour'
-import { Wrapper } from './styles'
+import { Wrapper, Container } from './styles'
+import { ITopicProps } from './types'
 
-const Topic: React.FC = () => {
+const Topic: React.VFC<ITopicProps> = ({ title, events }) => {
   return (
     <Wrapper>
-      {WORKING_HOURS.map(hour => (
-        <Hour key={hour} />
-      ))}
+      <Header title={title} />
 
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: 0,
-          right: 0,
-          bottom: '10%',
-          margin: 4,
-          border: 'none',
-          borderRadius: 4,
-          color: 'white',
-          padding: 8,
-          backgroundColor: 'rgba(255, 0, 0, 0.8)'
-        }}
-      >
-        Opa
-      </div>
+      <Container>
+        {WORKING_HOURS.map(hour => (
+          <Hour key={hour} />
+        ))}
+
+        {events.map(event => (
+          <Event key={event.id} data={event} />
+        ))}
+      </Container>
     </Wrapper>
   )
 }

@@ -1,4 +1,4 @@
-import { isBefore } from 'date-fns'
+import { isBefore, isAfter, isEqual } from 'date-fns'
 import createHttpError from 'http-errors'
 
 import { IProvider } from '~/domain/IProvider'
@@ -27,7 +27,7 @@ export function createCreateAgendaModule(
       const normalizedFrom = normalizeDate(agendaFrom)
       const normalizedTo = normalizeDate(agendaTo)
 
-      if (isBefore(normalizedFrom, normalizedTo)) {
+      if (isBefore(normalizedTo, normalizedFrom)) {
         throw new createHttpError.BadRequest(
           'O fim do agendamento é anterior ao inicio'
         )
@@ -38,6 +38,44 @@ export function createCreateAgendaModule(
       if (!buyer) {
         throw new createHttpError.NotFound('Comprador não encontrado')
       }
+
+      const agendas = await agendaModel.findByDatePerBuyer(
+        normalizedFrom,
+        buyer
+      )
+
+      agendas.forEach(({ date }) => {
+        const { from, to } = date
+
+        if (
+          (isAfter(normalizedFrom, from) && isBefore(normalizedFrom, to)) ||
+          isEqual(normalizedFrom, to) ||
+          isEqual(normalizedFrom, from)
+        ) {
+          throw new createHttpError.BadRequest(
+            'O inicio do agendamento conflita com um agendamento já existente'
+          )
+        }
+
+        if (
+          (isAfter(normalizedTo, from) && isBefore(normalizedTo, to)) ||
+          isEqual(normalizedTo, to) ||
+          isEqual(normalizedTo, from)
+        ) {
+          throw new createHttpError.BadRequest(
+            'O fim do agendamento conflita com um agendamento já existente'
+          )
+        }
+
+        if (
+          (isBefore(normalizedFrom, from) || isEqual(normalizedFrom, from)) &&
+          (isAfter(normalizedTo, to) || isEqual(normalizedTo, to))
+        ) {
+          throw new createHttpError.BadRequest(
+            'Já existe um agendamento entre esses horários'
+          )
+        }
+      })
 
       const providers: IProvider[] = []
       const uniqueProviderCodes: number[] = []
