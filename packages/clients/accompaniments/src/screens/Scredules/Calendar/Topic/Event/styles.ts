@@ -40,10 +40,11 @@ export const Container = styled.div<IContainerProps>`
     `${calcTopPercent(startHour, startMinute)}%`};
   bottom: ${({ endHour, endMinute }) =>
     `${calcBottomPercent(endHour, endMinute)}%`};
-  margin: 2px 4px;
+  margin: 2px;
   border: none !important;
   border-radius: 4px;
   color: white;
-  padding: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
   background-color: rgba(255, 0, 0, 0.8);
 `

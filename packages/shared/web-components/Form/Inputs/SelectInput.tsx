@@ -15,6 +15,7 @@ import { InputProps } from '../types'
 type Props = Pick<InputProps, 'label' | 'name'> & {
   inputProps: SelectProps<OptionTypeBase>
   onSelectionChange?: Dispatch<SetStateAction<any>>
+  clearOnOptionsChange?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
 const SelectInput: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const SelectInput: React.FC<Props> = ({
   label,
   inputProps = {},
   onSelectionChange,
+  clearOnOptionsChange,
   ...rest
 }) => {
   const { options } = inputProps
@@ -48,6 +50,13 @@ const SelectInput: React.FC<Props> = ({
 
     setSelection(defaultOption)
   }, [defaultValue, options])
+
+  useEffect(() => {
+    if (clearOnOptionsChange) {
+      console.log('cleared')
+      setSelection(undefined)
+    }
+  }, [clearOnOptionsChange, options])
 
   useEffect(() => {
     registerField({

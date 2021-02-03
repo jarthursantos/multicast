@@ -3,4 +3,10 @@ export interface IBuyerInputProps {
   label: string
   disabled?: boolean
   single?: boolean
+  onBuyersChange?(buyers: IBuyer[]): void
+}
+
+export interface IBuyer {
+  code: number
+  name: string
 }

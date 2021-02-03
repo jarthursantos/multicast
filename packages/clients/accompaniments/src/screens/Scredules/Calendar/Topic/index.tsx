@@ -7,9 +7,9 @@ import { Hour } from './Hour'
 import { Wrapper, Container } from './styles'
 import { ITopicProps } from './types'
 
-const Topic: React.VFC<ITopicProps> = ({ title, events }) => {
+const Topic: React.VFC<ITopicProps> = ({ title, events, fill }) => {
   return (
-    <Wrapper>
+    <Wrapper fill={fill}>
       <Header title={title} />
 
       <Container>

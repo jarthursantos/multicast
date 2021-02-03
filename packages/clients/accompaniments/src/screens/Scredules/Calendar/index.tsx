@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
+import { normalizeDate, useAgendaOfDay } from '../context'
 import { Gutter } from './Gutter'
 import { Wrapper, Container } from './styles'
 import { Topic } from './Topic'
+import { BuyerTopic } from './types'
 
 export const WORKING_HOURS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 
@@ -12,37 +14,45 @@ export const HOUR_PERCENT = 100 / WORKING_HOURS.length
 export const HALF_OF_HOUR_PERCENT = HOUR_PERCENT / 2
 
 const Calendar: React.FC = () => {
+  const agenda = useAgendaOfDay()
+
+  const topics = useMemo(() => {
+    return agenda.reduce<BuyerTopic[]>((currentTopics, { buyer, ...rest }) => {
+      let buyerTopic = currentTopics.find(
+        curr => curr.buyer.code === buyer.code
+      )
+
+      if (!buyerTopic) {
+        buyerTopic = { buyer, events: [] }
+
+        currentTopics.push(buyerTopic)
+      }
+
+      buyerTopic.events.push(rest)
+
+      return currentTopics
+    }, [])
+  }, [agenda])
+
   return (
     <Wrapper>
       <Gutter />
 
       <Container>
-        <Topic
-          title="PAULO ALEXANDRE REIS"
-          events={[
-            {
-              id: '1',
-              startHour: new Date(0, 0, 0, 10, 30),
-              endHour: new Date(0, 0, 0, 17, 30)
-            },
-            {
-              id: '2',
-              startHour: new Date(0, 0, 0, 7, 30),
-              endHour: new Date(0, 0, 0, 10, 30)
-            }
-          ]}
-        />
+        {topics.map(({ buyer, events }) => (
+          <Topic
+            key={buyer.code}
+            title={buyer.name}
+            events={events.map(({ id, date, providers }) => ({
+              id,
+              startHour: normalizeDate(date.from),
+              endHour: normalizeDate(date.to),
+              labels: providers.map(({ name }) => name)
+            }))}
+          />
+        ))}
 
-        <Topic
-          title="ALEXANDRE MAGNO"
-          events={[
-            {
-              id: '1',
-              startHour: new Date(0, 0, 0, 12, 0),
-              endHour: new Date(0, 0, 0, 15, 0)
-            }
-          ]}
-        />
+        <Topic title={''} events={[]} fill />
       </Container>
     </Wrapper>
   )

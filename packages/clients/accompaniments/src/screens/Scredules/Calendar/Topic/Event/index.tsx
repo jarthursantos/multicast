@@ -17,7 +17,11 @@ const Event: React.VFC<IEventProps> = ({ data: event }) => {
       endHour={getHours(event.endHour)}
       endMinute={getMinutes(event.endHour)}
     >
-      {formatHour(event.startHour, event.endHour)}
+      <div>{formatHour(event.startHour, event.endHour)}</div>
+
+      {event.labels.map(label => (
+        <div key={label}>{label}</div>
+      ))}
     </Container>
   )
 }

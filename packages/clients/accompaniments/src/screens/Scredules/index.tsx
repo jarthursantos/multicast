@@ -1,25 +1,40 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 
 import { ScheduleCalendar } from '@shared/web-components/ScheduleCalendar'
 
 import { Calendar } from './Calendar'
+import {
+  SchedulesContextProvider,
+  SchedulesContext,
+  useDaysWithSchedule
+} from './context'
 import { Wrapper, Container } from './styles'
 
-const ScredulesScreen: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date())
+const ScredulesScreenComponent: React.FC = () => {
+  const daysWithSchedules = useDaysWithSchedule()
+
+  const { selectedDate, setSelectedDate } = useContext(SchedulesContext)
 
   return (
     <Wrapper>
       <Container>
         <ScheduleCalendar
-          daysWithSchedules={[]}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          daysWithSchedules={daysWithSchedules}
         />
       </Container>
 
       <Calendar />
     </Wrapper>
+  )
+}
+
+const ScredulesScreen: React.FC = () => {
+  return (
+    <SchedulesContextProvider>
+      <ScredulesScreenComponent />
+    </SchedulesContextProvider>
   )
 }
 

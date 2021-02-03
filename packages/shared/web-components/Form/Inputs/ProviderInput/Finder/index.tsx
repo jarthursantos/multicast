@@ -17,6 +17,9 @@ import { Wrapper, FieldsWrapper, TableWrapper, ActionsWrapper } from './styles'
 interface IDetailedProvider extends IProvider {
   fantasy: string
   cnpj: string
+  representative: {
+    name: string
+  }
 }
 
 function normalizeString(str: string) {
@@ -32,41 +35,53 @@ const applyFilter = debounce(
     const filter = normalizeString(criteria)
 
     if (filter) {
-      const result = providers.filter(({ code, name, fantasy, cnpj }) => {
-        const normalizedName = normalizeString(name)
-        if (normalizedName.includes(filter)) {
-          return true
-        }
-
-        const normalizedCode = String(code)
-        if (normalizedCode.includes(filter)) {
-          return true
-        }
-
-        if (fantasy) {
-          const normalizedFantasy = normalizeString(fantasy)
-          if (normalizedFantasy.includes(filter)) {
+      const result = providers.filter(
+        ({ code, name, fantasy, cnpj, representative }) => {
+          const normalizedName = normalizeString(name)
+          if (normalizedName.includes(filter)) {
             return true
           }
-        }
 
-        if (cnpj) {
-          const filterMatches = filter.match(/\d+/g)
-          const cnpjMatches = normalizeString(cnpj).match(/\d+/g)
-
-          if (!filterMatches || !cnpjMatches) {
-            return false
-          }
-
-          const nomalizedFilter = filterMatches.join('')
-          const normalizedCNPJ = cnpjMatches.join('')
-          if (normalizedCNPJ.includes(nomalizedFilter)) {
+          const normalizedCode = String(code)
+          if (normalizedCode.includes(filter)) {
             return true
           }
-        }
 
-        return false
-      })
+          if (fantasy) {
+            const normalizedFantasy = normalizeString(fantasy)
+            if (normalizedFantasy.includes(filter)) {
+              return true
+            }
+          }
+
+          if (representative.name) {
+            const normalizedRepresentative = normalizeString(
+              representative.name
+            )
+
+            if (normalizedRepresentative.includes(filter)) {
+              return true
+            }
+          }
+
+          if (cnpj) {
+            const filterMatches = filter.match(/\d+/g)
+            const cnpjMatches = normalizeString(cnpj).match(/\d+/g)
+
+            if (!filterMatches || !cnpjMatches) {
+              return false
+            }
+
+            const nomalizedFilter = filterMatches.join('')
+            const normalizedCNPJ = cnpjMatches.join('')
+            if (normalizedCNPJ.includes(nomalizedFilter)) {
+              return true
+            }
+          }
+
+          return false
+        }
+      )
 
       return onEnd(result)
     }
@@ -178,6 +193,11 @@ const ProviderFinderScreen: React.VFC = () => {
                   title: 'Fantasia',
                   width: 200,
                   field: 'fantasy'
+                },
+                {
+                  title: 'Representante',
+                  width: 200,
+                  field: 'representative.name'
                 },
                 {
                   title: 'CNPJ',

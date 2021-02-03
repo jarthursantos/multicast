@@ -32,7 +32,10 @@ export async function registerWindows() {
 
   mainWindow.removeMenu()
   mainWindow.loadURL(resolvePath('auth'))
-  mainWindow.webContents.openDevTools()
+
+  if (isDevelopment) {
+    mainWindow.webContents.openDevTools()
+  }
 
   registerOpenAccompanimentDetails()
   registerOpenAccompanimentFilters()

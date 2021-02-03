@@ -8,18 +8,14 @@ import { Button } from '../../../Button'
 import { InputLabel, InputContainer, InputError } from '../../styles'
 import { openProviderFinderWindow } from './Finder/action'
 import { Container, FieldWrapper } from './styles'
-import { IProviderInputProps } from './types'
-
-export interface IProvider {
-  code: number
-  name: string
-}
+import { IProviderInputProps, IProvider } from './types'
 
 const ProviderInput: React.VFC<IProviderInputProps> = ({
   name,
   label,
   disabled,
-  single
+  single,
+  onProvidersChange
 }) => {
   const {
     fieldName,
@@ -127,6 +123,12 @@ const ProviderInput: React.VFC<IProviderInputProps> = ({
     })
   }, [fieldName, providers])
 
+  useEffect(() => {
+    if (onProvidersChange) {
+      onProvidersChange(providers || [])
+    }
+  }, [onProvidersChange, providers])
+
   return (
     <InputContainer hasError={Boolean(error)}>
       {label && <InputLabel>{label}</InputLabel>}
@@ -168,3 +170,4 @@ const ProviderInput: React.VFC<IProviderInputProps> = ({
 }
 
 export { ProviderInput }
+export * from './types'

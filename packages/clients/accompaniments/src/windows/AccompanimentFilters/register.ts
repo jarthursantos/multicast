@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
+import isDevelopment from 'electron-is-dev'
 
 import { IAccompanimentFilters } from '~/store/modules/accompaniments/types'
 import { resolvePath } from '~/windows'
@@ -29,7 +30,10 @@ export function registerOpenAccompanimentFilters() {
       })
 
       window.removeMenu()
-      // window.webContents.openDevTools()
+
+      if (isDevelopment) {
+        window.webContents.openDevTools()
+      }
 
       window.loadURL(resolvePath('accompanimentFilters'))
     }

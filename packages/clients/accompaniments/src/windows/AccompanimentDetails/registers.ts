@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
+import isDevelopment from 'electron-is-dev'
 
 import { Accompaniment } from '~/store/modules/accompaniments/types'
 import { resolvePath } from '~/windows'
@@ -43,7 +44,10 @@ export function registerOpenAccompanimentDetails() {
 
         window.loadURL(resolvePath('accompanimentDetails'))
         window.removeMenu()
-        // window.webContents.openDevTools()
+
+        if (isDevelopment) {
+          window.webContents.openDevTools()
+        }
       }
     }
   )

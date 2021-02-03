@@ -93,7 +93,7 @@ app.post('/', async (_, res) => {
       saldo_pendente: true,
       data_agendada: null
     })
-    .andWhere('numero_pedido', '=', 15931)
+    .andWhere('numero_pedido', '=', 16240)
 
   const lastPurchaseOrderProvider = createPrismaLastPurchaseOrderProvider()
   const purchaseOrdersModel = createWinThorPurchaseOrdersModel(
@@ -173,6 +173,7 @@ app.use(
 app.use('/buyers', buyersRoutes)
 app.use('/employees', employeesRoutes)
 app.use('/providers', providersRoutes)
+app.use('/representatives', representativesRoutes)
 
 app.use(auth)
 
@@ -193,7 +194,6 @@ app.use('/distribuitions', distribuitionsRoutes)
 app.use('/invoices', invoicesRouter)
 app.use('/permissions', permissionsRoutes)
 app.use('/regions', regionsRoutes)
-app.use('/representatives', representativesRoutes)
 app.use('/salesClasses', salesClassesRoutes)
 app.use('/scheduleRequests', scheduleRequestsRoutes)
 app.use('/schedules', schedulesRoutes)

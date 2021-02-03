@@ -49,7 +49,6 @@ export function createCreateAgendaModule(
 
         if (
           (isAfter(normalizedFrom, from) && isBefore(normalizedFrom, to)) ||
-          isEqual(normalizedFrom, to) ||
           isEqual(normalizedFrom, from)
         ) {
           throw new createHttpError.BadRequest(
@@ -59,8 +58,7 @@ export function createCreateAgendaModule(
 
         if (
           (isAfter(normalizedTo, from) && isBefore(normalizedTo, to)) ||
-          isEqual(normalizedTo, to) ||
-          isEqual(normalizedTo, from)
+          isEqual(normalizedTo, to)
         ) {
           throw new createHttpError.BadRequest(
             'O fim do agendamento conflita com um agendamento já existente'

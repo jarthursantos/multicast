@@ -8,18 +8,14 @@ import { Button } from '../../../Button'
 import { InputLabel, InputContainer, InputError } from '../../styles'
 import { openBuyerFinderWindow } from './Finder/action'
 import { Container, FieldWrapper } from './styles'
-import { IBuyerInputProps } from './types'
-
-export interface IBuyer {
-  code: number
-  name: string
-}
+import { IBuyerInputProps, IBuyer } from './types'
 
 const BuyerInput: React.VFC<IBuyerInputProps> = ({
   name,
   label,
   disabled,
-  single
+  single,
+  onBuyersChange
 }) => {
   const {
     fieldName,
@@ -56,6 +52,10 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
 
   const handleSearchByCode = useCallback(async () => {
     if (buyerCode.length === 0) {
+      setBuyers([])
+      setBuyerCode('')
+      setBuyerName('')
+
       return
     }
 
@@ -69,6 +69,7 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
       setBuyerCode(String(data.code))
       setBuyerName(data.name)
     } catch (error) {
+      setBuyers([])
       setBuyerCode('')
       setBuyerName('')
 
@@ -127,6 +128,12 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
     })
   }, [fieldName, buyers])
 
+  useEffect(() => {
+    if (onBuyersChange) {
+      onBuyersChange(buyers || [])
+    }
+  }, [onBuyersChange, buyers])
+
   return (
     <InputContainer hasError={Boolean(error)}>
       {label && <InputLabel>{label}</InputLabel>}
@@ -163,3 +170,4 @@ const BuyerInput: React.VFC<IBuyerInputProps> = ({
 }
 
 export { BuyerInput }
+export * from './types'

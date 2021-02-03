@@ -226,8 +226,7 @@ export function useNonScheduledAccompaniments() {
   const { accompaniments } = useContext(StoreContext)
 
   return accompaniments.filter(
-    accompaniment =>
-      accompaniment.schedulingAt && accompaniment.schedule === undefined
+    accompaniment => accompaniment.schedulingAt && !accompaniment.schedule
   )
 }
 
@@ -247,7 +246,7 @@ export function useReceivingAccompaniments() {
     accompaniment =>
       accompaniment.schedule !== undefined &&
       accompaniment.schedule.receivedAt &&
-      accompaniment.schedule.downloadedAt === undefined
+      !accompaniment.schedule.downloadedAt
   )
 }
 
@@ -258,7 +257,7 @@ export function useDownloadedAccompaniments() {
     accompaniment =>
       accompaniment.schedule !== undefined &&
       accompaniment.schedule.downloadedAt &&
-      accompaniment.schedule.unlockedAt === undefined
+      !accompaniment.schedule.unlockedAt
   )
 }
 
@@ -270,50 +269,3 @@ export function useUnlockedAccompaniments() {
       accompaniment.schedule !== undefined && accompaniment.schedule.unlockedAt
   )
 }
-
-// if (filters) {
-//   const {
-//     periodFrom,
-//     periodTo,
-//     numberFrom,
-//     numberTo,
-//     providers,
-//     buyers
-//   } = filters
-
-//   result = accompaniments.filter(accompaniment => {
-//     if (
-//       periodFrom &&
-//       isBefore(
-//         typeof accompaniment.purchaseOrder.emittedAt === 'string'
-//           ? parseISO(accompaniment.purchaseOrder.emittedAt)
-//           : accompaniment.purchaseOrder.emittedAt,
-//         periodFrom
-//       )
-//     ) {
-//       return false
-//     }
-
-//     if (
-//       periodTo &&
-//       isAfter(
-//         typeof accompaniment.purchaseOrder.emittedAt === 'string'
-//           ? parseISO(accompaniment.purchaseOrder.emittedAt)
-//           : accompaniment.purchaseOrder.emittedAt,
-//         periodTo
-//       )
-//     ) {
-//       return false
-//     }
-
-//     if (numberFrom && accompaniment.purchaseOrder.number < numberFrom) {
-//       return false
-//     }
-
-//     if (numberTo && accompaniment.purchaseOrder.number > numberTo) {
-//       return false
-//     }
-
-//     return true
-//   })
-// }

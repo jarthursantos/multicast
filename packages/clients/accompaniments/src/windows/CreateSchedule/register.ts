@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
+import isDevelopment from 'electron-is-dev'
 
 import { resolvePath } from '~/windows'
 
@@ -9,8 +10,8 @@ export function registerOpenCreateSchedule() {
     const window = new BrowserWindow({
       minimizable: false,
       maximizable: false,
-      width: 400,
-      height: 470,
+      width: 450,
+      height: 600,
       resizable: false,
       webPreferences: {
         nodeIntegration: true,
@@ -23,7 +24,10 @@ export function registerOpenCreateSchedule() {
     })
 
     window.removeMenu()
-    // window.webContents.openDevTools()
+
+    if (isDevelopment) {
+      window.webContents.openDevTools()
+    }
 
     window.loadURL(resolvePath('createSchedule'))
   })
