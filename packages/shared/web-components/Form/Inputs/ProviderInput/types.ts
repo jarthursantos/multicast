@@ -4,6 +4,7 @@ export interface IProvider {
   code: number
   name: string
   buyer?: IBuyer
+  principalCode: number
 }
 
 export interface IProviderInputProps {

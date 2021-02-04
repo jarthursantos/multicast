@@ -53,10 +53,10 @@ const SelectInput: React.FC<Props> = ({
 
   useEffect(() => {
     if (clearOnOptionsChange) {
-      console.log('cleared')
-      setSelection(undefined)
+      setSelection(null)
+      onSelectionChange(undefined)
     }
-  }, [clearOnOptionsChange, options])
+  }, [clearOnOptionsChange, options, onSelectionChange])
 
   useEffect(() => {
     registerField({

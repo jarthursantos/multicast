@@ -6,6 +6,7 @@ export interface IRepresentativeInputProps {
   label: string
   buyer?: IBuyer
   disabled?: boolean
+  onRepresentativeChange?(representative: IRepresentative): void
 }
 
 export interface IRepresentative {

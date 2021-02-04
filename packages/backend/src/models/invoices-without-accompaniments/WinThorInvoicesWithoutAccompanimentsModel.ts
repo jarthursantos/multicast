@@ -116,6 +116,7 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
         WHERE PCMOV.CODFORNEC = ${providerCode}
               AND PCMOV.NUMNOTA = ${number}
               AND PCMOV.DTCANCEL IS NULL
+              AND PCMOV.NUMTRANSENT IS NOT NULL
       `)
 
       if (normalEntry.length !== 0 && normalEntry[0].transactionNumber) {
@@ -132,6 +133,7 @@ export function createWinThorInvoicesWithoutAccompanimentsModel(): IInvoicesWith
         WHERE PCMOVPREENT.CODFORNEC = ${providerCode}
               AND PCMOVPREENT.NUMNOTA = ${number}
               AND PCMOVPREENT.DTCANCEL IS NULL
+              AND PCMOVPREENT.NUMTRANSENT IS NOT NULL
       `)
 
       return preEntry[0]
