@@ -3,7 +3,7 @@ import { MdToday } from 'react-icons/md'
 import ReactInputMask from 'react-input-mask'
 
 import { useField } from '@unform/core'
-import { parse, parseISO, format } from 'date-fns'
+import { parse, parseISO, format, isValid } from 'date-fns'
 import styled from 'styled-components'
 
 import {
@@ -19,6 +19,7 @@ import { PickerHandlers } from './Picker/types'
 type Props = InputProps &
   React.HTMLAttributes<HTMLDivElement> & {
     position?: 'top' | 'bottom'
+    onDateChange?(date: Date | undefined): void
   }
 
 const DateInput: React.FC<Props> = ({
@@ -26,6 +27,7 @@ const DateInput: React.FC<Props> = ({
   label,
   position = 'bottom',
   inputProps,
+  onDateChange,
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -72,7 +74,7 @@ const DateInput: React.FC<Props> = ({
 
     const parsedDate = parse(textValue, 'dd/MM/yyyy', new Date())
 
-    setDate(parsedDate)
+    setDate(isValid(parsedDate) ? parsedDate : null)
   }, [textValue])
 
   useEffect(() => {
@@ -84,12 +86,22 @@ const DateInput: React.FC<Props> = ({
   }, [defaultValue])
 
   useEffect(() => {
+    if (onDateChange) {
+      if (date instanceof Date) {
+        onDateChange(date)
+      } else if (typeof date === 'string') {
+        onDateChange(parseISO(date))
+      }
+    }
+  }, [onDateChange, date])
+
+  useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputRef.current,
       getValue: () => date,
       setValue: (_: any, value: Date | string) => {
-        setDate(value)
+        setDate(isValid(value) ? value : null)
 
         if (value instanceof Date) {
           setTextValue(format(value, 'dd/MM/yyyy'))

@@ -6,8 +6,8 @@ import { Props } from './types'
 
 const Checkbox: React.FC<Props> = ({ label, value, onValueChange }) => {
   const handleChange = useCallback(() => {
-    onValueChange(oldValue => !oldValue)
-  }, [])
+    onValueChange(!value)
+  }, [value])
 
   return (
     <Container onClick={handleChange} type="button">

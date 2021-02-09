@@ -3,6 +3,7 @@ import { createWinThorBuyersModel } from '~/models/buyers/WinThorBuyersModel'
 import { createWinThorProvidersModel } from '~/models/providers/WinThorProvidersModel'
 import { createPrismaUsersModel } from '~/models/users/PrismaUsersModel'
 
+import { createAvailableHoursModule } from './available-hours'
 import { createCreateAgendaModule } from './create'
 import { createAgendaSchema } from './create/schema'
 import { createFindByBuyerAgendaModule } from './find-by-buyer'
@@ -18,6 +19,10 @@ const agendaModel = createMongoAgendaModel(
   usersModel
 )
 
+const availableHoursModule = createAvailableHoursModule(
+  agendaModel,
+  buyersModel
+)
 const createAgendaModule = createCreateAgendaModule(
   agendaModel,
   buyersModel,
@@ -34,6 +39,7 @@ const findByProviderAgendaModule = createFindByProviderAgendaModule(
 )
 
 export {
+  availableHoursModule,
   createAgendaModule,
   createAgendaSchema,
   findManyAgendaModule,

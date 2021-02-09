@@ -1,14 +1,22 @@
 import React from 'react'
 
-import { CheckboxInput } from '@shared/web-components/Form'
+import { Checkbox } from '@shared/web-components'
 
 import { Container } from './styles'
 import { IRepresentedProps } from './types'
 
-const Represented: React.VFC<IRepresentedProps> = ({ data }) => {
+const Represented: React.VFC<IRepresentedProps> = ({
+  data,
+  value,
+  onValueChange
+}) => {
   return (
     <Container>
-      <CheckboxInput name="represented" label={data.fantasy} />
+      <Checkbox
+        label={data.fantasy}
+        value={value}
+        onValueChange={selected => onValueChange(selected)}
+      />
     </Container>
   )
 }

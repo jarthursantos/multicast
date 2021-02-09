@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import {
+  handleCalculateAvailableHours,
   handleCreateAgenda,
   handleFingByBuyerAgenda,
   handleFingByProviderAgenda,
@@ -17,5 +18,6 @@ router.get('/buyer/:code', handleFingByBuyerAgenda)
 router.get('/provider/:code', handleFingByProviderAgenda)
 
 router.post('/', validateRequestBody(createAgendaSchema), handleCreateAgenda)
+router.post('/:code/availableHours', handleCalculateAvailableHours)
 
 export { router as agendaRoutes }

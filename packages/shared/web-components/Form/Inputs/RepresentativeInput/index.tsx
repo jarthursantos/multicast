@@ -27,7 +27,24 @@ const RepresentativeInput: React.VFC<IRepresentativeInputProps> = props => {
   useEffect(() => {
     if (buyer) {
       const filtered = representatives
-        .filter(({ provider }) => provider.buyer.code === buyer.code)
+        .filter(
+          ({ provider }) =>
+            provider.buyer.code === buyer.code &&
+            provider.code === provider.principalCode
+        )
+        .reduce<IRepresentative[]>((curr, representative) => {
+          const alreadyAdded = curr.find(
+            ({ name }) =>
+              representative.name.trim().toUpperCase() ===
+              name.trim().toUpperCase()
+          )
+
+          if (!alreadyAdded) {
+            curr.push(representative)
+          }
+
+          return curr
+        }, [])
         .map(({ name, provider }) => ({ value: provider.code, label: name }))
 
       setOptions(filtered)
@@ -42,23 +59,7 @@ const RepresentativeInput: React.VFC<IRepresentativeInputProps> = props => {
         'http://192.168.1.2:3334/representatives'
       )
 
-      setRepresentatives(
-        data
-          .filter(({ provider }) => provider.code === provider.principalCode)
-          .reduce<IRepresentative[]>((curr, representative) => {
-            const alreadyAdded = curr.find(
-              ({ name }) =>
-                representative.name.trim().toUpperCase() ===
-                name.trim().toUpperCase()
-            )
-
-            if (!alreadyAdded) {
-              curr.push(representative)
-            }
-
-            return curr
-          }, [])
-      )
+      setRepresentatives(data)
     }
 
     loadOptions()

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getHours, getMinutes, format } from 'date-fns'
 
-import { Container } from './styles'
+import { Container, Line, Hour } from './styles'
 import { IEventProps } from './types'
 
 function formatHour(start: Date, end: Date) {
@@ -17,10 +17,10 @@ const Event: React.VFC<IEventProps> = ({ data: event }) => {
       endHour={getHours(event.endHour)}
       endMinute={getMinutes(event.endHour)}
     >
-      <div>{formatHour(event.startHour, event.endHour)}</div>
+      <Hour>{formatHour(event.startHour, event.endHour)}</Hour>
 
       {event.labels.map(label => (
-        <div key={label}>{label}</div>
+        <Line key={label}>{label}</Line>
       ))}
     </Container>
   )

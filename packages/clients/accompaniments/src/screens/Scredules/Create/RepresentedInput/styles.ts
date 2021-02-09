@@ -3,8 +3,6 @@ import styled, { css } from 'styled-components'
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-
-  flex: 1;
 `
 
 interface ContainerProps {
@@ -16,7 +14,7 @@ export const Container = styled.div<ContainerProps>`
   border: 2px solid #ccc;
   padding: 0 4px;
   overflow-y: scroll;
-  height: 130px;
+  height: 170px;
 
   ${({ disabled }) =>
     disabled &&

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useField } from '@unform/core'
 import { remote } from 'electron'
 
 import { api, extractErrorMessage } from '@shared/axios'
@@ -11,22 +12,28 @@ import { IRepresentedInputProps } from './types'
 
 const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
   label,
-  // name,
+  name,
   disabled,
-  representative
+  representative,
+  onRepresentedChanges
 }) => {
+  const { fieldName, error, registerField, defaultValue } = useField(name)
+
   const [representeds, setRepresenteds] = useState<IRepresentedProvider[]>([])
   const [providers, setProviders] = useState<IRepresentedProvider[]>([])
+  const [selections, setSelections] = useState<boolean[]>([])
 
   useEffect(() => {
     if (!representative) {
       setRepresenteds([])
+      setSelections([])
     } else {
-      setRepresenteds(
-        providers.filter(({ representative: { name } }) => {
-          return name === representative.name
-        })
-      )
+      const filtered = providers.filter(({ representative: { name } }) => {
+        return name === representative.name
+      })
+
+      setRepresenteds(filtered)
+      setSelections(filtered.map(() => false))
     }
   }, [representative, providers])
 
@@ -65,13 +72,44 @@ const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
     loadProviders()
   }, [])
 
+  useEffect(() => {
+    if (onRepresentedChanges) {
+      onRepresentedChanges(representeds.filter((_, index) => selections[index]))
+    }
+  }, [representeds, selections, onRepresentedChanges])
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      getValue: () => {
+        return representeds.filter((_, index) => selections[index])
+      }
+      // setValue: (_, data) => {}
+    })
+  }, [fieldName, registerField, representeds, selections])
+
   return (
     <Wrapper>
       <InputLabel>{label}</InputLabel>
 
       <Container disabled={disabled}>
-        {representeds.map(represented => (
-          <Represented key={represented.code} data={represented} />
+        {representeds.map((represented, index) => (
+          <Represented
+            key={represented.code}
+            data={represented}
+            value={selections[index]}
+            onValueChange={selected => {
+              setSelections(curr =>
+                curr.map<boolean>((value, i) => {
+                  if (i === index) {
+                    return selected
+                  }
+
+                  return value
+                })
+              )
+            }}
+          />
         ))}
       </Container>
     </Wrapper>

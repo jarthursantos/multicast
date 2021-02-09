@@ -11,7 +11,7 @@ export function registerOpenCreateSchedule() {
       minimizable: false,
       maximizable: false,
       width: 450,
-      height: 650,
+      height: 600,
       resizable: false,
       webPreferences: {
         nodeIntegration: true,

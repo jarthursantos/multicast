@@ -54,7 +54,7 @@ const SelectInput: React.FC<Props> = ({
   useEffect(() => {
     if (clearOnOptionsChange) {
       setSelection(null)
-      onSelectionChange(undefined)
+      onSelectionChange && onSelectionChange(undefined)
     }
   }, [clearOnOptionsChange, options, onSelectionChange])
 

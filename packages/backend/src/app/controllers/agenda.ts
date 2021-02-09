@@ -1,12 +1,27 @@
 import { Request, Response } from 'express'
 
 import {
+  availableHoursModule,
   createAgendaModule,
   findManyAgendaModule,
   findByBuyerAgendaModule,
   findByProviderAgendaModule
 } from '~/modules/agenda'
 import { normalizeInt } from '~/utilities/normalizations'
+
+export async function handleCalculateAvailableHours(
+  req: Request,
+  res: Response
+) {
+  const { body, params } = req
+
+  const result = await availableHoursModule.execute(
+    normalizeInt(params.code),
+    body
+  )
+
+  res.json(result)
+}
 
 export async function handleCreateAgenda(req: Request, res: Response) {
   const { auth, body } = req

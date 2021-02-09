@@ -9,4 +9,6 @@ export interface IRepresentedProvider extends IProvider {
 
 export interface IRepresentedProps {
   data: IRepresentedProvider
+  value: boolean
+  onValueChange(value: boolean): void
 }

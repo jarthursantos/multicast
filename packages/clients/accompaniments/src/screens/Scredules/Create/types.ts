@@ -1,9 +1,16 @@
-import { IBuyer, IProvider, ITime } from '~/../../../shared/web-components'
+import { IBuyer } from '@shared/web-components'
 
-export interface FormData {
+import { IRepresentedProvider } from './RepresentedInput/Represented/types'
+
+export interface IFormData {
   date: Date
   buyer: IBuyer[]
-  providers: IProvider[]
-  startTime: ITime
-  endTime: ITime
+  representeds: IRepresentedProvider[]
+  hour: number
+  representative: number
+}
+
+export interface IAvailableHour {
+  start: string | Date
+  end: string | Date
 }
