@@ -6,13 +6,11 @@ import { extractErrorMessage, useAxios } from '@shared/axios'
 import { Form, SelectInput } from '@shared/web-components'
 import { Table } from '@shared/web-components/Table'
 
+import { openProductDetails } from '~/windows/ProductDetails/actions'
+import { Product } from '~/windows/ProductDetails/types'
+
 import { Wrapper, Header, Container, LoadingWrapper } from './styles'
 import { ProductsContainerProps } from './types'
-
-interface Product {
-  code: string
-  provider: string
-}
 
 interface Option {
   value: string
@@ -93,6 +91,11 @@ const ProductsContainer: React.VFC<ProductsContainerProps> = ({
             data,
             layout: 'fitColumns',
             resizableColumns: false,
+            rowDblClick: (_, row) => {
+              const product: Product = row.getData()
+
+              product && openProductDetails(product)
+            },
             columns: [
               {
                 title: 'Código',

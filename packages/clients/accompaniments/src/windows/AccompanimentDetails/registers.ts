@@ -22,8 +22,10 @@ export function registerOpenAccompanimentDetails() {
       } else {
         const window = new BrowserWindow({
           width: 1160,
-          height: 565,
-          resizable: false,
+          height: 670,
+          minHeight: 670,
+          minWidth: 1000,
+          backgroundColor: '#fff',
           webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true

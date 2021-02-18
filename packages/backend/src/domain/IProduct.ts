@@ -46,3 +46,8 @@ export interface ITerminationStockProduct
   extends Omit<IStockProduct, 'invoiceNumber'> {
   terminationAt?: Date
 }
+
+export interface IPriceHistory {
+  entryAt: Date
+  price: number
+}

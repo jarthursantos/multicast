@@ -1,16 +1,13 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+  grid-area: REQUEST;
+
   position: relative;
 
   display: flex;
   flex-direction: column;
-
-  h3 {
-    color: ${({ theme }) => theme.colors.text.primary.dark};
-    font-size: 16px;
-    font-weight: 500;
-  }
+  padding: 16px;
 
   & > * + * {
     margin-top: 8px;

@@ -26,6 +26,7 @@ import { distribuitionsRoutes } from '~/app/routes/distribuitions'
 import { employeesRoutes } from '~/app/routes/employees'
 import { invoicesRouter } from '~/app/routes/invoices'
 import { permissionsRoutes } from '~/app/routes/permissions'
+import { productsRoutes } from '~/app/routes/products'
 import { providersRoutes } from '~/app/routes/providers'
 import { regionsRoutes } from '~/app/routes/regions'
 import { representativesRoutes } from '~/app/routes/representatives'
@@ -93,7 +94,7 @@ app.post('/', async (_, res) => {
       saldo_pendente: true,
       data_agendada: null
     })
-    .andWhere('numero_pedido', '=', 16240)
+    .andWhere('numero_pedido', '=', 16220)
 
   const lastPurchaseOrderProvider = createPrismaLastPurchaseOrderProvider()
   const purchaseOrdersModel = createWinThorPurchaseOrdersModel(
@@ -193,6 +194,7 @@ app.use('/dischargeTables', dischargeTablesRoutes)
 app.use('/distribuitions', distribuitionsRoutes)
 app.use('/invoices', invoicesRouter)
 app.use('/permissions', permissionsRoutes)
+app.use('/products', productsRoutes)
 app.use('/regions', regionsRoutes)
 app.use('/salesClasses', salesClassesRoutes)
 app.use('/scheduleRequests', scheduleRequestsRoutes)

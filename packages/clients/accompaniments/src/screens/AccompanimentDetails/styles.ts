@@ -1,22 +1,18 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
+  display: grid;
 
-export const Container = styled.div`
-  display: flex;
+  grid-template-columns: 350px calc(100vw - 350px);
+  grid-template-rows: 100vh;
+  grid-template-areas: 'SIDE_PANEL ACCOMPANIMENT_VIEWER';
 
-  padding: 8px;
+  height: 100vh;
+  width: 100vw;
 
-  form {
-    display: flex;
-
-    & > * {
-      margin: 0;
-      padding: 8px;
-      width: 374px;
-    }
+  h3 {
+    color: ${({ theme }) => theme.colors.text.primary.dark};
+    font-size: 14px;
+    font-weight: 500;
   }
 `
