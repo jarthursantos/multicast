@@ -106,7 +106,7 @@ const RequestData: React.VFC<RequestDataProps> = ({
         />
       </InlineWithLargeField>
 
-      {/* <DataWrapper>
+      <DataWrapper>
         <ChartWrapper>
           <Pie height={100} width={100} data={data} options={buildOptions()} />
         </ChartWrapper>
@@ -132,7 +132,7 @@ const RequestData: React.VFC<RequestDataProps> = ({
             <span>{formatPrice(amountValue - deliveredValue)}</span>
           </DataTuple>
         </DataContainer>
-      </DataWrapper> */}
+      </DataWrapper>
     </Container>
   )
 }
