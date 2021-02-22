@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
+import Loading from 'react-loading'
 
 import { format } from 'date-fns'
 
@@ -8,7 +9,13 @@ import { formatPriceWithoutSymbol } from '@shared/web-components/DataGrid/Body/R
 import { Form, TextInput, NumberInput } from '@shared/web-components/Form'
 
 import { normalizeDate } from '../Scredules/context'
-import { Wrapper, ChartWrapper, Inline, InlineFlexRight } from './styles'
+import {
+  Wrapper,
+  ChartWrapper,
+  Inline,
+  InlineFlexRight,
+  LoadingWrapper
+} from './styles'
 import { ProductDetailsScreenProps, PriceHistory } from './types'
 
 function buildData(labels: string[], values: number[]) {
@@ -90,7 +97,10 @@ const ProductDetailsScreen: React.VFC<ProductDetailsScreenProps> = ({
 
   return (
     <Wrapper>
-      <Form onSubmit={console.log} initialData={product}>
+      <Form
+        onSubmit={console.log}
+        initialData={product && { ...product, price: product.price.toFixed(4) }}
+      >
         <InlineFlexRight>
           <NumberInput
             name="code"
@@ -140,6 +150,12 @@ const ProductDetailsScreen: React.VFC<ProductDetailsScreenProps> = ({
 
       <ChartWrapper>
         <Line data={buildData(labels, values)} options={buildOptions()} />
+
+        {isLoadingPriceHistory && (
+          <LoadingWrapper>
+            <Loading color="#666" type="spin" width={32} height={32} />
+          </LoadingWrapper>
+        )}
       </ChartWrapper>
     </Wrapper>
   )

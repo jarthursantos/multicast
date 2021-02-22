@@ -6,7 +6,14 @@ import { SelectInput } from '../SelectInput'
 import { IRepresentativeInputProps, IRepresentative } from './types'
 
 const RepresentativeInput: React.VFC<IRepresentativeInputProps> = props => {
-  const { name, label, buyer, disabled, onRepresentativeChange } = props
+  const {
+    name,
+    label,
+    buyer,
+    disabled,
+    onRepresentativeChange,
+    showAllRepresentatives
+  } = props
 
   const [representatives, setRepresentatives] = useState<IRepresentative[]>([])
   const [options, setOptions] = useState([])
@@ -27,11 +34,16 @@ const RepresentativeInput: React.VFC<IRepresentativeInputProps> = props => {
   useEffect(() => {
     if (buyer) {
       const filtered = representatives
-        .filter(
-          ({ provider }) =>
+        .filter(({ provider }) => {
+          if (showAllRepresentatives) {
+            return provider.code === provider.principalCode
+          }
+
+          return (
             provider.buyer.code === buyer.code &&
             provider.code === provider.principalCode
-        )
+          )
+        })
         .reduce<IRepresentative[]>((curr, representative) => {
           const alreadyAdded = curr.find(
             ({ name }) =>
@@ -51,7 +63,7 @@ const RepresentativeInput: React.VFC<IRepresentativeInputProps> = props => {
     } else {
       setOptions([])
     }
-  }, [buyer, representatives])
+  }, [buyer, representatives, showAllRepresentatives])
 
   useEffect(() => {
     async function loadOptions() {

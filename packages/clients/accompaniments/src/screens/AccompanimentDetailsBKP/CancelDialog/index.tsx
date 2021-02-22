@@ -78,4 +78,4 @@ const CancelDialog: React.VFC<CancelDialogProps> = ({
   )
 }
 
-export default CancelDialog
+export { CancelDialog }

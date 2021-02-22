@@ -7,6 +7,7 @@ import { useFormValidatorRef } from 'hookable-unform'
 
 import { useWatchAction } from '@shared/action-watcher'
 import { extractErrorMessage, useAxios } from '@shared/axios'
+import { Checkbox } from '@shared/web-components'
 import {
   SubmitButton,
   DateInput,
@@ -37,6 +38,9 @@ const CreateScheduleScreen: React.VFC = () => {
   const { additingAgenda } = useTypedSelector(state => state.agenda)
 
   const [formRef, validateForm] = useFormValidatorRef(schema)
+
+  const [isShowAllRepresentatives, setShowAllRepresentatives] = useState(false)
+  const [isHideBranches, setHideBranches] = useState(true)
 
   const [buyers, setBuyers] = useState<IBuyer[]>([])
   const [representative, setRepresentative] = useState<IRepresentative>()
@@ -122,8 +126,15 @@ const CreateScheduleScreen: React.VFC = () => {
           name="representative"
           label="Representante"
           onRepresentativeChange={setRepresentative}
+          showAllRepresentatives={isShowAllRepresentatives}
           buyer={buyers[0]}
           disabled={!buyers[0]}
+        />
+
+        <Checkbox
+          label="Exibir todos os representantes"
+          value={isShowAllRepresentatives}
+          onValueChange={setShowAllRepresentatives}
         />
 
         <RepresentedInput
@@ -131,7 +142,14 @@ const CreateScheduleScreen: React.VFC = () => {
           label="Representadas"
           onRepresentedChanges={setRepresenteds}
           representative={representative}
+          hideBranches={isHideBranches}
           disabled={!representative}
+        />
+
+        <Checkbox
+          label="Ocultar filiais"
+          value={isHideBranches}
+          onValueChange={setHideBranches}
         />
 
         <DateInput

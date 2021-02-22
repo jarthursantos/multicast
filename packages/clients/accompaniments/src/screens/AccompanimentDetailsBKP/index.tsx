@@ -39,6 +39,7 @@ import {
 } from '~/store/modules/accompaniments/types'
 import { closeWindow } from '~/utils/close-window'
 
+import { CancelDialog } from './CancelDialog'
 import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { schema } from './schema'
 import { Wrapper, Container } from './styles'
@@ -55,6 +56,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
   const [api, haveToken] = useAxios()
 
   const [sendingMail, setSendingMail] = useState(false)
+  const [isCancelOpen, setCancelOpen] = useState(false)
   const [isConfirmMailOpen, setConfirmMailOpen] = useState(false)
   const [accompaniment, setAccompaniment] = useState<Accompaniment>(
     remoteAccompaniment
@@ -80,6 +82,9 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
   const openConfirmMail = useCallback(() => setConfirmMailOpen(true), [])
   const closeConfirmMail = useCallback(() => setConfirmMailOpen(false), [])
+
+  const openCancel = useCallback(() => setCancelOpen(true), [])
+  const closeCancel = useCallback(() => setCancelOpen(false), [])
 
   const handleSendMail = useCallback(async () => {
     try {
@@ -173,8 +178,6 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
   useEffect(() => {
     remoteAccompaniment && setAccompaniment(remoteAccompaniment)
-
-    console.log({ remoteAccompaniment })
   }, [remoteAccompaniment])
 
   useWatchAction<MarkAccompanimentAsSendedSuccessAction>(
@@ -251,6 +254,8 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
 
           {/* <Button secondary label="Gerar PDF" onClick={handleGeneratePDF} /> */}
 
+          <Button secondary label="Cancelar Saldo" onClick={openCancel} />
+
           {!sended && (
             <Button
               label="Enviar Pedido"
@@ -308,6 +313,12 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
         accompaniment={accompaniment}
         isOpen={isConfirmMailOpen}
         onClose={closeConfirmMail}
+      />
+
+      <CancelDialog
+        isOpen={isCancelOpen}
+        onClose={closeCancel}
+        accompanimentId={accompaniment?.id}
       />
     </>
   )

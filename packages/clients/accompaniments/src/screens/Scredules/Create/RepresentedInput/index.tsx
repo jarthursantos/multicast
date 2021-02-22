@@ -14,10 +14,15 @@ const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
   label,
   name,
   disabled,
+  hideBranches,
   representative,
   onRepresentedChanges
 }) => {
-  const { fieldName, error, registerField, defaultValue } = useField(name)
+  const { fieldName, registerField } = useField(name) // error, defaultValue
+
+  const [loadedProviders, setLoadedProviders] = useState<
+    IRepresentedProvider[]
+  >([])
 
   const [representeds, setRepresenteds] = useState<IRepresentedProvider[]>([])
   const [providers, setProviders] = useState<IRepresentedProvider[]>([])
@@ -28,14 +33,35 @@ const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
       setRepresenteds([])
       setSelections([])
     } else {
-      const filtered = providers.filter(({ representative: { name } }) => {
-        return name === representative.name
-      })
+      const filtered = providers.filter(
+        ({ representative: { name }, buyer }) => {
+          return (
+            name === representative.name &&
+            representative.provider.buyer?.code === buyer?.code
+          )
+        }
+      )
+
+      console.log({ filtered })
 
       setRepresenteds(filtered)
       setSelections(filtered.map(() => false))
     }
   }, [representative, providers])
+
+  useEffect(() => {
+    console.log({ hideBranches })
+
+    setProviders(
+      loadedProviders.filter(({ code, principalCode }) => {
+        if (hideBranches) {
+          return code === principalCode
+        }
+
+        return true
+      })
+    )
+  }, [hideBranches, loadedProviders])
 
   useEffect(() => {
     async function loadProviders() {
@@ -44,20 +70,18 @@ const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
           'http://192.168.1.2:3334/providers'
         )
 
-        setProviders(
-          data
-            .filter(({ code, principalCode }) => code === principalCode)
-            .sort((represented, other) => {
-              if (represented.name > other.name) {
-                return 1
-              }
+        setLoadedProviders(
+          data.sort((represented, other) => {
+            if (represented.name > other.name) {
+              return 1
+            }
 
-              if (represented.name < other.name) {
-                return -1
-              }
+            if (represented.name < other.name) {
+              return -1
+            }
 
-              return 0
-            })
+            return 0
+          })
         )
       } catch (error) {
         const message = extractErrorMessage(error)

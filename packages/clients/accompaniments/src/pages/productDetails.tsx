@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import Head from 'next/head'
 
@@ -12,8 +12,6 @@ const Home = () => {
 
   useSetupAuth(token)
   useCloseWindow()
-
-  useEffect(() => console.log({ product }), [product])
 
   return (
     <React.Fragment>
