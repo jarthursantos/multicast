@@ -6,5 +6,5 @@ export interface IOptions {
 }
 
 export interface IBillsToPayModel {
-  find(options: IOptions, month: number, year: number): Promise<IBillToPay[]>
+  find(options: IOptions): Promise<IBillToPay[]>
 }

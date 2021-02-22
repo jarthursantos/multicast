@@ -6,12 +6,8 @@ export function createFindAllBillsToPayModule(
   billsToPayModel: IBillsToPayModel
 ) {
   return {
-    async execute(
-      options: IFindBillsToPayOptions,
-      month: number,
-      year: number
-    ) {
-      const bills = await billsToPayModel.find(options, month, year)
+    async execute(options: IFindBillsToPayOptions) {
+      const bills = await billsToPayModel.find(options)
 
       return bills
     }

@@ -1,8 +1,5 @@
-import { endOfMonth, startOfMonth } from 'date-fns'
-
 import { IBillToPay } from '~/domain/IBillToPay'
 import { winthor } from '~/libraries/WinThor'
-import { formatDate } from '~/utilities/date'
 
 import { IBillsToPayModel, IOptions } from './IBillsToPayModel'
 
@@ -43,18 +40,11 @@ export function createWinThorBillsToPayModel(): IBillsToPayModel {
       params += generateCodeFilter(providers, 'PCFORNEC.CODFORNEC')
     }
 
-    return params
+    return `WHERE 1 = 1 ${params}`
   }
 
   return {
-    async find(
-      options: IOptions,
-      month: number,
-      year: number
-    ): Promise<IBillToPay[]> {
-      const startDate = startOfMonth(new Date(year, month - 1, 1))
-      const endDate = endOfMonth(new Date(year, month - 1, 1))
-
+    async find(options: IOptions): Promise<IBillToPay[]> {
       const response = await winthor.raw<IRawBillToPay[]>(`
         SELECT PCLANC3.NUMPED AS "number",
           PCFORNEC.CODFORNEC AS "providerCode",
@@ -69,9 +59,7 @@ export function createWinThorBillsToPayModel(): IBillsToPayModel {
           MATRICULA AS "buyerCode",
           NOME AS "buyerName"
         FROM PCLANC3 LEFT JOIN PCFORNEC ON (PCFORNEC.CODFORNEC = PCLANC3.CODFORNEC) LEFT JOIN PCEMPR ON (CODCOMPRADOR = MATRICULA)
-        WHERE DTVENC BETWEEN TO_DATE('${formatDate(startDate)}', 'DD/MM/YYYY')
-          AND TO_DATE('${formatDate(endDate)}', 'DD/MM/YYYY')
-          ${parseOptions(options)}
+        ${parseOptions(options)}
         ORDER BY PCLANC3.DTVENC
       `)
 
