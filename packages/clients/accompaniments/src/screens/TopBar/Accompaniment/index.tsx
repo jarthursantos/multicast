@@ -14,7 +14,7 @@ import { HomeScreenTabs, AccompanimentTabs } from '~/screens/types'
 import { loadAccompanimentsRequest } from '~/store/modules/accompaniments/actions'
 import { openAccompanimentFilters } from '~/windows/AccompanimentFilters/action'
 
-const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
+const HomeScreenTopBarAccompaniment: React.VFC = () => {
   const dispatch = useDispatch()
 
   const { currentAccompanimentTab, changeAccompanimentTab } = useContext(
@@ -72,4 +72,4 @@ const HomeScreenTopBarAccompanimentOptions: React.VFC = () => {
   )
 }
 
-export { HomeScreenTopBarAccompanimentOptions }
+export { HomeScreenTopBarAccompaniment }

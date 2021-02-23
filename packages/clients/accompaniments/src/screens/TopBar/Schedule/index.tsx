@@ -11,7 +11,7 @@ import { openCreateSchedule } from '~/windows/CreateSchedule/action'
 
 import { ScheduleFilter, ScheduleFilterHandles } from './FilterDialog'
 
-const HomeScreenTopBarScheduleOptions: React.FC = () => {
+const HomeScreenTopBarSchedule: React.FC = () => {
   const dispatch = useDispatch()
 
   const filterRef = useRef<ScheduleFilterHandles>(null)
@@ -61,4 +61,4 @@ const HomeScreenTopBarScheduleOptions: React.FC = () => {
   )
 }
 
-export { HomeScreenTopBarScheduleOptions }
+export { HomeScreenTopBarSchedule }

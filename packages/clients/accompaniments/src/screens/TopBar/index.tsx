@@ -2,13 +2,13 @@ import React from 'react'
 
 import { Ribbon, TabBar } from '@shared/web-components'
 
-import { HomeScreenTopBarAccompanimentOptions } from '~/screens/TopBar/AccompanimentOptions'
+import { HomeScreenTopBarAccompaniment } from '~/screens/TopBar/Accompaniment'
 import { HomeScreenTopBarBillsToPay } from '~/screens/TopBar/BillsToPay'
 import { HomeScreenTopBarPurchaseResume } from '~/screens/TopBar/PurchaseResume'
 import { HomeScreenTopBarRepresentatives } from '~/screens/TopBar/Representatives'
 import { HomeScreenTopBarRevenues } from '~/screens/TopBar/Revenues'
 import { HomeScreenTopBarSalesByProvider } from '~/screens/TopBar/SalesByProvider'
-import { HomeScreenTopBarScheduleOptions } from '~/screens/TopBar/ScheduleOptions'
+import { HomeScreenTopBarSchedule } from '~/screens/TopBar/Schedule'
 import { HomeScreenTopBarStockNotifications } from '~/screens/TopBar/StockNotifications'
 import { HomeScreenTopBarStockPosition } from '~/screens/TopBar/StockPosition'
 import { HomeScreenTabs } from '~/screens/types'
@@ -16,7 +16,7 @@ import { HomeScreenTabs } from '~/screens/types'
 const HomeTopBar: React.VFC = () => {
   return (
     <>
-      <Ribbon.Bar initialTab={HomeScreenTabs.ACCOMPANIMENTS}>
+      <Ribbon.Bar initialTab={HomeScreenTabs.BILLS_TO_PAY}>
         <TabBar.Button name={HomeScreenTabs.ACCOMPANIMENTS} label="Pedidos" />
 
         <TabBar.Button name={HomeScreenTabs.SCHEDULES} label="Agenda" />
@@ -55,9 +55,9 @@ const HomeTopBar: React.VFC = () => {
       </Ribbon.Bar>
 
       <Ribbon.Options>
-        <HomeScreenTopBarAccompanimentOptions />
+        <HomeScreenTopBarAccompaniment />
 
-        <HomeScreenTopBarScheduleOptions />
+        <HomeScreenTopBarSchedule />
 
         <HomeScreenTopBarBillsToPay />
 

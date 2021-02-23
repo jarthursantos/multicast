@@ -3,6 +3,7 @@ import { IBuyer } from '../BuyerInput'
 export interface IProvider {
   code: number
   name: string
+  fantasy: string
   buyer?: IBuyer
   principalCode: number
 }

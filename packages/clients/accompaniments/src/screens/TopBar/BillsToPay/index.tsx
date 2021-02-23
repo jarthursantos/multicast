@@ -1,42 +1,36 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { MdRefresh } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
 import { TabOptions, ActionIconButton } from '@shared/web-components'
 
 import { MdFilter } from '~/components/Icons'
 import { HomeScreenTabs } from '~/screens/types'
-
-import { BillsToPayFilter, BillsToPayFilterHandles } from './FilterDialog'
+import { loadBillsToPayActionRequest } from '~/store/modules/billsToPay/actions'
 
 const HomeScreenTopBarBillsToPay: React.FC = () => {
-  const filterRef = useRef<BillsToPayFilterHandles>(null)
-  const filterButtonRef = useRef<HTMLDivElement>(null)
+  const dispatch = useDispatch()
 
-  const handleFilter = useCallback(() => {
-    filterRef.current?.open(filterButtonRef.current.getBoundingClientRect())
-  }, [filterRef, filterButtonRef])
+  const handleRefresh = useCallback(() => {
+    dispatch(loadBillsToPayActionRequest())
+  }, [dispatch])
 
   return (
-    <React.Fragment>
-      <TabOptions.Content name={HomeScreenTabs.BILLS_TO_PAY}>
-        <div ref={filterButtonRef}>
-          <ActionIconButton
-            icon={<MdFilter />}
-            onClick={handleFilter}
-            width={80}
-            label="Aplicar Filtro"
-          />
-        </div>
+    <TabOptions.Content name={HomeScreenTabs.BILLS_TO_PAY}>
+      <ActionIconButton
+        icon={<MdFilter />}
+        onClick={console.log}
+        width={80}
+        label="Aplicar Filtro"
+      />
 
-        <ActionIconButton
-          icon={<MdRefresh />}
-          width={85}
-          label="Recarregar Dados"
-        />
-      </TabOptions.Content>
-
-      <BillsToPayFilter ref={filterRef} />
-    </React.Fragment>
+      <ActionIconButton
+        icon={<MdRefresh />}
+        width={85}
+        onClick={handleRefresh}
+        label="Recarregar Dados"
+      />
+    </TabOptions.Content>
   )
 }
 
