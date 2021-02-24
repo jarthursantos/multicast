@@ -34,6 +34,8 @@ export type BillsToPayActionTypes =
 export interface BillsToPayState {
   loading: boolean
   billsToPay: BillsToPay[]
+
+  filters: IBillsToPayFilters
 }
 
 export interface BillsToPay {
@@ -43,4 +45,9 @@ export interface BillsToPay {
   dueDate: Date | string
   installment: string
   value: number
+}
+
+export interface IBillsToPayFilters {
+  buyers: IBuyer[]
+  providers: IProvider[]
 }

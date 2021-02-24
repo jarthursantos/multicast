@@ -35,6 +35,7 @@ import { scheduleRequestsRoutes } from '~/app/routes/schedule-requests'
 import { schedulesRoutes } from '~/app/routes/schedules'
 import { sectionsRoutes } from '~/app/routes/sections'
 import { sessionsRoutes } from '~/app/routes/sessions'
+import { stockNotificationsRoutes } from '~/app/routes/stock-notifications'
 import { usersRoutes } from '~/app/routes/users'
 import { URL } from '~/configs/mongo'
 import multerOptions from '~/configs/multer'
@@ -200,6 +201,7 @@ app.use('/salesClasses', salesClassesRoutes)
 app.use('/scheduleRequests', scheduleRequestsRoutes)
 app.use('/schedules', schedulesRoutes)
 app.use('/sections', sectionsRoutes)
+app.use('/stockNotifications', stockNotificationsRoutes)
 app.use('/users', usersRoutes)
 
 app.use((_req, _res, next) =>

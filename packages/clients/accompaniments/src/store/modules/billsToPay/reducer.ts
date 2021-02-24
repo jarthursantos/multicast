@@ -5,6 +5,11 @@ import { BillsToPayState, BillsToPayActionTypes, Types } from './types'
 const INITIAL_STATE: BillsToPayState = {
   billsToPay: [],
 
+  filters: {
+    buyers: [],
+    providers: []
+  },
+
   loading: false
 }
 

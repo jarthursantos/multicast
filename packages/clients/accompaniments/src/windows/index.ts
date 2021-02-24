@@ -6,6 +6,7 @@ import { registerOpenProviderFinderWindow } from '@shared/web-components/Form/In
 
 import { registerOpenAccompanimentDetails } from './AccompanimentDetails/registers'
 import { registerOpenAccompanimentFilters } from './AccompanimentFilters/register'
+import { registerOpenBillsToPayFilters } from './BillsToPayFilters/register'
 import { registerOpenCreateSchedule } from './CreateSchedule/register'
 import { registerOpenProductDetails } from './ProductDetails/register'
 
@@ -40,6 +41,8 @@ export async function registerWindows() {
 
   registerOpenAccompanimentDetails()
   registerOpenAccompanimentFilters()
+
+  registerOpenBillsToPayFilters()
 
   registerOpenCreateSchedule()
 
