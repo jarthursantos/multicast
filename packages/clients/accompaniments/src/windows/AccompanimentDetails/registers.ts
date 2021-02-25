@@ -22,8 +22,8 @@ export function registerOpenAccompanimentDetails() {
       } else {
         const window = new BrowserWindow({
           width: 1160,
-          height: 550,
-          minHeight: 550,
+          height: 560,
+          minHeight: 560,
           // height: 670,
           // minHeight: 670,
           minWidth: 1000,

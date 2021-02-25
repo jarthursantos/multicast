@@ -1,7 +1,7 @@
 import { differenceInBusinessDays, isAfter } from 'date-fns'
 
 import { CriticalLevel } from '~/domain/CriticalLevel'
-import { IAnnotation } from '~/domain/IAnnotation'
+// import { IAnnotation } from '~/domain/IAnnotation'
 
 import {
   IAccompanimentDelay,
@@ -10,35 +10,35 @@ import {
 } from './IAccompanimentDelayProvider'
 
 export function createManualAccompanimentDelayProvider(): IAccompanimentDelayProvider {
-  function findMonstRecentlyAnnotation(
-    annotations: IAnnotation[] = []
-  ): Date | undefined {
-    if (annotations.length !== 0) {
-      const firstDate = annotations[0].createdAt
+  // function findMonstRecentlyAnnotation(
+  //   annotations: IAnnotation[] = []
+  // ): Date | undefined {
+  //   if (annotations.length !== 0) {
+  //     const firstDate = annotations[0].createdAt
 
-      if (annotations.length === 1) {
-        return firstDate
-      }
+  //     if (annotations.length === 1) {
+  //       return firstDate
+  //     }
 
-      return annotations.reduce((current, { createdAt }) => {
-        if (createdAt === undefined) {
-          return current
-        }
+  //     return annotations.reduce((current, { createdAt }) => {
+  //       if (createdAt === undefined) {
+  //         return current
+  //       }
 
-        if (current === undefined) {
-          return createdAt
-        }
+  //       if (current === undefined) {
+  //         return createdAt
+  //       }
 
-        if (isAfter(createdAt, current)) {
-          return createdAt
-        }
+  //       if (isAfter(createdAt, current)) {
+  //         return createdAt
+  //       }
 
-        return current
-      }, firstDate)
-    }
+  //       return current
+  //     }, firstDate)
+  //   }
 
-    return undefined
-  }
+  //   return undefined
+  // }
 
   function getMostBiggerDate(date: Date, dateToCompare: Date): Date {
     if (isAfter(date, dateToCompare)) {
@@ -66,13 +66,14 @@ export function createManualAccompanimentDelayProvider(): IAccompanimentDelayPro
         expectedBillingAt,
         billingAt,
         freeOnBoardAt,
-        schedulingAt,
-        annotations
+        schedulingAt
+        // annotations
       } = accompaniment
 
       const { emittedAt } = purchaseOrder
 
-      const mostRecentlyAnnotation = findMonstRecentlyAnnotation(annotations)
+      // const mostRecentlyAnnotation = findMonstRecentlyAnnotation(annotations)
+      const mostRecentlyAnnotation = undefined
 
       if (sendedAt && !reviewedAt) {
         const count = differenceInBusinessDays(

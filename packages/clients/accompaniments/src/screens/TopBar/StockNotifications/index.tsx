@@ -1,5 +1,11 @@
-import React, { useContext } from 'react'
-import { MdLockOpen, MdArrowDownward, MdArrowUpward } from 'react-icons/md'
+import React, { useContext, useEffect } from 'react'
+import {
+  MdLockOpen,
+  MdArrowDownward,
+  MdArrowUpward,
+  MdSearch
+} from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
 import {
   TabOptions,
@@ -7,15 +13,28 @@ import {
   ActionIconButton
 } from '@shared/web-components'
 
-import { MdFilter } from '~/components/Icons'
 import { HomeScreenContext } from '~/screens/context'
 import { HomeScreenTabs, StockNotificationTabs } from '~/screens/types'
+import { searchStockNotificationsRequest } from '~/store/modules/stockNotifications/actions'
 
 const HomeScreenTopBarStockNotifications: React.FC = () => {
   const {
     currentStockNotificationTab,
     changeStockNotificationTab
   } = useContext(HomeScreenContext)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(
+      searchStockNotificationsRequest({
+        buyers: [],
+        providers: [],
+        periodFrom: new Date(2021, 0, 1),
+        periodTo: new Date(2021, 0, 31)
+      })
+    )
+  }, [dispatch])
 
   return (
     <TabOptions.Content name={HomeScreenTabs.STOCK_NOTIFICATIONS}>
@@ -48,10 +67,10 @@ const HomeScreenTopBarStockNotifications: React.FC = () => {
       <TabOptions.Content.Separator />
 
       <ActionIconButton
-        icon={<MdFilter />}
+        icon={<MdSearch />}
         onClick={console.log}
         width={80}
-        label="Aplicar Filtro"
+        label="Pesquisar Produtos"
       />
     </TabOptions.Content>
   )

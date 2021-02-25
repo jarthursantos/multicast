@@ -1,18 +1,207 @@
-import React from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { AccompanimentViewer } from './AccompanimentViewer'
-import { SidePanel } from './SidePanel'
-import { Wrapper } from './styles'
+import { useFormValidator } from 'hookable-unform'
+
+import { useWatchAction } from '@shared/action-watcher'
+import {
+  Form,
+  ActionsContainer,
+  FormHandles
+} from '@shared/web-components/Form'
+
+import AccompanimentData from '~/components/Forms/AccompanimentData'
+import Observations from '~/components/Forms/Observations'
+import RequestData from '~/components/Forms/RequestData'
+import { updateAccompanimentRequest } from '~/store/modules/accompaniments/actions'
+import {
+  Types,
+  Accompaniment,
+  MarkAccompanimentAsSendedSuccessAction,
+  MarkAccompanimentAsReleasedSuccessAction,
+  MarkAccompanimentAsReviewedSuccessAction,
+  AddAnnotationSuccessAction
+} from '~/store/modules/accompaniments/types'
+import { closeWindow } from '~/utils/close-window'
+
+import { Actions } from './Actions'
+import { CancelDialog } from './CancelDialog'
+import { ConfirmMailSendedDialog } from './ConfirmMailSended'
+import { useChecks, useInvoices } from './hooks'
+import { schema } from './schema'
+import { Wrapper, Container } from './styles'
 import { AccompanimentDetailsScreenProps } from './types'
 
-const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = () => {
-  return (
-    <Wrapper>
-      <SidePanel />
+const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = ({
+  accompaniment: remoteAccompaniment
+}) => {
+  const dispatch = useDispatch()
 
-      <AccompanimentViewer />
-    </Wrapper>
+  const formRef = useRef<FormHandles>(null)
+  const validateForm = useFormValidator(formRef, schema)
+
+  const [isCancelOpen, setCancelOpen] = useState(false)
+  const [isAccompanimentReviewOpen, setAccompanimentReviewOpen] = useState(
+    false
+  )
+  const [isConfirmMailOpen, setConfirmMailOpen] = useState(false)
+  const [accompaniment, setAccompaniment] = useState<Accompaniment>(
+    remoteAccompaniment
+  )
+  const invoices = useInvoices(accompaniment)
+
+  const {
+    sended,
+    reviewed,
+    released,
+    scheduled,
+    unlocked,
+    finished
+  } = useChecks(accompaniment)
+
+  const openConfirmMail = useCallback(() => setConfirmMailOpen(true), [])
+  const closeConfirmMail = useCallback(() => setConfirmMailOpen(false), [])
+
+  const openCancel = useCallback(() => setCancelOpen(true), [])
+  const closeCancel = useCallback(() => setCancelOpen(false), [])
+
+  const openAccompanimentReview = useCallback(
+    () => setAccompanimentReviewOpen(true),
+    []
+  )
+  const closeAccompanimentReview = useCallback(
+    () => setAccompanimentReviewOpen(false),
+    []
+  )
+
+  const handleSubmit = useCallback(
+    async (data: any) => {
+      const { success } = await validateForm()
+
+      if (success) {
+        formRef.current?.setErrors({})
+
+        dispatch(updateAccompanimentRequest(accompaniment.id, data))
+      }
+    },
+    [dispatch, accompaniment, validateForm, formRef]
+  )
+
+  const handleSubmitForm = useCallback(() => formRef.current?.submitForm(), [
+    formRef
+  ])
+
+  useEffect(
+    () => remoteAccompaniment && setAccompaniment(remoteAccompaniment),
+    [remoteAccompaniment]
+  )
+
+  useWatchAction<MarkAccompanimentAsSendedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS
+  )
+
+  useWatchAction<MarkAccompanimentAsReleasedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS
+  )
+
+  useWatchAction<MarkAccompanimentAsReviewedSuccessAction>(
+    ({ payload }) => setAccompaniment(payload.accompaniment),
+    Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS
+  )
+
+  useWatchAction<AddAnnotationSuccessAction>(
+    ({ payload }) => {
+      setAccompaniment(oldValue => ({
+        ...oldValue,
+        annotations: [...oldValue.annotations, payload.annotation]
+      }))
+    },
+    [Types.ADD_ANNOTATION_SUCCESS]
+  )
+
+  useWatchAction(closeWindow, [
+    Types.UPDATE_ACCOMPANIMENT_SUCCESS,
+    Types.RENEW_ACCOMPANIMENT_SUCCESS,
+    Types.CANCEL_ACCOMPANIMENT_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_SENDED_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_REVIEWED_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_RELEASED_SUCCESS,
+    Types.MARK_ACCOMPANIMENT_FINISHED_SUCCESS
+  ])
+
+  return (
+    <>
+      <Wrapper>
+        <Container>
+          <Form
+            onSubmit={handleSubmit}
+            initialData={accompaniment}
+            ref={formRef}
+          >
+            <RequestData
+              amountValue={accompaniment?.purchaseOrder.amountValue || 0}
+              deliveredValue={accompaniment?.purchaseOrder.deliveredValue || 0}
+            />
+
+            <AccompanimentData
+              options={invoices}
+              disabled={!sended || !reviewed || !released || finished}
+              isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
+            />
+          </Form>
+
+          <Observations
+            accompanimentId={accompaniment?.id}
+            observations={accompaniment?.annotations || []}
+          />
+        </Container>
+
+        <ActionsContainer>
+          <Actions
+            accompaniment={accompaniment}
+            openCancel={openCancel}
+            openConfirmMail={openConfirmMail}
+            openAccompanimentReview={openAccompanimentReview}
+            sended={sended}
+            reviewed={reviewed}
+            released={released}
+            scheduled={scheduled}
+            unlocked={unlocked}
+            finished={finished}
+            submitForm={handleSubmitForm}
+          />
+        </ActionsContainer>
+      </Wrapper>
+
+      <ConfirmMailSendedDialog
+        accompaniment={accompaniment}
+        isOpen={isConfirmMailOpen}
+        onClose={closeConfirmMail}
+      />
+
+      <CancelDialog
+        isOpen={isCancelOpen}
+        onClose={closeCancel}
+        accompanimentId={accompaniment?.id}
+      />
+    </>
   )
 }
 
 export { AccompanimentDetailsScreen }
+
+// const handleGeneratePDF = useCallback(async () => {
+//   try {
+//     const { data } = await api.get(
+//       `accompaniments/${accompaniment.id}/generatePDF`
+//     )
+
+//     console.log({ data })
+//   } catch (error) {
+//     const message = extractErrorMessage(error)
+
+//     toast.error(message)
+//   }
+// }, [api, accompaniment])

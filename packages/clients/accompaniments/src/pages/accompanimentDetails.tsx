@@ -4,7 +4,7 @@ import Head from 'next/head'
 
 import { useCloseWindow } from '~/hooks/use-close-window'
 import { useSetupAuth } from '~/hooks/use-setup-auth'
-import { AccompanimentDetailsScreen } from '~/screens/AccompanimentDetailsBKP'
+import { AccompanimentDetailsScreen } from '~/screens/AccompanimentDetails'
 import { useAccompanimentDetailsPayload } from '~/windows/AccompanimentDetails/actions'
 
 const Home = () => {

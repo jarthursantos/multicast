@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 
+import { IProvider } from '@shared/web-components'
 import { Table } from '@shared/web-components/Table'
+import { contabilFormatter } from '@shared/web-components/Table'
 
 import { Wrapper, GroupWrapper, ProductsWrapper } from './styles'
 import { StockNotificationsPresenterProps } from './types'
 
 const StockNotificationPresenter: React.VFC<StockNotificationsPresenterProps> = ({
-  productsColumns
+  productsColumns,
+  providers,
+  products,
+  onChangeSelection
 }) => {
   const [groupWidth, setGroupWidth] = useState(300)
 
@@ -24,7 +29,12 @@ const StockNotificationPresenter: React.VFC<StockNotificationsPresenterProps> = 
           options={{
             selectable: 1,
             layout: 'fitColumns',
-            data: [{ code: 83, name: 'Tintas Lux' }],
+            data: providers,
+            height: '100%',
+            rowClick: (_, row) => row?.select(),
+            rowSelectionChanged: (data: IProvider[]) => {
+              onChangeSelection(data[0])
+            },
             columns: [
               {
                 title: 'Código',
@@ -50,29 +60,29 @@ const StockNotificationPresenter: React.VFC<StockNotificationsPresenterProps> = 
       <ProductsWrapper>
         <Table
           options={{
-            data: [],
+            data: products,
             columns: [
               ...productsColumns,
               {
                 title: 'Código',
-                width: 80,
+                width: 100,
                 hozAlign: 'center',
                 sorter: 'number',
-                field: 'code'
+                field: 'code',
+                bottomCalc: 'count'
               },
               {
                 title: 'Cód. Fab.',
-                width: 100,
+                width: 120,
                 hozAlign: 'center',
                 sorter: 'string',
-                field: 'code'
+                field: 'factoryCode'
               },
               {
                 title: 'Descrição',
                 width: 300,
-                hozAlign: 'center',
                 sorter: 'string',
-                field: 'name'
+                field: 'description'
               },
               {
                 title: 'Embalagem',
@@ -91,8 +101,17 @@ const StockNotificationPresenter: React.VFC<StockNotificationsPresenterProps> = 
               {
                 title: 'Últ. Pedido',
                 width: 120,
-                hozAlign: 'center',
                 sorter: 'datetime',
+                sorterParams: {
+                  format: 'YYYY-MM-DD'
+                },
+                hozAlign: 'center',
+                formatter: 'datetime',
+                formatterParams: {
+                  inputFormat: 'YYYY-MM-DD',
+                  outputFormat: 'DD/MM/YYYY',
+                  invalidPlaceholder: '-'
+                },
                 field: 'lastPurchaseOrderAt'
               },
               {
@@ -100,14 +119,17 @@ const StockNotificationPresenter: React.VFC<StockNotificationsPresenterProps> = 
                 width: 150,
                 hozAlign: 'center',
                 sorter: 'number',
-                field: 'valueLastArrival'
+                field: 'lastBuyPrice',
+                formatter: contabilFormatter,
+                bottomCalc: 'sum',
+                bottomCalcFormatter: contabilFormatter
               },
               {
                 title: 'Qt. Últ. Entrada',
                 width: 150,
                 hozAlign: 'center',
                 sorter: 'number',
-                field: 'quantityLastArrival'
+                field: 'lastEntryQuantity'
               }
             ]
           }}
