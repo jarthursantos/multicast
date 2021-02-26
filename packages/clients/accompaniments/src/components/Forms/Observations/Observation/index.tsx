@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { formatDistanceToNow, parseISO } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { format, parseISO } from 'date-fns'
 
 import { Annotation } from '~/store/modules/accompaniments/types'
 
@@ -20,11 +19,7 @@ const Observation: React.FC<Annotation> = ({ content, user, createdAt }) => {
         parsedDate = createdAt
       }
 
-      setDate(
-        parsedDate
-          ? formatDistanceToNow(parsedDate, { addSuffix: true, locale: ptBR })
-          : '-'
-      )
+      setDate(parsedDate ? format(parsedDate, 'dd/MM/yyyy') : '-')
     }
 
     const interval = setInterval(handleUpdate, 60000)

@@ -13,6 +13,7 @@ import {
 import AccompanimentData from '~/components/Forms/AccompanimentData'
 import Observations from '~/components/Forms/Observations'
 import RequestData from '~/components/Forms/RequestData'
+import ScheduleData from '~/components/Forms/ScheduleData'
 import { updateAccompanimentRequest } from '~/store/modules/accompaniments/actions'
 import {
   Types,
@@ -28,8 +29,9 @@ import { Actions } from './Actions'
 import { CancelDialog } from './CancelDialog'
 import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { useChecks, useInvoices } from './hooks'
+import { ReviewDialog } from './ReviewDialog'
 import { schema } from './schema'
-import { Wrapper, Container } from './styles'
+import { Wrapper, Container, RightPanel } from './styles'
 import { AccompanimentDetailsScreenProps } from './types'
 
 const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = ({
@@ -41,9 +43,7 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
   const validateForm = useFormValidator(formRef, schema)
 
   const [isCancelOpen, setCancelOpen] = useState(false)
-  const [isAccompanimentReviewOpen, setAccompanimentReviewOpen] = useState(
-    false
-  )
+  const [isReviewOpen, setReviewOpen] = useState(false)
   const [isConfirmMailOpen, setConfirmMailOpen] = useState(false)
   const [accompaniment, setAccompaniment] = useState<Accompaniment>(
     remoteAccompaniment
@@ -65,14 +65,8 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
   const openCancel = useCallback(() => setCancelOpen(true), [])
   const closeCancel = useCallback(() => setCancelOpen(false), [])
 
-  const openAccompanimentReview = useCallback(
-    () => setAccompanimentReviewOpen(true),
-    []
-  )
-  const closeAccompanimentReview = useCallback(
-    () => setAccompanimentReviewOpen(false),
-    []
-  )
+  const openAccompanimentReview = useCallback(() => setReviewOpen(true), [])
+  const closeAccompanimentReview = useCallback(() => setReviewOpen(false), [])
 
   const handleSubmit = useCallback(
     async (data: any) => {
@@ -152,10 +146,16 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
             />
           </Form>
 
-          <Observations
-            accompanimentId={accompaniment?.id}
-            observations={accompaniment?.annotations || []}
-          />
+          <RightPanel>
+            <Form onSubmit={console.log} initialData={accompaniment}>
+              <ScheduleData />
+            </Form>
+
+            <Observations
+              accompanimentId={accompaniment?.id}
+              observations={accompaniment?.annotations || []}
+            />
+          </RightPanel>
         </Container>
 
         <ActionsContainer>
@@ -186,22 +186,14 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
         onClose={closeCancel}
         accompanimentId={accompaniment?.id}
       />
+
+      <ReviewDialog
+        isOpen={isReviewOpen}
+        onClose={closeAccompanimentReview}
+        accompanimentId={accompaniment?.id}
+      />
     </>
   )
 }
 
 export { AccompanimentDetailsScreen }
-
-// const handleGeneratePDF = useCallback(async () => {
-//   try {
-//     const { data } = await api.get(
-//       `accompaniments/${accompaniment.id}/generatePDF`
-//     )
-
-//     console.log({ data })
-//   } catch (error) {
-//     const message = extractErrorMessage(error)
-
-//     toast.error(message)
-//   }
-// }, [api, accompaniment])

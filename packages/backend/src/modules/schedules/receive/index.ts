@@ -87,7 +87,6 @@ export function createReceiveSchedulesModule(
           'Agendamento já teve os recibos confirmados'
         )
       }
-
       const conflictedInvoiceCount = schedule.invoices.filter(
         invoice => !!invoice.divergence
       ).length
@@ -98,15 +97,17 @@ export function createReceiveSchedulesModule(
         )
       }
 
-      const receiptsOfScheduledInvoicesCount = schedule.invoices.filter(
-        invoice => !!data.invoices.find(curr => curr.id === invoice.id)
-      ).length
+      // const invoices = schedule.invoices.filter(({ canceledAt }) => !canceledAt)
 
-      if (receiptsOfScheduledInvoicesCount !== schedule.invoices.length) {
-        throw new createHttpError.BadRequest(
-          'Alguma(s) das notas não teve o recibo informado'
-        )
-      }
+      // const receiptsOfScheduledInvoicesCount = schedule.invoices.filter(
+      //   invoice => !!data.invoices.find(curr => curr.id === invoice.id)
+      // ).length
+
+      // if (receiptsOfScheduledInvoicesCount !== schedule.invoices.length) {
+      //   throw new createHttpError.BadRequest(
+      //     'Alguma(s) das notas não teve o recibo informado'
+      //   )
+      // }
 
       const dischargeTable = await dischargeTablesModel.findLatest()
 

@@ -106,7 +106,7 @@ const Actions: React.VFC<ActionsProps> = ({
 
       <Button secondary label="Cancelar Saldo" onClick={openCancel} />
 
-      <Button secondary label="Revisar" onClick={openAccompanimentReview} />
+      {/* <Button secondary label="Revisar" onClick={openAccompanimentReview} /> */}
 
       {!sended && (
         <Button
@@ -163,3 +163,17 @@ const Actions: React.VFC<ActionsProps> = ({
 }
 
 export { Actions }
+
+// const handleGeneratePDF = useCallback(async () => {
+//   try {
+//     const { data } = await api.get(
+//       `accompaniments/${accompaniment.id}/generatePDF`
+//     )
+
+//     console.log({ data })
+//   } catch (error) {
+//     const message = extractErrorMessage(error)
+
+//     toast.error(message)
+//   }
+// }, [api, accompaniment])

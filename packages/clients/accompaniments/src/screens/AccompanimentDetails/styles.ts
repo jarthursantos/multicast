@@ -20,3 +20,12 @@ export const Container = styled.div`
     }
   }
 `
+
+export const RightPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  & > * + * {
+    flex: 1;
+  }
+`
