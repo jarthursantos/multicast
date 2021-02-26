@@ -88,26 +88,28 @@ export function createReceiveSchedulesModule(
         )
       }
 
-      const invoices = schedule.invoices.filter(({ canceledAt }) => !canceledAt)
-
-      const conflictedInvoiceCount = invoices.filter(
+      const conflictedInvoiceCount = schedule.invoices.filter(
         invoice => !!invoice.divergence
       ).length
 
-      if (conflictedInvoiceCount !== invoices.length) {
+      if (conflictedInvoiceCount !== schedule.invoices.length) {
         throw new createHttpError.BadRequest(
           'Esse agendamento possui notas não conflitadas'
         )
       }
 
-      const receiptsOfScheduledInvoicesCount = invoices.filter(
-        invoice => !!data.invoices.find(curr => curr.id === invoice.id)
-      ).length
+      const { receiptPerInvoice } = data
 
-      if (receiptsOfScheduledInvoicesCount !== invoices.length) {
-        throw new createHttpError.BadRequest(
-          'Alguma(s) das notas não teve o recibo informado'
-        )
+      if (receiptPerInvoice) {
+        const receiptsOfScheduledInvoicesCount = schedule.invoices.filter(
+          invoice => !!data.invoices.find(curr => curr.id === invoice.id)
+        ).length
+
+        if (receiptsOfScheduledInvoicesCount !== schedule.invoices.length) {
+          throw new createHttpError.BadRequest(
+            'Alguma(s) das notas não teve o recibo informado'
+          )
+        }
       }
 
       const dischargeTable = await dischargeTablesModel.findLatest()
@@ -124,12 +126,10 @@ export function createReceiveSchedulesModule(
         )
       }
 
-      const { receiptPerInvoice } = data
-
       const receipts: IInvoiceReceipt[] = generateReceipts(
         { ...data, dischargeTable },
         receiptPerInvoice,
-        invoices,
+        schedule.invoices,
         data.invoices,
         data.receiptValue
       )
