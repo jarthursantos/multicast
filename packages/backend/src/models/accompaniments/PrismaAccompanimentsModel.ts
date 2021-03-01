@@ -8,6 +8,10 @@ import {
   createCanceledAccompaniment,
   ICanceledAccompaniment
 } from '~/domain/ICanceledAccompaniment'
+import {
+  createFinishedAccompaniment,
+  IFinishedAccompaniment
+} from '~/domain/IFinishedAccompaniment'
 import { IPurchaseOrder } from '~/domain/IPurchaseOrder'
 import { IUser } from '~/domain/IUser'
 import { IAccompanimentDelayProvider } from '~/providers/accompaniment-delay/IAccompanimentDelayProvider'
@@ -336,6 +340,99 @@ export function createPrismaAccompanimentsModel(
               isOutstanding: !!accompaniment.renewedFrom,
               canceledAt: accompaniment.cancelation.createdAt,
               motive: accompaniment.cancelation.motive
+            },
+            accompaniment.id
+          )
+        )
+      }
+
+      return result
+    },
+
+    async findFinisheds(): Promise<IFinishedAccompaniment[]> {
+      const result: IFinishedAccompaniment[] = []
+
+      const accompaniments = await prisma.accompaniments.findMany({
+        where: { NOT: { finishedAt: null } },
+        include: { renewedFrom: true },
+        orderBy: { number: 'asc' }
+      })
+
+      for (let i = 0; i < accompaniments.length; i++) {
+        const accompaniment = accompaniments[i]
+
+        if (!accompaniment.finishedAt) {
+          continue
+        }
+
+        const purchaseOrder = await purchaseOrderModel.findByNumber(
+          accompaniment.number
+        )
+
+        if (!purchaseOrder) {
+          continue
+        }
+
+        const annotations = await annotationsModel.findFromAccompaniment(
+          accompaniment.id
+        )
+
+        let transactionNumber: number | null = null
+
+        const { invoiceNumber, invoiceProvider } = accompaniment
+
+        if (invoiceNumber && invoiceProvider) {
+          const transaction = await invoicesWithoutAccompanimentsModel.findByInvoice(
+            invoiceNumber,
+            invoiceProvider
+          )
+
+          if (transaction) {
+            transactionNumber = transaction.transactionNumber
+          }
+        }
+
+        const schedule = await accompanimentScheduleModel.find({
+          invoiceNumber: accompaniment.invoiceNumber,
+          invoiceProvider: accompaniment.invoiceProvider,
+          schedulingAt: accompaniment.schedulingAt
+        })
+
+        const { count, criticalLevel } = accompanimentDelayProvider.calculate({
+          billingAt: accompaniment.billingAt || undefined,
+          expectedBillingAt: accompaniment.expectedBillingAt || undefined,
+          freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+          releasedAt: accompaniment.releasedAt || undefined,
+          reviewedAt: accompaniment.reviewedAt || undefined,
+          schedulingAt: accompaniment.schedulingAt || undefined,
+          sendedAt: accompaniment.sendedAt || undefined,
+          purchaseOrder,
+          annotations
+        })
+
+        result.push(
+          createFinishedAccompaniment(
+            {
+              billingAt: accompaniment.billingAt || undefined,
+              createdAt: accompaniment.createdAt || undefined,
+              expectedBillingAt: accompaniment.expectedBillingAt || undefined,
+              freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+              invoiceNumber: accompaniment.invoiceNumber || undefined,
+              invoiceProvider: accompaniment.invoiceProvider || undefined,
+              releasedAt: accompaniment.releasedAt || undefined,
+              renewedAt: accompaniment.renewedAt || undefined,
+              reviewedAt: accompaniment.reviewedAt || undefined,
+              schedulingAt: accompaniment.schedulingAt || undefined,
+              sendedAt: accompaniment.sendedAt || undefined,
+              updatedAt: accompaniment.updatedAt || undefined,
+              delay: count,
+              criticalLevel,
+              purchaseOrder,
+              annotations,
+              schedule,
+              transactionNumber: transactionNumber || undefined,
+              isOutstanding: !!accompaniment.renewedFrom,
+              finishedAt: accompaniment.finishedAt
             },
             accompaniment.id
           )

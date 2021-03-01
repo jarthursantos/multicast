@@ -7,6 +7,7 @@ import {
   handleFindAccompanimentProducts,
   handleFindAccompanimentUntrackedInvoices,
   handleFindAllAccompaniments,
+  handleFindFinishedAccompaniments,
   handleGenerateAccompanimentPDFReport,
   handleMarkAccompanimentAsFinished,
   handleMarkAccompanimentAsReleased,
@@ -28,6 +29,7 @@ const router = Router()
 router.get('/', handleFindAllAccompaniments)
 
 router.get('/all/canceleds', handleFindCanceledAccompaniments)
+router.get('/all/finisheds', handleFindFinishedAccompaniments)
 
 router.get('/:id', handleFindAccompanimentById)
 router.get('/:id/generatePDF', handleGenerateAccompanimentPDFReport)

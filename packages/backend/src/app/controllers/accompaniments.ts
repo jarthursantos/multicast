@@ -8,6 +8,7 @@ import {
   findAccompanimentUntrackedInvoices,
   findAccompanimentsProductsModule,
   findAllAccompanimentsModule,
+  findFinishedAccompanimentsModule,
   generateAccompanimentsPDFModule,
   markAccompanimentAsFinishedModule,
   markAccompanimentAsReleasedModule,
@@ -30,6 +31,15 @@ export async function handleFindCanceledAccompaniments(
   res: Response
 ) {
   const result = await findCanceledAccompanimentsModule.execute()
+
+  res.json(result)
+}
+
+export async function handleFindFinishedAccompaniments(
+  req: Request,
+  res: Response
+) {
+  const result = await findFinishedAccompanimentsModule.execute()
 
   res.json(result)
 }
