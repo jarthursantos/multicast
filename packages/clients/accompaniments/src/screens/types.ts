@@ -26,7 +26,9 @@ export enum HomeScreenTabs {
 export enum AccompanimentTabs {
   GENERAL_RESUME = 'GENERAL_RESUME',
   IN_PROGRESS = 'IN_PROGRESS',
-  IN_RECEIVEMENT = 'IN_RECEIVEMENT'
+  IN_RECEIVEMENT = 'IN_RECEIVEMENT',
+  CENCELED = 'CENCELED',
+  COMPLETED = 'COMPLETED'
 }
 
 export enum StockNotificationTabs {

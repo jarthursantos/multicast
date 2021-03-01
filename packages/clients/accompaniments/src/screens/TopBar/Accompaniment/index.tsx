@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react'
-import { MdDashboard, MdRefresh } from 'react-icons/md'
+import { MdDashboard, MdRefresh, MdCancel, MdCheckCircle } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -51,23 +51,39 @@ const HomeScreenTopBarAccompaniment: React.VFC = () => {
           icon={<MdReceiptLong />}
           width={105}
         />
+
+        <TabOptions.Content.Separator />
+
+        <ActionIconButton
+          icon={<MdFilter />}
+          onClick={openAccompanimentFilters}
+          width={80}
+          label="Aplicar Filtro"
+        />
+
+        <ActionIconButton
+          icon={<MdRefresh />}
+          onClick={handleRefresh}
+          width={85}
+          label="Recarregar Dados"
+        />
+
+        <TabOptions.Content.Separator />
+
+        <ButtonGroup.Button
+          name={AccompanimentTabs.CENCELED}
+          label="Pedidos Cancelados"
+          icon={<MdCancel />}
+          width={95}
+        />
+
+        <ButtonGroup.Button
+          name={AccompanimentTabs.COMPLETED}
+          label="Pedidos Concluidos"
+          icon={<MdCheckCircle />}
+          width={105}
+        />
       </ButtonGroup>
-
-      <TabOptions.Content.Separator />
-
-      <ActionIconButton
-        icon={<MdFilter />}
-        onClick={openAccompanimentFilters}
-        width={80}
-        label="Aplicar Filtro"
-      />
-
-      <ActionIconButton
-        icon={<MdRefresh />}
-        onClick={handleRefresh}
-        width={85}
-        label="Recarregar Dados"
-      />
     </TabOptions.Content>
   )
 }

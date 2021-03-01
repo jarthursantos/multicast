@@ -3,6 +3,8 @@ import React, { useCallback, useContext, useRef } from 'react'
 import { LoadingPanel } from '@shared/web-components'
 import { Pager } from '@shared/web-components/Pager'
 
+import { AccompanimentsCanceled } from '~/screens/Accompaniments/Canceled'
+import { AccompanimentsCompleted } from '~/screens/Accompaniments/Completed'
 import { AccompanimentsGeneralResume } from '~/screens/Accompaniments/GeneralResume'
 import { AccompanimentsInProgress } from '~/screens/Accompaniments/InProgress'
 import { AccompanimentsInReceivement } from '~/screens/Accompaniments/InReceivement'
@@ -41,6 +43,14 @@ const AccompanimentsScreen: React.FC = () => {
 
         <Pager.Page name={AccompanimentTabs.IN_RECEIVEMENT}>
           <AccompanimentsInReceivement />
+        </Pager.Page>
+
+        <Pager.Page name={AccompanimentTabs.CENCELED}>
+          <AccompanimentsCanceled />
+        </Pager.Page>
+
+        <Pager.Page name={AccompanimentTabs.COMPLETED}>
+          <AccompanimentsCompleted />
         </Pager.Page>
       </Pager>
 

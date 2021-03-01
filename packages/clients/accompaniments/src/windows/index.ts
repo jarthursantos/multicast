@@ -32,6 +32,16 @@ export async function registerWindows() {
     }
   })
 
+  mainWindow.on('close', () => {
+    BrowserWindow.getAllWindows().forEach(window => {
+      try {
+        window.close()
+      } catch (error) {
+        console.log({ error })
+      }
+    })
+  })
+
   mainWindow.removeMenu()
   mainWindow.loadURL(resolvePath('auth'))
 

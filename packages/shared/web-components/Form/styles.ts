@@ -125,7 +125,7 @@ export const ActionsContainer = styled.div`
   justify-content: flex-end;
 
   border-top: 1px solid ${({ theme }) => theme.colors.border.primary};
-  padding: 12px 16px;
+  padding: 10px 16px;
   margin-top: 0 !important;
 
   & > * + * {

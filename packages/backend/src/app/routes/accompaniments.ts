@@ -13,7 +13,8 @@ import {
   handleMarkAccompanimentAsReviewed,
   handleMarkAccompanimentAsSended,
   handleRenewAccompaniments,
-  handleUpdateAccompaniments
+  handleUpdateAccompaniments,
+  handleFindCanceledAccompaniments
 } from '~/app/controllers/accompaniments'
 import {
   cancelAccompanimentsSchema,
@@ -25,6 +26,7 @@ import { validateRequestBody } from '../middlewares/validate-request-body'
 const router = Router()
 
 router.get('/', handleFindAllAccompaniments)
+router.get('/canceleds', handleFindCanceledAccompaniments)
 router.get('/:id', handleFindAccompanimentById)
 router.get('/:id/generatePDF', handleGenerateAccompanimentPDFReport)
 router.get('/:id/products', handleFindAccompanimentProducts)

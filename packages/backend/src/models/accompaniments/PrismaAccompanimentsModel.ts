@@ -4,6 +4,10 @@ import { omit } from 'lodash'
 
 import { CriticalLevel } from '~/domain/CriticalLevel'
 import { createAccompaniment, IAccompaniment } from '~/domain/IAccompaniment'
+import {
+  createCanceledAccompaniment,
+  ICanceledAccompaniment
+} from '~/domain/ICanceledAccompaniment'
 import { IPurchaseOrder } from '~/domain/IPurchaseOrder'
 import { IUser } from '~/domain/IUser'
 import { IAccompanimentDelayProvider } from '~/providers/accompaniment-delay/IAccompanimentDelayProvider'
@@ -238,6 +242,100 @@ export function createPrismaAccompanimentsModel(
               schedule,
               transactionNumber: transactionNumber || undefined,
               isOutstanding: !!accompaniment.renewedFrom
+            },
+            accompaniment.id
+          )
+        )
+      }
+
+      return result
+    },
+
+    async findCanceleds(): Promise<ICanceledAccompaniment[]> {
+      const result: ICanceledAccompaniment[] = []
+
+      const accompaniments = await prisma.accompaniments.findMany({
+        where: { NOT: { cancelation: null } },
+        include: { renewedFrom: true, cancelation: true },
+        orderBy: { number: 'asc' }
+      })
+
+      for (let i = 0; i < accompaniments.length; i++) {
+        const accompaniment = accompaniments[i]
+
+        if (!accompaniment.cancelation) {
+          continue
+        }
+
+        const purchaseOrder = await purchaseOrderModel.findByNumber(
+          accompaniment.number
+        )
+
+        if (!purchaseOrder) {
+          continue
+        }
+
+        const annotations = await annotationsModel.findFromAccompaniment(
+          accompaniment.id
+        )
+
+        let transactionNumber: number | null = null
+
+        const { invoiceNumber, invoiceProvider } = accompaniment
+
+        if (invoiceNumber && invoiceProvider) {
+          const transaction = await invoicesWithoutAccompanimentsModel.findByInvoice(
+            invoiceNumber,
+            invoiceProvider
+          )
+
+          if (transaction) {
+            transactionNumber = transaction.transactionNumber
+          }
+        }
+
+        const schedule = await accompanimentScheduleModel.find({
+          invoiceNumber: accompaniment.invoiceNumber,
+          invoiceProvider: accompaniment.invoiceProvider,
+          schedulingAt: accompaniment.schedulingAt
+        })
+
+        const { count, criticalLevel } = accompanimentDelayProvider.calculate({
+          billingAt: accompaniment.billingAt || undefined,
+          expectedBillingAt: accompaniment.expectedBillingAt || undefined,
+          freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+          releasedAt: accompaniment.releasedAt || undefined,
+          reviewedAt: accompaniment.reviewedAt || undefined,
+          schedulingAt: accompaniment.schedulingAt || undefined,
+          sendedAt: accompaniment.sendedAt || undefined,
+          purchaseOrder,
+          annotations
+        })
+
+        result.push(
+          createCanceledAccompaniment(
+            {
+              billingAt: accompaniment.billingAt || undefined,
+              createdAt: accompaniment.createdAt || undefined,
+              expectedBillingAt: accompaniment.expectedBillingAt || undefined,
+              freeOnBoardAt: accompaniment.freeOnBoardAt || undefined,
+              invoiceNumber: accompaniment.invoiceNumber || undefined,
+              invoiceProvider: accompaniment.invoiceProvider || undefined,
+              releasedAt: accompaniment.releasedAt || undefined,
+              renewedAt: accompaniment.renewedAt || undefined,
+              reviewedAt: accompaniment.reviewedAt || undefined,
+              schedulingAt: accompaniment.schedulingAt || undefined,
+              sendedAt: accompaniment.sendedAt || undefined,
+              updatedAt: accompaniment.updatedAt || undefined,
+              delay: count,
+              criticalLevel,
+              purchaseOrder,
+              annotations,
+              schedule,
+              transactionNumber: transactionNumber || undefined,
+              isOutstanding: !!accompaniment.renewedFrom,
+              canceledAt: accompaniment.cancelation.createdAt,
+              motive: accompaniment.cancelation.motive
             },
             accompaniment.id
           )

@@ -4,6 +4,7 @@ import {
   cancelAccompanimentsModule,
   createAccompanimentAnnotationsModule,
   findAccompanimentByIdModule,
+  findCanceledAccompanimentsModule,
   findAccompanimentUntrackedInvoices,
   findAccompanimentsProductsModule,
   findAllAccompanimentsModule,
@@ -20,6 +21,15 @@ import {
 
 export async function handleFindAllAccompaniments(req: Request, res: Response) {
   const result = await findAllAccompanimentsModule.execute()
+
+  res.json(result)
+}
+
+export async function handleFindCanceledAccompaniments(
+  req: Request,
+  res: Response
+) {
+  const result = await findCanceledAccompanimentsModule.execute()
 
   res.json(result)
 }

@@ -8,7 +8,8 @@ import { AccompanimentDataProps } from './types'
 const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
   disabled,
   isFreeOnBoard,
-  options
+  options,
+  scheduled
 }) => {
   return (
     <Container>
@@ -57,6 +58,32 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
         position="top"
         inputProps={{ disabled }}
       />
+
+      {scheduled && (
+        <>
+          <h3>Dados do Agendamento</h3>
+          <DateInput
+            name="schedule.scheduledAt"
+            label="Agendamento"
+            inputProps={{ readOnly: true }}
+          />
+          <DateInput
+            name="schedule.receivedAt"
+            label="Recebimento"
+            inputProps={{ readOnly: true }}
+          />
+          <DateInput
+            name="schedule.downloadedAt"
+            label="Descarregamento"
+            inputProps={{ readOnly: true }}
+          />
+          <DateInput
+            name="schedule.unlockedAt"
+            label="Desbloqueio"
+            inputProps={{ readOnly: true }}
+          />
+        </>
+      )}
     </Container>
   )
 }

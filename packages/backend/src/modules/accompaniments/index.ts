@@ -20,6 +20,7 @@ import { createCancelAccompanimentsModule } from './cancel'
 import { cancelAccompanimentsSchema } from './cancel/schema'
 import { createFindAllAccompanimentsModule } from './find-all'
 import { createFindAccompanimentByIdModule } from './find-by-id'
+import { createFindCanceledAccompanimentsModule } from './find-canceleds'
 import { createFindAccompanimentsProductsModule } from './find-products'
 import { createGenerateAccompanimentsPDFModule } from './generate-pdf'
 import { createMarkAccompanimentAsFinishedModule } from './mark-as-finished'
@@ -74,6 +75,9 @@ const findAllAccompanimentsModule = createFindAllAccompanimentsModule(
 const findAccompanimentByIdModule = createFindAccompanimentByIdModule(
   accompanimentsModel
 )
+const findCanceledAccompanimentsModule = createFindCanceledAccompanimentsModule(
+  accompanimentsModel
+)
 const findAccompanimentsProductsModule = createFindAccompanimentsProductsModule(
   accompanimentsModel,
   accompanimentProductsModel
@@ -120,6 +124,7 @@ export {
   createAccompanimentAnnotationsModule,
   findAllAccompanimentsModule,
   findAccompanimentByIdModule,
+  findCanceledAccompanimentsModule,
   findAccompanimentsProductsModule,
   findAccompanimentUntrackedInvoices,
   markAccompanimentAsFinishedModule,

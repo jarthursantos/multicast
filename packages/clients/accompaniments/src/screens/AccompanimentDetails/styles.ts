@@ -9,6 +9,8 @@ export const Container = styled.div`
   display: flex;
 
   padding: 8px;
+  padding-bottom: 0;
+  padding-right: 0;
 
   form {
     display: flex;
@@ -18,14 +20,5 @@ export const Container = styled.div`
       padding: 8px;
       width: 374px;
     }
-  }
-`
-
-export const RightPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  & > * + * {
-    flex: 1;
   }
 `

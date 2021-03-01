@@ -21,12 +21,9 @@ export function registerOpenAccompanimentDetails() {
         accompanimentWindows[id].focus()
       } else {
         const window = new BrowserWindow({
-          width: 1160,
-          height: 560,
-          minHeight: 560,
-          // height: 670,
-          // minHeight: 670,
-          minWidth: 1000,
+          width: 1150,
+          height: 550,
+          resizable: false,
           backgroundColor: '#fff',
           webPreferences: {
             nodeIntegration: true,

@@ -24,4 +24,6 @@ export const Separator = styled.div`
   background: ${({ theme }) => theme.colors.border.secondary} !important;
   margin-left: 12px !important;
   margin-right: 4px;
+
+  align-self: center !important;
 `

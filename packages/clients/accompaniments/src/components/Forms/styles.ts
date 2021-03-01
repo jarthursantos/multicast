@@ -5,6 +5,8 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  height: calc(100vh - 62px);
 
   h3 {
     color: ${({ theme }) => theme.colors.text.primary.dark};
@@ -12,8 +14,13 @@ export const Container = styled.div`
     font-weight: 500;
   }
 
-  & > * + * {
-    margin-top: 8px;
+  & > * {
+    margin-bottom: 8px;
+  }
+
+  ::-webkit-scrollbar-track:vertical,
+  ::-webkit-scrollbar-thumb:vertical {
+    border-left: 0;
   }
 `
 

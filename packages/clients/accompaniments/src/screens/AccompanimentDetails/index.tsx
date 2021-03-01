@@ -13,7 +13,6 @@ import {
 import AccompanimentData from '~/components/Forms/AccompanimentData'
 import Observations from '~/components/Forms/Observations'
 import RequestData from '~/components/Forms/RequestData'
-import ScheduleData from '~/components/Forms/ScheduleData'
 import { updateAccompanimentRequest } from '~/store/modules/accompaniments/actions'
 import {
   Types,
@@ -31,7 +30,7 @@ import { ConfirmMailSendedDialog } from './ConfirmMailSended'
 import { useChecks, useInvoices } from './hooks'
 import { ReviewDialog } from './ReviewDialog'
 import { schema } from './schema'
-import { Wrapper, Container, RightPanel } from './styles'
+import { Wrapper, Container } from './styles'
 import { AccompanimentDetailsScreenProps } from './types'
 
 const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = ({
@@ -142,20 +141,15 @@ const AccompanimentDetailsScreen: React.VFC<AccompanimentDetailsScreenProps> = (
             <AccompanimentData
               options={invoices}
               disabled={!sended || !reviewed || !released || finished}
+              scheduled={!!accompaniment?.schedule}
               isFreeOnBoard={accompaniment?.purchaseOrder.freight === 'FOB'}
             />
           </Form>
 
-          <RightPanel>
-            <Form onSubmit={console.log} initialData={accompaniment}>
-              <ScheduleData />
-            </Form>
-
-            <Observations
-              accompanimentId={accompaniment?.id}
-              observations={accompaniment?.annotations || []}
-            />
-          </RightPanel>
+          <Observations
+            accompanimentId={accompaniment?.id}
+            observations={accompaniment?.annotations || []}
+          />
         </Container>
 
         <ActionsContainer>
