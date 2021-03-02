@@ -30,6 +30,8 @@ export async function handleFindCanceledAccompaniments(
   req: Request,
   res: Response
 ) {
+  console.log(req.query)
+
   const result = await findCanceledAccompanimentsModule.execute()
 
   res.json(result)
@@ -39,6 +41,8 @@ export async function handleFindFinishedAccompaniments(
   req: Request,
   res: Response
 ) {
+  console.log(req.query)
+
   const result = await findFinishedAccompanimentsModule.execute()
 
   res.json(result)

@@ -82,7 +82,21 @@ export function* loadCanceledAccompaniments({
     const { filters } = payload
 
     const response = yield call(api.get, '/accompaniments/all/canceleds', {
-      params: filters,
+      params: {
+        ...(filters.buyers
+          ? { buyers: filters.buyers.map(({ code }) => code).join(',') }
+          : {}),
+
+        ...(filters.providers
+          ? { providers: filters.providers.map(({ code }) => code).join(',') }
+          : {}),
+
+        ...(filters.numberFrom ? { numberFrom: filters.numberFrom } : {}),
+        ...(filters.numberTo ? { numberTo: filters.numberTo } : {}),
+
+        ...(filters.periodFrom ? { numberTo: filters.periodFrom } : {}),
+        ...(filters.periodTo ? { numberTo: filters.periodTo } : {})
+      },
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -113,7 +127,21 @@ export function* loadCompletedAccompaniments({
     const { filters } = payload
 
     const response = yield call(api.get, '/accompaniments/all/finisheds', {
-      params: filters,
+      params: {
+        ...(filters.buyers
+          ? { buyers: filters.buyers.map(({ code }) => code).join(',') }
+          : {}),
+
+        ...(filters.providers
+          ? { providers: filters.providers.map(({ code }) => code).join(',') }
+          : {}),
+
+        ...(filters.numberFrom ? { numberFrom: filters.numberFrom } : {}),
+        ...(filters.numberTo ? { numberTo: filters.numberTo } : {}),
+
+        ...(filters.periodFrom ? { numberTo: filters.periodFrom } : {}),
+        ...(filters.periodTo ? { numberTo: filters.periodTo } : {})
+      },
       headers: {
         Authorization: `Bearer ${token}`
       }
