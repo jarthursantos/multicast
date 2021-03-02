@@ -38,7 +38,6 @@ const SettingsPage: React.FC<Props> = ({
 
         if (success) {
           formRef.current?.setErrors({})
-          console.log({ data })
 
           onSettingsChange(data)
 

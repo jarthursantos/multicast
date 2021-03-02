@@ -7,7 +7,12 @@ import { AccompanimentsFilterScreen } from '~/screens/AccompanimentsFilter'
 import { useAccompanimentFilters } from '~/windows/AccompanimentFilters/action'
 
 const Home = () => {
-  const [filters, token] = useAccompanimentFilters()
+  const [
+    filters,
+    includeCanceledAccompaniments,
+    includeCompletedAccompaniments,
+    token
+  ] = useAccompanimentFilters()
 
   useSetupAuth(token)
 
@@ -17,7 +22,13 @@ const Home = () => {
         <title>FollowUP Compras - Acompanhamento - Filtros</title>
       </Head>
 
-      <AccompanimentsFilterScreen filters={filters} />
+      <AccompanimentsFilterScreen
+        {...{
+          filters,
+          includeCanceledAccompaniments,
+          includeCompletedAccompaniments
+        }}
+      />
     </React.Fragment>
   )
 }

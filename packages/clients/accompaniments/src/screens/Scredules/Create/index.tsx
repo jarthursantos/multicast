@@ -52,8 +52,6 @@ const CreateScheduleScreen: React.VFC = () => {
 
   const handleSubmit = useCallback(
     async (data: IFormData) => {
-      console.log({ data })
-
       const { success, errors } = await validateForm()
 
       if (!success) {

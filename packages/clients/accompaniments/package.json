@@ -2,7 +2,7 @@
   "name": "@clients/accompaniments",
   "private": true,
   "description": "Acompanhamento dos pedidos de compra",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "Dantas Distribuidora <dantas@dantasdistribuidora.com.br>",
   "main": "app/background.js",
   "scripts": {

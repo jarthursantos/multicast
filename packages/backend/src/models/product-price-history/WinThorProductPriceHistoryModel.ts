@@ -34,8 +34,6 @@ export function createWinThorProductPriceHistoryModel(): IProductPriceHistoryMod
         result.push(history)
       }
 
-      console.log({ result })
-
       return result
     }
   }

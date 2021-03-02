@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useWatchAction } from '@shared/action-watcher'
@@ -7,13 +7,18 @@ import {
   SubmitButton,
   NumberInput,
   ProviderInput,
+  Checkbox,
   BuyerInput,
   DateInput
 } from '@shared/web-components'
 
 import {
   applyAccompanimentsFilters,
-  clearAccompanimentsFilters
+  clearAccompanimentsFilters,
+  includeCanceledAccompaniments,
+  clearCanceledAccompaniments,
+  includeCompletedAccompaniments,
+  clearCompletedAccompaniments
 } from '~/store/modules/accompaniments/actions'
 import {
   IAccompanimentFilters,
@@ -25,19 +30,50 @@ import { Wrapper, Container, Inline, ActionsWrapper } from './styles'
 import { IAccompanimentsFilterScreenProps } from './types'
 
 const AccompanimentsFilterScreen: React.VFC<IAccompanimentsFilterScreenProps> = ({
-  filters
+  filters,
+  includeCanceledAccompaniments: canceledAccompaniments,
+  includeCompletedAccompaniments: completedAccompaniments
 }) => {
   const dispatch = useDispatch()
 
+  const [generateCanceledReport, setGenerateCanceledReport] = useState(
+    canceledAccompaniments
+  )
+  const [generateFinishedReport, setGenerateFinishedReport] = useState(
+    completedAccompaniments
+  )
+
   const handleSubmit = useCallback(
-    (data: IAccompanimentFilters) => dispatch(applyAccompanimentsFilters(data)),
-    [dispatch]
+    (data: IAccompanimentFilters) => {
+      dispatch(applyAccompanimentsFilters(data))
+
+      dispatch(
+        generateCanceledReport
+          ? includeCanceledAccompaniments(data)
+          : clearCanceledAccompaniments()
+      )
+
+      dispatch(
+        generateFinishedReport
+          ? includeCompletedAccompaniments(data)
+          : clearCompletedAccompaniments()
+      )
+    },
+    [dispatch, generateCanceledReport, generateFinishedReport]
   )
 
   const handleClearFilters = useCallback(
     () => dispatch(clearAccompanimentsFilters()),
     [dispatch]
   )
+
+  useEffect(() => {
+    setGenerateCanceledReport(canceledAccompaniments)
+  }, [canceledAccompaniments])
+
+  useEffect(() => {
+    setGenerateFinishedReport(completedAccompaniments)
+  }, [completedAccompaniments])
 
   useWatchAction(closeWindow, [
     Types.APPLY_ACCOMPANIMENTS_FILTERS,
@@ -64,6 +100,20 @@ const AccompanimentsFilterScreen: React.VFC<IAccompanimentsFilterScreenProps> = 
           <DateInput name="periodFrom" label="De" position="top" />
           <DateInput name="periodTo" label="Até" position="top" />
         </Inline>
+
+        <h3>Relatórios</h3>
+
+        <Checkbox
+          label="Buscar Pedidos Cancelados"
+          value={generateCanceledReport}
+          onValueChange={setGenerateCanceledReport}
+        />
+
+        <Checkbox
+          label="Buscar Pedidos Finalizados"
+          value={generateFinishedReport}
+          onValueChange={setGenerateFinishedReport}
+        />
       </Container>
 
       <ActionsWrapper>

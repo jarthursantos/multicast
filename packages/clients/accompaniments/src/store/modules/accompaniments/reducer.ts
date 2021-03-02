@@ -5,6 +5,12 @@ import { AccompanimentsActionTypes, AccompanimentsState, Types } from './types'
 const INITIAL_STATE: AccompanimentsState = {
   accompaniments: [],
 
+  loadingCanceledAccompaniments: false,
+  canceledAccompaniments: [],
+
+  loadingCompletedAccompaniments: false,
+  completedAccompaniments: [],
+
   loading: false,
 
   updatingAccompaniment: false,
@@ -16,6 +22,9 @@ const INITIAL_STATE: AccompanimentsState = {
   markingAsReviewed: false,
   markingAsReleased: false,
   markingAsFinished: false,
+
+  includeCanceledAccompaniments: false,
+  includeCompletedAccompaniments: false,
 
   filters: {}
 }
@@ -252,6 +261,68 @@ export default function accompaniments(
 
       case Types.CLEAR_ACCOMPANIMENTS_FILTERS: {
         draft.filters = {}
+
+        break
+      }
+
+      case Types.LOAD_CANCELED_ACCOMPANIMENTS_SUCCESS: {
+        draft.canceledAccompaniments = action.payload.accompaniments
+        draft.loadingCanceledAccompaniments = false
+
+        break
+      }
+      case Types.LOAD_CANCELED_ACCOMPANIMENTS_FAILURE: {
+        draft.loadingCanceledAccompaniments = false
+
+        break
+      }
+      case Types.LOAD_CANCELED_ACCOMPANIMENTS_REQUEST: {
+        draft.loadingCanceledAccompaniments = true
+
+        break
+      }
+
+      case Types.INCLUDE_CANCELED_ACCOMPANIMENTS: {
+        draft.includeCanceledAccompaniments = true
+
+        break
+      }
+
+      case Types.CLEAR_CANCELED_ACCOMPANIMENTS: {
+        draft.canceledAccompaniments = []
+        draft.includeCanceledAccompaniments = false
+        draft.loadingCanceledAccompaniments = false
+
+        break
+      }
+
+      case Types.LOAD_COMPLETED_ACCOMPANIMENTS_SUCCESS: {
+        draft.completedAccompaniments = action.payload.accompaniments
+        draft.loadingCompletedAccompaniments = false
+
+        break
+      }
+      case Types.LOAD_COMPLETED_ACCOMPANIMENTS_FAILURE: {
+        draft.loadingCompletedAccompaniments = false
+
+        break
+      }
+      case Types.LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST: {
+        draft.loadingCompletedAccompaniments = true
+
+        break
+      }
+
+      case Types.INCLUDE_COMPLETED_ACCOMPANIMENTS: {
+        draft.includeCompletedAccompaniments = true
+
+        break
+      }
+
+      case Types.CLEAR_COMPLETED_ACCOMPANIMENTS: {
+        draft.completedAccompaniments = []
+        draft.includeCompletedAccompaniments = false
+        draft.loadingCompletedAccompaniments = false
 
         break
       }

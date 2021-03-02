@@ -31,7 +31,6 @@ export function parseFindStockNotificationsOptions(
   let buyers: string[] = []
 
   if (query.buyers) {
-    console.log(query.buyers)
     buyers = query.buyers.split(',')
   }
 

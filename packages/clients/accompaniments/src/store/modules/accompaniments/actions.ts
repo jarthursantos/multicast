@@ -32,7 +32,17 @@ import {
   CancelAccompanimentSuccessAction,
   ApplyAccompanimentFilterAction,
   IAccompanimentFilters,
-  ClearAccompanimentFilterAction
+  ClearAccompanimentFilterAction,
+  LoadCanceledAccompanimentsRequestAction,
+  LoadCanceledAccompanimentsSuccessAction,
+  LoadCanceledAccompanimentsFailureAction,
+  IncludeCanceledAccompanimentsAction,
+  ClearCanceledAccompanimentsAction,
+  LoadCompletedAccompanimentsRequestAction,
+  LoadCompletedAccompanimentsSuccessAction,
+  LoadCompletedAccompanimentsFailureAction,
+  IncludeCompletedAccompanimentsAction,
+  ClearCompletedAccompanimentsAction
 } from './types'
 
 export function loadAccompanimentsRequest(): LoadAccompanimentsRequestAction {
@@ -304,5 +314,97 @@ export function clearAccompanimentsFilters(): ClearAccompanimentFilterAction {
   return {
     propagate: true,
     type: Types.CLEAR_ACCOMPANIMENTS_FILTERS
+  }
+}
+
+export function loadCanceledAccompanimentsRequest(
+  filters: IAccompanimentFilters
+): LoadCanceledAccompanimentsRequestAction {
+  return {
+    type: Types.LOAD_CANCELED_ACCOMPANIMENTS_REQUEST,
+    payload: { filters }
+  }
+}
+
+export function loadCanceledAccompanimentsFailure(
+  message: string
+): LoadCanceledAccompanimentsFailureAction {
+  return {
+    propagate: true,
+    type: Types.LOAD_CANCELED_ACCOMPANIMENTS_FAILURE,
+    payload: { message }
+  }
+}
+
+export function loadCanceledAccompanimentsSuccess(
+  accompaniments: Accompaniment[]
+): LoadCanceledAccompanimentsSuccessAction {
+  return {
+    propagate: true,
+    type: Types.LOAD_CANCELED_ACCOMPANIMENTS_SUCCESS,
+    payload: { accompaniments }
+  }
+}
+
+export function includeCanceledAccompaniments(
+  filters: IAccompanimentFilters
+): IncludeCanceledAccompanimentsAction {
+  return {
+    propagate: true,
+    type: Types.INCLUDE_CANCELED_ACCOMPANIMENTS,
+    payload: { filters }
+  }
+}
+
+export function clearCanceledAccompaniments(): ClearCanceledAccompanimentsAction {
+  return {
+    propagate: true,
+    type: Types.CLEAR_CANCELED_ACCOMPANIMENTS
+  }
+}
+
+export function loadCompletedAccompanimentsRequest(
+  filters: IAccompanimentFilters
+): LoadCompletedAccompanimentsRequestAction {
+  return {
+    type: Types.LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST,
+    payload: { filters }
+  }
+}
+
+export function loadCompletedAccompanimentsFailure(
+  message: string
+): LoadCompletedAccompanimentsFailureAction {
+  return {
+    propagate: true,
+    type: Types.LOAD_COMPLETED_ACCOMPANIMENTS_FAILURE,
+    payload: { message }
+  }
+}
+
+export function loadCompletedAccompanimentsSuccess(
+  accompaniments: Accompaniment[]
+): LoadCompletedAccompanimentsSuccessAction {
+  return {
+    propagate: true,
+    type: Types.LOAD_COMPLETED_ACCOMPANIMENTS_SUCCESS,
+    payload: { accompaniments }
+  }
+}
+
+export function includeCompletedAccompaniments(
+  filters: IAccompanimentFilters
+): IncludeCompletedAccompanimentsAction {
+  return {
+    propagate: true,
+    type: Types.INCLUDE_COMPLETED_ACCOMPANIMENTS,
+    payload: { filters }
+  }
+}
+
+export function clearCompletedAccompaniments(): ClearCompletedAccompanimentsAction {
+  return {
+    propagate: true,
+    type: Types.CLEAR_COMPLETED_ACCOMPANIMENTS
   }
 }

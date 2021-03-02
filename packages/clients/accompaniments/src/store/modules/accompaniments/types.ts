@@ -41,7 +41,21 @@ export enum Types {
   MARK_ACCOMPANIMENT_FINISHED_FAILURE = '@accompaniments/MARK_ACCOMPANIMENT_FINISHED_FAILURE',
 
   APPLY_ACCOMPANIMENTS_FILTERS = '@accompaniments/APPLY_ACCOMPANIMENTS_FILTERS',
-  CLEAR_ACCOMPANIMENTS_FILTERS = '@accompaniments/CLEAR_ACCOMPANIMENTS_FILTERS'
+  CLEAR_ACCOMPANIMENTS_FILTERS = '@accompaniments/CLEAR_ACCOMPANIMENTS_FILTERS',
+
+  INCLUDE_CANCELED_ACCOMPANIMENTS = '@accompaniments/INCLUDE_CANCELED_ACCOMPANIMENTS',
+  CLEAR_CANCELED_ACCOMPANIMENTS = '@accompaniments/CLEAR_CANCELED_ACCOMPANIMENTS',
+
+  LOAD_CANCELED_ACCOMPANIMENTS_REQUEST = '@accompaniments/LOAD_CANCELED_ACCOMPANIMENTS_REQUEST',
+  LOAD_CANCELED_ACCOMPANIMENTS_SUCCESS = '@accompaniments/LOAD_CANCELED_ACCOMPANIMENTS_SUCCESS',
+  LOAD_CANCELED_ACCOMPANIMENTS_FAILURE = '@accompaniments/LOAD_CANCELED_ACCOMPANIMENTS_FAILURE',
+
+  LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST = '@accompaniments/LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST',
+  LOAD_COMPLETED_ACCOMPANIMENTS_SUCCESS = '@accompaniments/LOAD_COMPLETED_ACCOMPANIMENTS_SUCCESS',
+  LOAD_COMPLETED_ACCOMPANIMENTS_FAILURE = '@accompaniments/LOAD_COMPLETED_ACCOMPANIMENTS_FAILURE',
+
+  INCLUDE_COMPLETED_ACCOMPANIMENTS = '@accompaniments/INCLUDE_COMPLETED_ACCOMPANIMENTS',
+  CLEAR_COMPLETED_ACCOMPANIMENTS = '@accompaniments/CLEAR_COMPLETED_ACCOMPANIMENTS'
 }
 
 export interface LoadAccompanimentsRequestAction extends BaseAction {
@@ -246,6 +260,70 @@ export interface ClearAccompanimentFilterAction extends BaseAction {
   type: typeof Types.CLEAR_ACCOMPANIMENTS_FILTERS
 }
 
+export interface LoadCanceledAccompanimentsRequestAction extends BaseAction {
+  type: typeof Types.LOAD_CANCELED_ACCOMPANIMENTS_REQUEST
+  payload: {
+    filters: IAccompanimentFilters
+  }
+}
+
+export interface LoadCanceledAccompanimentsSuccessAction extends BaseAction {
+  type: typeof Types.LOAD_CANCELED_ACCOMPANIMENTS_SUCCESS
+  payload: {
+    accompaniments: Accompaniment[]
+  }
+}
+
+export interface LoadCanceledAccompanimentsFailureAction extends BaseAction {
+  type: typeof Types.LOAD_CANCELED_ACCOMPANIMENTS_FAILURE
+  payload: {
+    message: string
+  }
+}
+
+export interface IncludeCanceledAccompanimentsAction extends BaseAction {
+  type: typeof Types.INCLUDE_CANCELED_ACCOMPANIMENTS
+  payload: {
+    filters: IAccompanimentFilters
+  }
+}
+
+export interface ClearCanceledAccompanimentsAction extends BaseAction {
+  type: typeof Types.CLEAR_CANCELED_ACCOMPANIMENTS
+}
+
+export interface LoadCompletedAccompanimentsRequestAction extends BaseAction {
+  type: typeof Types.LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST
+  payload: {
+    filters: IAccompanimentFilters
+  }
+}
+
+export interface LoadCompletedAccompanimentsSuccessAction extends BaseAction {
+  type: typeof Types.LOAD_COMPLETED_ACCOMPANIMENTS_SUCCESS
+  payload: {
+    accompaniments: Accompaniment[]
+  }
+}
+
+export interface LoadCompletedAccompanimentsFailureAction extends BaseAction {
+  type: typeof Types.LOAD_COMPLETED_ACCOMPANIMENTS_FAILURE
+  payload: {
+    message: string
+  }
+}
+
+export interface IncludeCompletedAccompanimentsAction extends BaseAction {
+  type: typeof Types.INCLUDE_COMPLETED_ACCOMPANIMENTS
+  payload: {
+    filters: IAccompanimentFilters
+  }
+}
+
+export interface ClearCompletedAccompanimentsAction extends BaseAction {
+  type: typeof Types.CLEAR_COMPLETED_ACCOMPANIMENTS
+}
+
 export type AccompanimentsActionTypes =
   | LoadAccompanimentsRequestAction
   | LoadAccompanimentsFailureAction
@@ -276,10 +354,26 @@ export type AccompanimentsActionTypes =
   | MarkAccompanimentAsFinishedFailureAction
   | ApplyAccompanimentFilterAction
   | ClearAccompanimentFilterAction
+  | LoadCanceledAccompanimentsRequestAction
+  | LoadCanceledAccompanimentsSuccessAction
+  | LoadCanceledAccompanimentsFailureAction
+  | IncludeCanceledAccompanimentsAction
+  | ClearCanceledAccompanimentsAction
+  | LoadCompletedAccompanimentsRequestAction
+  | LoadCompletedAccompanimentsSuccessAction
+  | LoadCompletedAccompanimentsFailureAction
+  | IncludeCompletedAccompanimentsAction
+  | ClearCompletedAccompanimentsAction
 
 export interface AccompanimentsState {
   loading: boolean
   accompaniments: Accompaniment[]
+
+  loadingCanceledAccompaniments: boolean
+  canceledAccompaniments: Accompaniment[]
+
+  loadingCompletedAccompaniments: boolean
+  completedAccompaniments: Accompaniment[]
 
   updatingAccompaniment: boolean
   additingAnnotation: boolean
@@ -292,6 +386,9 @@ export interface AccompanimentsState {
   markingAsFinished: boolean
 
   filters: IAccompanimentFilters
+
+  includeCanceledAccompaniments: boolean
+  includeCompletedAccompaniments: boolean
 }
 
 export interface Accompaniment {

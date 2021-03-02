@@ -12,12 +12,18 @@ import {
 export function registerOpenAccompanimentFilters() {
   ipcMain.on(
     OPEN_ACCOMPANIMENT_FILTERS,
-    (_: IpcMainEvent, filters: IAccompanimentFilters, token: string) => {
+    (
+      _: IpcMainEvent,
+      filters: IAccompanimentFilters,
+      includeCanceledAccompaniments: boolean,
+      includeCompletedAccompaniments: boolean,
+      token: string
+    ) => {
       const window = new BrowserWindow({
         minimizable: false,
         maximizable: false,
         width: 520,
-        height: 470,
+        height: 550,
         resizable: false,
         webPreferences: {
           nodeIntegration: true,
@@ -26,7 +32,13 @@ export function registerOpenAccompanimentFilters() {
       })
 
       window.webContents.once('did-finish-load', () => {
-        window.webContents.send(OPEN_ACCOMPANIMENT_FILTERS_DATA, filters, token)
+        window.webContents.send(
+          OPEN_ACCOMPANIMENT_FILTERS_DATA,
+          filters,
+          includeCanceledAccompaniments,
+          includeCompletedAccompaniments,
+          token
+        )
       })
 
       window.removeMenu()

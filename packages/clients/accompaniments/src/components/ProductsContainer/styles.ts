@@ -13,12 +13,18 @@ export const Wrapper = styled(ResizableBox).attrs({
   border-left: 1px solid ${props => props.theme.colors.border.primary};
 `
 
-export const Container = styled.div`
+interface ContainerProps {
+  isExpanded?: boolean
+}
+
+export const Container = styled.div<ContainerProps>`
   position: relative;
 
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 88px calc(100vh - 88px - 243px);
+  grid-template-rows: 88px calc(
+      100vh - ${({ isExpanded }) => (isExpanded ? 0 : 88)}px - 243px
+    );
   grid-template-areas:
     'HEADER'
     'CONTENT';

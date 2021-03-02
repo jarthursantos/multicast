@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2'
 import Loading from 'react-loading'
 
 import { format } from 'date-fns'
+import { remote } from 'electron'
 
 import { useAxios, extractErrorMessage } from '@shared/axios'
 import { formatPriceWithoutSymbol } from '@shared/web-components/DataGrid/Body/Row/Cell/Contabil/format'
@@ -84,7 +85,10 @@ const ProductDetailsScreen: React.VFC<ProductDetailsScreenProps> = ({
       } catch (error) {
         const message = extractErrorMessage(error)
 
-        console.log(String(message))
+        remote?.dialog.showErrorBox(
+          'Erro ao carregar histórico de preços',
+          String(message)
+        )
       } finally {
         setLoadingPriceHistory(false)
       }

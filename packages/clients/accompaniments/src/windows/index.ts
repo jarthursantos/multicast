@@ -37,7 +37,7 @@ export async function registerWindows() {
       try {
         window.close()
       } catch (error) {
-        console.log({ error })
+        console.error({ error })
       }
     })
   })

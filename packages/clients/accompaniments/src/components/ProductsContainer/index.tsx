@@ -19,7 +19,8 @@ interface Option {
 
 const ProductsContainer: React.VFC<ProductsContainerProps> = ({
   accompanimentId,
-  onResize
+  onResize,
+  isExpanded
 }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<Product[]>([])
@@ -64,7 +65,7 @@ const ProductsContainer: React.VFC<ProductsContainerProps> = ({
       maxConstraints={[500, Infinity]}
       onResize={(_, data) => onResize(data.size.width)}
     >
-      <Container>
+      <Container isExpanded={isExpanded}>
         <Header>
           <Form onSubmit={console.log}>
             <SelectInput

@@ -25,7 +25,11 @@ import {
   renewAccompanimentFailure,
   renewAccompanimentSuccess,
   updateAccompanimentFailure,
-  updateAccompanimentSuccess
+  updateAccompanimentSuccess,
+  loadCanceledAccompanimentsSuccess,
+  loadCanceledAccompanimentsFailure,
+  loadCompletedAccompanimentsSuccess,
+  loadCompletedAccompanimentsFailure
 } from './actions'
 import {
   Accompaniment,
@@ -36,9 +40,11 @@ import {
   MarkAccompanimentAsReleasedRequestAction,
   MarkAccompanimentAsReviewedRequestAction,
   MarkAccompanimentAsSendedRequestAction,
+  LoadCanceledAccompanimentsRequestAction,
   RenewAccompanimentRequestAction,
   Types,
-  UpdateAccompanimentRequestAction
+  UpdateAccompanimentRequestAction,
+  LoadCompletedAccompanimentsRequestAction
 } from './types'
 
 export function* loadAccompaniments() {
@@ -65,6 +71,68 @@ export function* loadAccompaniments() {
     )
 
     yield put(loadAccompanimentsFailure(message))
+  }
+}
+
+export function* loadCanceledAccompaniments({
+  payload
+}: LoadCanceledAccompanimentsRequestAction) {
+  try {
+    const token: string = yield select((state: RootState) => state.auth.token)
+    const { filters } = payload
+
+    const response = yield call(api.get, '/accompaniments/all/canceleds', {
+      params: filters,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const accompaniments: Accompaniment[] = response.data
+
+    toast.success('Acompanhamentos cancelados atualizados')
+
+    yield put(loadCanceledAccompanimentsSuccess(accompaniments))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    remote?.dialog.showErrorBox(
+      'Erro ao carregar acompanhamentos cancelados',
+      String(message)
+    )
+
+    yield put(loadCanceledAccompanimentsFailure(message))
+  }
+}
+
+export function* loadCompletedAccompaniments({
+  payload
+}: LoadCompletedAccompanimentsRequestAction) {
+  try {
+    const token: string = yield select((state: RootState) => state.auth.token)
+    const { filters } = payload
+
+    const response = yield call(api.get, '/accompaniments/all/finisheds', {
+      params: filters,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const accompaniments: Accompaniment[] = response.data
+
+    toast.success('Acompanhamentos finalizados atualizados')
+
+    yield put(loadCompletedAccompanimentsSuccess(accompaniments))
+  } catch (err) {
+    const message = extractErrorMessage(err)
+
+    remote?.dialog.showErrorBox(
+      'Erro ao carregar acompanhamentos finalizados',
+      String(message)
+    )
+
+    yield put(loadCompletedAccompanimentsFailure(message))
   }
 }
 
@@ -282,6 +350,16 @@ export function* markAccompanimentAsReleased({
 
 export default all([
   takeLatest(Types.LOAD_ACCOMPANIMENTS_REQUEST, loadAccompaniments),
+
+  takeLatest(
+    Types.LOAD_CANCELED_ACCOMPANIMENTS_REQUEST,
+    loadCanceledAccompaniments
+  ),
+
+  takeLatest(
+    Types.LOAD_COMPLETED_ACCOMPANIMENTS_REQUEST,
+    loadCompletedAccompaniments
+  ),
 
   takeLatest(Types.UPDATE_ACCOMPANIMENT_REQUEST, updateAccompaniment),
 

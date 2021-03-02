@@ -42,16 +42,12 @@ const RepresentedInput: React.VFC<IRepresentedInputProps> = ({
         }
       )
 
-      console.log({ filtered })
-
       setRepresenteds(filtered)
       setSelections(filtered.map(() => false))
     }
   }, [representative, providers])
 
   useEffect(() => {
-    console.log({ hideBranches })
-
     setProviders(
       loadedProviders.filter(({ code, principalCode }) => {
         if (hideBranches) {
