@@ -8,12 +8,21 @@ export interface Data {
   motive: string
 }
 
+export interface FindCanceledFilters {
+  buyers: number[]
+  providers: number[]
+}
+
 export interface IAccompanimentsModel {
   save(accompaniment: IAccompaniment): Promise<void>
   registerPurchaseOrders(purchases: IPurchaseOrder[]): Promise<void>
   findMany(): Promise<IAccompaniment[]>
-  findCanceleds(): Promise<ICanceledAccompaniment[]>
-  findFinisheds(): Promise<IFinishedAccompaniment[]>
+  findCanceleds(
+    filters?: FindCanceledFilters
+  ): Promise<ICanceledAccompaniment[]>
+  findFinisheds(
+    filters?: FindCanceledFilters
+  ): Promise<IFinishedAccompaniment[]>
   findById(id: string): Promise<IAccompaniment | undefined>
   update(accompaniment: IAccompaniment): Promise<IAccompaniment>
   cancel(accompaniment: IAccompaniment, data: Data, user: IUser): Promise<void>

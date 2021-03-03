@@ -1,11 +1,13 @@
 import { IAccompanimentsModel } from '~/models/accompaniments/IAccompanimentsModel'
 
+import { IFindFinishedAccompanimentsOptions } from './parser'
+
 export function createFindFinishedAccompanimentsModule(
   accompanimentsModel: IAccompanimentsModel
 ) {
   return {
-    async execute() {
-      const accompaniments = await accompanimentsModel.findFinisheds()
+    async execute(filters?: IFindFinishedAccompanimentsOptions) {
+      const accompaniments = await accompanimentsModel.findFinisheds(filters)
 
       return accompaniments
     }

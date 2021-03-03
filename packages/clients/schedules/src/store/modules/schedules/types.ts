@@ -415,6 +415,10 @@ export interface IMarkScheduleInvoiceAsNonReceivedFailureAction
 
 export interface ILoadSchedulesRequestAction extends BaseAction {
   type: typeof Types.LOAD_SCHEDULES_REQUEST
+  payload: {
+    year: number
+    month: number
+  }
 }
 
 export interface ILoadSchedulesSuccessAction extends BaseAction {

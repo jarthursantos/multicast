@@ -54,7 +54,8 @@ import {
   IMoveInvoiceResult,
   IMarkScheduleInvoiceAsReceivedRequestAction,
   IMarkScheduleInvoiceAsNonReceivedRequestAction,
-  IReceiveScheduleRequestAction
+  IReceiveScheduleRequestAction,
+  ILoadSchedulesRequestAction
 } from './types'
 
 function* addSchedule({ payload }: IAddScheduleRequestAction) {
@@ -183,11 +184,12 @@ export function* receiveSchedule({ payload }: IReceiveScheduleRequestAction) {
   }
 }
 
-function* loadSchedules() {
+function* loadSchedules({ payload }: ILoadSchedulesRequestAction) {
   try {
     const { data }: AxiosResponse<ISchedule[]> = yield call(
       api.get,
-      'schedules'
+      'schedules',
+      { params: payload }
     )
 
     yield put(loadSchedulesSuccess(data))

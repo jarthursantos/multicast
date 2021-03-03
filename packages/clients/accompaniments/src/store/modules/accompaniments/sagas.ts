@@ -94,8 +94,8 @@ export function* loadCanceledAccompaniments({
         ...(filters.numberFrom ? { numberFrom: filters.numberFrom } : {}),
         ...(filters.numberTo ? { numberTo: filters.numberTo } : {}),
 
-        ...(filters.periodFrom ? { numberTo: filters.periodFrom } : {}),
-        ...(filters.periodTo ? { numberTo: filters.periodTo } : {})
+        ...(filters.periodFrom ? { periodFrom: filters.periodFrom } : {}),
+        ...(filters.periodTo ? { periodTo: filters.periodTo } : {})
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -139,8 +139,8 @@ export function* loadCompletedAccompaniments({
         ...(filters.numberFrom ? { numberFrom: filters.numberFrom } : {}),
         ...(filters.numberTo ? { numberTo: filters.numberTo } : {}),
 
-        ...(filters.periodFrom ? { numberTo: filters.periodFrom } : {}),
-        ...(filters.periodTo ? { numberTo: filters.periodTo } : {})
+        ...(filters.periodFrom ? { periodFrom: filters.periodFrom } : {}),
+        ...(filters.periodTo ? { periodTo: filters.periodTo } : {})
       },
       headers: {
         Authorization: `Bearer ${token}`

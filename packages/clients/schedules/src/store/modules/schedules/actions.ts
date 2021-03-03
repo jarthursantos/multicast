@@ -553,9 +553,13 @@ export function markScheduleInvoiceAsNonReceivedFailure(
 
 // #region Load
 
-export function loadSchedulesRequest(): ILoadSchedulesRequestAction {
+export function loadSchedulesRequest(
+  year: number,
+  month: number
+): ILoadSchedulesRequestAction {
   return {
-    type: Types.LOAD_SCHEDULES_REQUEST
+    type: Types.LOAD_SCHEDULES_REQUEST,
+    payload: { year, month }
   }
 }
 

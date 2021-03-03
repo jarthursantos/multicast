@@ -25,6 +25,8 @@ export function createCreateSessionModule(usersModel: IUsersModel) {
         throw new createHttpError.BadRequest('Usuário desativado')
       }
 
+      delete user.password
+
       return { user, token: jwt.sign({ id: user.id }, secret) }
     }
   }

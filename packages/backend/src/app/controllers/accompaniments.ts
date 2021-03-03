@@ -17,7 +17,11 @@ import {
   renewAccompanimentsModule,
   updateAccompanimentsModule,
   parseFindAccompanimentProductsOptions,
-  IFindAccompanimentProductsRequest
+  IFindAccompanimentProductsRequest,
+  parseFindCanceledAccompanimentsOptions,
+  IFindCanceledAccompanimentsRequest,
+  parseFindFinishedAccompanimentsOptions,
+  IFindFinishedAccompanimentsRequest
 } from '~/modules/accompaniments'
 
 export async function handleFindAllAccompaniments(req: Request, res: Response) {
@@ -27,23 +31,23 @@ export async function handleFindAllAccompaniments(req: Request, res: Response) {
 }
 
 export async function handleFindCanceledAccompaniments(
-  req: Request,
+  req: IFindCanceledAccompanimentsRequest,
   res: Response
 ) {
-  console.log(req.query)
-
-  const result = await findCanceledAccompanimentsModule.execute()
+  const result = await findCanceledAccompanimentsModule.execute(
+    parseFindCanceledAccompanimentsOptions(req.query)
+  )
 
   res.json(result)
 }
 
 export async function handleFindFinishedAccompaniments(
-  req: Request,
+  req: IFindFinishedAccompanimentsRequest,
   res: Response
 ) {
-  console.log(req.query)
-
-  const result = await findFinishedAccompanimentsModule.execute()
+  const result = await findFinishedAccompanimentsModule.execute(
+    parseFindFinishedAccompanimentsOptions(req.query)
+  )
 
   res.json(result)
 }

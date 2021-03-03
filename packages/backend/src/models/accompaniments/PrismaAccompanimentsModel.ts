@@ -14,13 +14,54 @@ import {
 } from '~/domain/IFinishedAccompaniment'
 import { IPurchaseOrder } from '~/domain/IPurchaseOrder'
 import { IUser } from '~/domain/IUser'
+import { winthor } from '~/libraries/WinThor'
 import { IAccompanimentDelayProvider } from '~/providers/accompaniment-delay/IAccompanimentDelayProvider'
 
 import { IAccompanimentScheduleModel } from '../accompaniment-schedule/IAccompanimentScheduleModel'
 import { IAnnotationsModel } from '../annotations/IAnnotationsModel'
 import { IInvoicesWithoutAccompanimentsModel } from '../invoices-without-accompaniments/IInvoicesWithoutAccompanimentsModel'
 import { IPurchaseOrderModel } from '../purchase-orders/IPurchaseOrderModel'
-import { IAccompanimentsModel, Data } from './IAccompanimentsModel'
+import {
+  IAccompanimentsModel,
+  FindCanceledFilters,
+  Data
+} from './IAccompanimentsModel'
+
+function generateFilter(codes: number[], criteria: string): string {
+  if (codes.length === 0) {
+    return '1 = 1'
+  }
+
+  return `(${criteria} = ${codes.join(` OR ${criteria} = `)})`
+}
+
+async function getAccompanimentCodes(
+  filters: FindCanceledFilters
+): Promise<number[]> {
+  let numbers: number[] = []
+
+  const winthorResult = await winthor.raw<{ number: number }[]>(`
+      SELECT NUMPED AS "number" FROM PCPEDIDO WHERE
+      ${filters.buyers && generateFilter(filters.buyers, 'CODCOMPRADOR')}
+      ${filters.buyers && filters.providers && ' AND '}
+      ${filters.providers && generateFilter(filters.providers, 'CODFORNEC')}
+    `)
+
+  console.log(
+    `
+      SELECT NUMPED AS "number" FROM PCPEDIDO WHERE
+      ${filters.buyers && generateFilter(filters.buyers, 'CODCOMPRADOR')}
+      ${filters.buyers && filters.providers && ' AND '}
+      ${filters.providers && generateFilter(filters.providers, 'CODFORNEC')}
+    `,
+    filters,
+    numbers
+  )
+
+  numbers = [...numbers, ...winthorResult.map(({ number }) => number)]
+
+  return numbers
+}
 
 export function createPrismaAccompanimentsModel(
   purchaseOrderModel: IPurchaseOrderModel,
@@ -255,11 +296,17 @@ export function createPrismaAccompanimentsModel(
       return result
     },
 
-    async findCanceleds(): Promise<ICanceledAccompaniment[]> {
+    async findCanceleds(
+      filters?: FindCanceledFilters
+    ): Promise<ICanceledAccompaniment[]> {
       const result: ICanceledAccompaniment[] = []
 
+      const numbers: number[] = filters
+        ? await getAccompanimentCodes(filters)
+        : []
+
       const accompaniments = await prisma.accompaniments.findMany({
-        where: { NOT: { cancelation: null } },
+        where: { NOT: { cancelation: null }, number: { in: numbers } },
         include: { renewedFrom: true, cancelation: true },
         orderBy: { number: 'asc' }
       })
@@ -274,6 +321,8 @@ export function createPrismaAccompanimentsModel(
         const purchaseOrder = await purchaseOrderModel.findByNumber(
           accompaniment.number
         )
+
+        // purchaseOrder.buyers.code
 
         if (!purchaseOrder) {
           continue
@@ -349,11 +398,17 @@ export function createPrismaAccompanimentsModel(
       return result
     },
 
-    async findFinisheds(): Promise<IFinishedAccompaniment[]> {
+    async findFinisheds(
+      filters?: FindCanceledFilters
+    ): Promise<IFinishedAccompaniment[]> {
       const result: IFinishedAccompaniment[] = []
 
+      const numbers: number[] = filters
+        ? await getAccompanimentCodes(filters)
+        : []
+
       const accompaniments = await prisma.accompaniments.findMany({
-        where: { NOT: { finishedAt: null } },
+        where: { NOT: { finishedAt: null }, number: { in: numbers } },
         include: { renewedFrom: true },
         orderBy: { number: 'asc' }
       })
