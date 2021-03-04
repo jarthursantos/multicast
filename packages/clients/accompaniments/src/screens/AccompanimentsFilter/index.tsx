@@ -83,7 +83,7 @@ const AccompanimentsFilterScreen: React.VFC<IAccompanimentsFilterScreenProps> = 
   return (
     <Wrapper onSubmit={handleSubmit} initialData={filters} noValidate>
       <Container>
-        <BuyerInput name="buyers" label="Compradores" />
+        <BuyerInput name="buyers" label="Compradores (*)" />
 
         <ProviderInput name="providers" label="Fornecedor" />
 

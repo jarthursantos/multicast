@@ -6,12 +6,6 @@ export const Wrapper = styled(Form)`
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  hr {
-    border: none;
-    border-top: 1px dotted #bbb;
-    margin: 8px;
-  }
 `
 
 export const Container = styled.div`
