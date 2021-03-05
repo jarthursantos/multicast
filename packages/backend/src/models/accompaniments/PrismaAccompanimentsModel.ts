@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { format } from 'date-fns'
 import createHttpError from 'http-errors'
 import { omit } from 'lodash'
 
@@ -29,10 +30,10 @@ import {
 
 function generateFilter(codes: number[], criteria: string): string {
   if (codes.length === 0) {
-    return '1 = 1'
+    return ' AND 1 = 1 '
   }
 
-  return `(${criteria} = ${codes.join(` OR ${criteria} = `)})`
+  return ` AND (${criteria} = ${codes.join(` OR ${criteria} = `)}) `
 }
 
 async function getAccompanimentCodes(
@@ -41,22 +42,26 @@ async function getAccompanimentCodes(
   let numbers: number[] = []
 
   const winthorResult = await winthor.raw<{ number: number }[]>(`
-      SELECT NUMPED AS "number" FROM PCPEDIDO WHERE
+      SELECT NUMPED AS "number" FROM PCPEDIDO WHERE 1 = 1
+      ${filters.numberFrom && ` AND NUMPED >= ${filters.numberFrom}`}
+      ${filters.numberTo && ` AND NUMPED <= ${filters.numberTo}`}
+      ${
+        filters.periodFrom &&
+        ` AND DTEMISSAO >= TO_DATE('DD/MM/YYYY', '${format(
+          filters.periodFrom,
+          'dd/MM/yyyy'
+        )}')`
+      }
+      ${
+        filters.periodTo &&
+        ` AND DTEMISSAO <= TO_DATE('DD/MM/YYYY', '${format(
+          filters.periodTo,
+          'dd/MM/yyyy'
+        )}')`
+      }
       ${filters.buyers && generateFilter(filters.buyers, 'CODCOMPRADOR')}
-      ${filters.buyers && filters.providers && ' AND '}
       ${filters.providers && generateFilter(filters.providers, 'CODFORNEC')}
     `)
-
-  console.log(
-    `
-      SELECT NUMPED AS "number" FROM PCPEDIDO WHERE
-      ${filters.buyers && generateFilter(filters.buyers, 'CODCOMPRADOR')}
-      ${filters.buyers && filters.providers && ' AND '}
-      ${filters.providers && generateFilter(filters.providers, 'CODFORNEC')}
-    `,
-    filters,
-    numbers
-  )
 
   numbers = [...numbers, ...winthorResult.map(({ number }) => number)]
 

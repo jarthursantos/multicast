@@ -11,6 +11,10 @@ export interface Data {
 export interface FindCanceledFilters {
   buyers: number[]
   providers: number[]
+  numberFrom?: number
+  numberTo?: number
+  periodFrom?: Date
+  periodTo?: Date
 }
 
 export interface IAccompanimentsModel {

@@ -61,7 +61,7 @@ const AccompanimentData: React.VFC<AccompanimentDataProps> = ({
 
       {scheduled && (
         <>
-          <h3>Dados do Agendamento</h3>
+          <h3>Dados do Agendamento/Recebimento</h3>
           <DateInput
             name="schedule.scheduledAt"
             label="Agendamento"

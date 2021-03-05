@@ -427,8 +427,8 @@ export interface IAccompanimentFilters {
   numberTo?: number
   buyers?: IBuyer[]
   providers?: IProvider[]
-  periodFrom?: number
-  periodTo?: number
+  periodFrom?: Date
+  periodTo?: Date
 }
 
 export enum CriticalLevel {
